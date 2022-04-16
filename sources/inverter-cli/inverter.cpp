@@ -14,7 +14,7 @@ cInverter::cInverter(std::string devicename) {
     status1[0] = 0;
     status2[0] = 0;
     warnings[0] = 0;
-    mode = 0; 
+    mode = 0;
 }
 
 string *cInverter::GetQpigsStatus() {
@@ -88,7 +88,7 @@ char *cInverter::escape_strn(unsigned char *str, int n) {
 bool cInverter::query(const char *cmd) {
     time_t started;
     int fd;
-int i=0, n, write_failed=0;
+    int i=0, n, write_failed=0;
 
     fd = open(this->device.data(), O_RDWR | O_NONBLOCK);
     if (fd == -1) {
@@ -166,7 +166,7 @@ int i=0, n, write_failed=0;
             }
         }
 
-	    endbuf = (char *)memrchr((void *)&buf[i], 0x0d, n);
+	endbuf = (char *)memrchr((void *)&buf[i], 0x0d, n);
         i += n;
     } while (endbuf == NULL);
     close(fd);
@@ -216,7 +216,7 @@ void cInverter::poll() {
         // Reading mode
         if (!ups_qmod_changed) {
             if (query("QMOD") &&
-        		strcmp((char *)&buf[1], "NAK") != 0) {
+		strcmp((char *)&buf[1], "NAK") != 0) {
                 SetMode(buf[1]);
                 ups_qmod_changed = true;
             }
@@ -225,7 +225,7 @@ void cInverter::poll() {
         // reading status (QPIGS)
         if (!ups_qpigs_changed) {
             if (query("QPIGS") &&
-	        	strcmp((char *)&buf[1], "NAK") != 0) {
+		strcmp((char *)&buf[1], "NAK") != 0) {
                 m.lock();
                 strcpy(status1, (const char*)buf+1);
                 m.unlock();
@@ -236,7 +236,7 @@ void cInverter::poll() {
         // Reading QPIRI status
         if (!ups_qpiri_changed) {
             if (query("QPIRI") &&
-        		strcmp((char *)&buf[1], "NAK") != 0) {
+		strcmp((char *)&buf[1], "NAK") != 0) {
                 m.lock();
                 strcpy(status2, (const char*)buf+1);
                 m.unlock();
@@ -247,7 +247,7 @@ void cInverter::poll() {
         // Get any device warnings...
         if (!ups_qpiws_changed) {
             if (query("QPIWS") &&
-        		strcmp((char *)&buf[1], "NAK") != 0) {
+		strcmp((char *)&buf[1], "NAK") != 0) {
                 m.lock();
                 strcpy(warnings, (const char*)buf+1);
                 m.unlock();
