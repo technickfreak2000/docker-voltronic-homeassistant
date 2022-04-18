@@ -18,4 +18,4 @@ $UNBUFFER /opt/inverter-mqtt/mqtt-init.sh
 $UNBUFFER /opt/inverter-mqtt/mqtt-subscriber.sh &
 
 # Push poller updates every 30 seconds.
-while :; do $UNBUFFER /opt/inverter-mqtt/mqtt-push.sh; sleep 10; done
+while :; do $UNBUFFER /opt/inverter-mqtt/mqtt-push.sh; sleep 8; done
