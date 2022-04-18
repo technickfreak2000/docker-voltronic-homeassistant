@@ -202,23 +202,23 @@ int main(int argc, char* argv[]) {
             replylen = 5;
         else if (!strcmp(rawcmd.c_str(), "QOPM"))
             replylen = 6;
-	    else if (!strcmp(rawcmd.c_str(), "QMOD"))
+        else if (!strcmp(rawcmd.c_str(), "QMOD"))
             replylen = qmod;
-    	else if (!strcmp(rawcmd.c_str(), "QPIRI"))
+        else if (!strcmp(rawcmd.c_str(), "QPIRI"))
             replylen = qpiri;
-    	else if (!strcmp(rawcmd.c_str(), "QPIGS"))
+        else if (!strcmp(rawcmd.c_str(), "QPIGS"))
             replylen = qpigs;
-    	else if (!strcmp(rawcmd.c_str(), "QPIGS2"))
+        else if (!strcmp(rawcmd.c_str(), "QPIGS2"))
             replylen = 71;
-    	else if (!strcmp(rawcmd.c_str(), "QDI"))
+        else if (!strcmp(rawcmd.c_str(), "QDI"))
             replylen = 89;
-    	else if (!strcmp(rawcmd.c_str(), "QCST"))
+        else if (!strcmp(rawcmd.c_str(), "QCST"))
             replylen = 6;
-    	else if (!strcmp(rawcmd.c_str(), "QCVT"))
+        else if (!strcmp(rawcmd.c_str(), "QCVT"))
             replylen = 7;
-    	else if (!strcmp(rawcmd.c_str(), "QBEQI"))
+        else if (!strcmp(rawcmd.c_str(), "QBEQI"))
             replylen = 37;
-    	else if (!strcmp(rawcmd.c_str(), "QPIWS"))
+        else if (!strcmp(rawcmd.c_str(), "QPIWS"))
             replylen = qpiws;
         else replylen = 7;
         ups->ExecuteCmd(rawcmd, replylen);
