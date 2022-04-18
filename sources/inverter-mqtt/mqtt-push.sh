@@ -8,7 +8,6 @@ MQTT_DEVICENAME=`cat /etc/inverter/mqtt.json | jq '.devicename' -r`
 MQTT_SERIAL=`cat /etc/inverter/mqtt.json | jq '.serial' -r`
 MQTT_USERNAME=`cat /etc/inverter/mqtt.json | jq '.username' -r`
 MQTT_PASSWORD=`cat /etc/inverter/mqtt.json | jq '.password' -r`
-MQTT_CLIENTID=`cat /etc/inverter/mqtt.json | jq '.clientid' -r`
 
 
 if [[ $INFLUX_ENABLED == "true" ]] ; then
@@ -29,7 +28,7 @@ pushMQTTData () {
             -u "$MQTT_USERNAME" \
             -P "$MQTT_PASSWORD" \
             -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
-            -t "$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_$1/$1" \
+            -t "$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1" \
             -m "$2"
     
         if [[ $INFLUX_ENABLED == "true" ]] ; then

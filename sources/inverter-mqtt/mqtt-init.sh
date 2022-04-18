@@ -12,7 +12,6 @@ MQTT_SERIAL=`cat /etc/inverter/mqtt.json | jq '.serial' -r`
 MQTT_VER=`cat /etc/inverter/mqtt.json | jq '.ver' -r`
 MQTT_USERNAME=`cat /etc/inverter/mqtt.json | jq '.username' -r`
 MQTT_PASSWORD=`cat /etc/inverter/mqtt.json | jq '.password' -r`
-MQTT_CLIENTID=`cat /etc/inverter/mqtt.json | jq '.clientid' -r`
 
 registerTopic () {
     mosquitto_pub \
@@ -21,13 +20,13 @@ registerTopic () {
         -u "$MQTT_USERNAME" \
         -P "$MQTT_PASSWORD" \
         -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
-        -t "$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_$1/config" \
+        -t ""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/config" \
         -r \
         -m "{
-            \"name\": \""$MQTT_DEVICENAME"_$1\",
+            \"name\": \"$1_"$MQTT_DEVICENAME"\",
             \"uniq_id\": \""$MQTT_SERIAL"_$1\",
             \"device\": { \"ids\": \""$MQTT_SERIAL"\", \"mf\": \""$MQTT_MANUFACTURER"\", \"mdl\": \""$MQTT_MODEL"\", \"name\": \""$MQTT_DEVICENAME"\", \"sw\": \""$MQTT_VER"\"},
-            \"state_topic\": \"$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_$1\",
+            \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1\",
             \"state_class\": \"measurement\",
             \"unit_of_measurement\": \"$2\",
             \"icon\": \"mdi:$3\"
@@ -40,8 +39,8 @@ registerEnergyTopic () {
         -u "$MQTT_USERNAME" \
         -P "$MQTT_PASSWORD" \
         -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
-        -t "$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_$1/$1/LastReset" \
-		-r \
+        -t "$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/LastReset" \
+        -r \
         -m "1970-01-01T00:00:00+00:00"
 
     mosquitto_pub \
@@ -53,10 +52,10 @@ registerEnergyTopic () {
         -t ""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/config" \
         -r \
         -m "{
-            \"name\": \""$MQTT_DEVICENAME"_$1\",
+            \"name\": \"$1_"$MQTT_DEVICENAME"\",
             \"uniq_id\": \""$MQTT_SERIAL"_$1\",
             \"device\": { \"ids\": \""$MQTT_SERIAL"\", \"mf\": \""$MQTT_MANUFACTURER"\", \"mdl\": \""$MQTT_MODEL"\", \"name\": \""$MQTT_DEVICENAME"\", \"sw\": \""$MQTT_VER"\"},
-            \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_$1/$1\",
+            \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1\",
             \"state_class\": \"total_increasing\",
             \"device_class\": \"$4\",
             \"unit_of_measurement\": \"$2\",
@@ -70,13 +69,13 @@ registerModeTopic () {
         -u "$MQTT_USERNAME" \
         -P "$MQTT_PASSWORD" \
         -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
-        -t ""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_$1/$1/config" \
+        -t ""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/config" \
         -r \
         -m "{
-            \"name\": \""$MQTT_DEVICENAME"_$1\",
+            \"name\": \"$1_"$MQTT_DEVICENAME"\",
             \"uniq_id\": \""$MQTT_SERIAL"_$1\",
             \"device\": { \"ids\": \""$MQTT_SERIAL"\", \"mf\": \""$MQTT_MANUFACTURER"\", \"mdl\": \""$MQTT_MODEL"\", \"name\": \""$MQTT_DEVICENAME"\", \"sw\": \""$MQTT_VER"\"},
-            \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_$1/$1\",
+            \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1\",
             \"icon\": \"mdi:$2\"
         }"
 }
@@ -87,13 +86,13 @@ registerInverterRawCMD () {
         -u "$MQTT_USERNAME" \
         -P "$MQTT_PASSWORD" \
         -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
-        -t "$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_$1/COMMANDS/config" \
+        -t ""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/COMMANDS/config" \
         -r \
         -m "{
-            \"name\": \""$MQTT_DEVICENAME"_$1_COMMANDS\",
+            \"name\": \""$MQTT_DEVICENAME"_COMMANDS\",
             \"uniq_id\": \""$MQTT_DEVICENAME"_"$MQTT_SERIAL"\",
             \"device\": { \"ids\": \""$MQTT_SERIAL"\", \"mf\": \""$MQTT_MANUFACTURER"\", \"mdl\": \""$MQTT_MODEL"\", \"name\": \""$MQTT_DEVICENAME"\", \"sw\": \""$MQTT_VER"\"},
-            \"state_topic\": \"$MQTT_TOPIC/sensor/$MQTT_DEVICENAME"_$1/COMMANDS\"
+            \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/COMMANDS\"
             }"
 }
 
