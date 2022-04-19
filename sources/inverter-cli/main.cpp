@@ -42,6 +42,7 @@ atomic_bool ups_cmd_executed(false);
 // Global configs read from 'inverter.conf'
 
 string devicename;
+int runinterval;
 float ampfactor;
 float wattfactor;
 int qpiri, qpiws, qmod, qpigs;
