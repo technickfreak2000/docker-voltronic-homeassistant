@@ -23,7 +23,7 @@ registerTopic () {
         -t ""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/config" \
         -r \
         -m "{
-            \"name\": \"$5"\",
+            \"name\": \"$5\",
             \"uniq_id\": \""$MQTT_SERIAL"_$1\",
             \"device\": { \"ids\": \""$MQTT_SERIAL"\", \"mf\": \""$MQTT_MANUFACTURER"\", \"mdl\": \""$MQTT_MODEL"\", \"name\": \""$MQTT_DEVICENAME"\", \"sw\": \""$MQTT_VER"\"},
             \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1\",
@@ -53,7 +53,7 @@ registerEnergyTopic () {
         -t ""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/config" \
         -r \
         -m "{
-            \"name\": \"$5"\",
+            \"name\": \"$5\",
             \"uniq_id\": \""$MQTT_SERIAL"_$1\",
             \"device\": { \"ids\": \""$MQTT_SERIAL"\", \"mf\": \""$MQTT_MANUFACTURER"\", \"mdl\": \""$MQTT_MODEL"\", \"name\": \""$MQTT_DEVICENAME"\", \"sw\": \""$MQTT_VER"\"},
             \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1\",
@@ -119,14 +119,14 @@ registerTopic "Load_pct" "%" "brightness-percent" "none" "Load pct"
 registerTopic "Load_status_on" "" "power" "none" "Load status on"
 registerTopic "Load_va" "VA" "chart-bell-curve" "apparent_power" "Load va"
 registerTopic "Load_watt" "W" "chart-bell-curve" "power" "Load watt"
-registerEnergyTopic "Load_watthour" "Wh" "chart-bell-curve" "energy" "Load watthour"
+registerEnergyTopic "Load_watthour" "kWh" "chart-bell-curve" "energy" "Load kWatthour"
 registerTopic "Max_charge_current" "A" "current-ac" "current" "Max charge current"
 registerTopic "Max_grid_charge_current" "A" "current-ac" "current" "Max grid charge current"
 registerModeTopic "Inverter_mode" "" "solar-power" "none" "Inverter mode" # 1 = Power_On, 2 = Standby, 3 = Line, 4 = Battery, 5 = Fault, 6 = Power_Saving, 7 = Unknown
 registerTopic "Out_source_priority" "" "grid" "none" "Out source priority"
 registerTopic "PV_in_current" "A" "solar-panel-large" "current" "PV in current"
 registerTopic "PV_in_voltage" "V" "solar-panel-large" "voltage" "PV in voltage"
-registerEnergyTopic "PV_in_watthour" "Wh" "solar-panel-large" "energy" "PV in watthour"
+registerEnergyTopic "PV_in_watthour" "kWh" "solar-panel-large" "energy" "PV in kWatthour"
 registerTopic "PV_in_watts" "W" "solar-panel-large" "power" "PV in watts"
 registerTopic "SCC_charge_on" "" "power" "none" "SCC charge on"
 registerTopic "SCC_voltage" "V" "current-dc" "voltage" "SCC voltage"
