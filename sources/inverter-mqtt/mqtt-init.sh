@@ -98,7 +98,7 @@ registerInverterRawCMD () {
 }
 
 #              $1code    $2unit of measure  $3mdi $4class   $5name
-registerTopic "AC_charge_on" "" "power" "None" "AC charge on"
+registerTopic "AC_charge_on" "" "power" "" "AC charge on"
 registerTopic "AC_grid_frequency" "Hz" "current-ac" "frequency" "AC grid frequency"
 registerTopic "AC_grid_voltage" "V" "power-plug" "voltage" "AC grid voltage"
 registerTopic "AC_out_frequency" "Hz" "current-ac" "frequency" "AC out frequency"
@@ -113,22 +113,22 @@ registerTopic "Battery_redischarge_voltage" "V" "battery-negative" "voltage" "Ba
 registerTopic "Battery_under_voltage" "V" "current-dc" "voltage" "Battery under voltage"
 registerTopic "Battery_voltage" "V" "battery-outline" "voltage" "Battery voltage"
 registerTopic "Bus_voltage" "V" "details" "voltage" "Bus voltage"
-registerTopic "Charger_source_priority" "" "solar-power" "None" "Charger source priority"
+registerTopic "Charger_source_priority" "" "solar-power" "" "Charger source priority"
 registerTopic "Heatsink_temperature" "°C" "details" "temperature" "Heatsink temperature"
-registerTopic "Load_pct" "%" "brightness-percent" "None" "Load pct"
-registerTopic "Load_status_on" "" "power" "None" "Load status on"
+registerTopic "Load_pct" "%" "brightness-percent" "" "Load pct"
+registerTopic "Load_status_on" "" "power" "" "Load status on"
 registerTopic "Load_va" "VA" "chart-bell-curve" "apparent_power" "Load va"
 registerTopic "Load_watt" "W" "chart-bell-curve" "power" "Load watt"
 registerEnergyTopic "Load_watthour" "kWh" "chart-bell-curve" "energy" "Load kWatthour"
 registerTopic "Max_charge_current" "A" "current-ac" "current" "Max charge current"
 registerTopic "Max_grid_charge_current" "A" "current-ac" "current" "Max grid charge current"
-registerModeTopic "Inverter_mode" "" "solar-power" "None" "Inverter mode" # 1 = Power_On, 2 = Standby, 3 = Line, 4 = Battery, 5 = Fault, 6 = Power_Saving, 7 = Unknown
-registerTopic "Out_source_priority" "" "grid" "None" "Out source priority"
+registerModeTopic "Inverter_mode" "" "solar-power" "" "Inverter mode" # 1 = Power_On, 2 = Standby, 3 = Line, 4 = Battery, 5 = Fault, 6 = Power_Saving, 7 = Unknown
+registerTopic "Out_source_priority" "" "grid" "" "Out source priority"
 registerTopic "PV_in_current" "A" "solar-panel-large" "current" "PV in current"
 registerTopic "PV_in_voltage" "V" "solar-panel-large" "voltage" "PV in voltage"
 registerEnergyTopic "PV_in_watthour" "kWh" "solar-panel-large" "energy" "PV in kWatthour"
 registerTopic "PV_in_watts" "W" "solar-panel-large" "power" "PV in watts"
-registerTopic "SCC_charge_on" "" "power" "None" "SCC charge on"
+registerTopic "SCC_charge_on" "" "power" "" "SCC charge on"
 registerTopic "SCC_voltage" "V" "current-dc" "voltage" "SCC voltage"
 
 # Add in a separate topic so we can send raw commands from assistant back to the inverter via MQTT (such as changing power modes etc)...
