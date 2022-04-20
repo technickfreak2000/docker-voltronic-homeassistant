@@ -77,6 +77,7 @@ registerModeTopic () {
             \"uniq_id\": \""$MQTT_SERIAL"_$1\",
             \"device\": { \"ids\": \""$MQTT_SERIAL"\", \"mf\": \""$MQTT_MANUFACTURER"\", \"mdl\": \""$MQTT_MODEL"\", \"name\": \""$MQTT_DEVICENAME"\", \"sw\": \""$MQTT_VER"\"},
             \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1\",
+            \"unit_of_measurement\": \"$2\",
             \"icon\": \"mdi:$3\"
         }"
 }
@@ -130,6 +131,7 @@ registerEnergyTopic "PV_in_watthour" "kWh" "solar-panel-large" "energy" "PV in k
 registerTopic "PV_in_watts" "W" "solar-panel-large" "power" "PV in watts"
 registerModeTopic "SCC_charge_on" "" "power" "None" "SCC charge on"
 registerTopic "SCC_voltage" "V" "current-dc" "voltage" "SCC voltage"
+registerModeTopic "Warnings" "" "power" "None" "Warnings"
 
 # Add in a separate topic so we can send raw commands from assistant back to the inverter via MQTT (such as changing power modes etc)...
 registerInverterRawCMD
