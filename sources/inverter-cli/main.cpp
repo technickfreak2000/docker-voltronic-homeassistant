@@ -172,45 +172,7 @@ float batt_redischarge_voltage;
     ups = new cInverter(devicename);
     // Logic to send 'raw commands' to the inverter..
     if (!rawcmd.empty()) {
-        int replylen;
-        if (!strcmp(rawcmd.c_str(), "QPI"))
-            replylen = 8;
-        else if (!strcmp(rawcmd.c_str(), "QID"))
-            replylen = 18;
-        else if (!strcmp(rawcmd.c_str(), "QVFW"))
-            replylen = 18;
-        else if (!strcmp(rawcmd.c_str(), "QVFW2"))
-            replylen = 19;
-        else if (!strcmp(rawcmd.c_str(), "QVFW3"))
-            replylen = 19;
-        else if (!strcmp(rawcmd.c_str(), "QVFW4"))
-            replylen = 19;
-        else if (!strcmp(rawcmd.c_str(), "QFLAG"))
-            replylen = 15;
-        else if (!strcmp(rawcmd.c_str(), "QBOOT"))
-            replylen = 5;
-        else if (!strcmp(rawcmd.c_str(), "QOPM"))
-            replylen = 6;
-        else if (!strcmp(rawcmd.c_str(), "QMOD"))
-            replylen = qmod;
-        else if (!strcmp(rawcmd.c_str(), "QPIRI"))
-            replylen = qpiri;
-        else if (!strcmp(rawcmd.c_str(), "QPIGS"))
-            replylen = qpigs;
-        else if (!strcmp(rawcmd.c_str(), "QPIGS2"))
-            replylen = 71;
-        else if (!strcmp(rawcmd.c_str(), "QDI"))
-            replylen = 89;
-        else if (!strcmp(rawcmd.c_str(), "QCST"))
-            replylen = 6;
-        else if (!strcmp(rawcmd.c_str(), "QCVT"))
-            replylen = 7;
-        else if (!strcmp(rawcmd.c_str(), "QBEQI"))
-            replylen = 37;
-        else if (!strcmp(rawcmd.c_str(), "QPIWS"))
-            replylen = qpiws;
-        else replylen = 7;
-        ups->ExecuteCmd(rawcmd, replylen);
+        ups->ExecuteCmd(rawcmd);
       // We can piggyback on either GetStatus() function to return our result, it doesn't matter which
         printf("Reply:  %s\n", ups->GetQpiriStatus()->c_str());
         exit(0);
