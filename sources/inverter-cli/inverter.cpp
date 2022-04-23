@@ -74,25 +74,25 @@ bool cInverter::query(const char *cmd) {
     return false;
   }
 
-    // Once connected, set the baud rate and other serial config (Don't rely on this being correct on the system by default...)
-    speed_t baud = B2400;
+  // Once connected, set the baud rate and other serial config (Don't rely on this being correct on the system by default...)
+  speed_t baud = B2400;
 
-    // Speed settings (in this case, 2400 8N1)
-    struct termios settings;
-    tcgetattr(fd, &settings);
+  // Speed settings (in this case, 2400 8N1)
+  struct termios settings;
+  tcgetattr(fd, &settings);
 
-    cfsetospeed(&settings, baud);      // baud rate
-    settings.c_cflag &= ~PARENB;       // no parity
-    settings.c_cflag &= ~CSTOPB;       // 1 stop bit
-    settings.c_cflag &= ~CSIZE;
-    settings.c_cflag |= CS8 | CLOCAL;  // 8 bits
-    // settings.c_lflag = ICANON;         // canonical mode
-    settings.c_oflag &= ~OPOST;        // raw output
+  cfsetospeed(&settings, baud);      // baud rate
+  settings.c_cflag &= ~PARENB;       // no parity
+  settings.c_cflag &= ~CSTOPB;       // 1 stop bit
+  settings.c_cflag &= ~CSIZE;
+  settings.c_cflag |= CS8 | CLOCAL;  // 8 bits
+  // settings.c_lflag = ICANON;         // canonical mode
+  settings.c_oflag &= ~OPOST;        // raw output
 
-    tcsetattr(fd, TCSANOW, &settings); // apply the settings
-    tcflush(fd, TCOFLUSH);
+  tcsetattr(fd, TCSANOW, &settings); // apply the settings
+  tcflush(fd, TCOFLUSH);
 
-    // ---------------------------------------------------------------
+  // ---------------------------------------------------------------
 
   // Generating CRC for a command
   uint16_t crc = cal_crc_half((uint8_t*)cmd, strlen(cmd));
