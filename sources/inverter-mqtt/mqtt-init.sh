@@ -33,36 +33,37 @@ registerTopic () {
             \"icon\": \"mdi:$3\"
         }"
 }
-registerEnergyTopic () {
-    mosquitto_pub \
-        -h $MQTT_SERVER \
-        -p $MQTT_PORT \
-        -u "$MQTT_USERNAME" \
-        -P "$MQTT_PASSWORD" \
-        -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
-        -t "$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/LastReset" \
-        -r \
-        -m "1970-01-01T00:00:00+00:00"
+# Remove the energy topic because they are not good for HA. Device class:total increasing or total it will add in statistics the differences between states, and we need to make sum of states. Best cases it is useful for influxdb.
+# registerEnergyTopic () {
+#     mosquitto_pub \
+#         -h $MQTT_SERVER \
+#         -p $MQTT_PORT \
+#         -u "$MQTT_USERNAME" \
+#         -P "$MQTT_PASSWORD" \
+#         -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
+#         -t "$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/LastReset" \
+#         -r \
+#         -m "1970-01-01T00:00:00+00:00"
 
-    mosquitto_pub \
-        -h $MQTT_SERVER \
-        -p $MQTT_PORT \
-        -u "$MQTT_USERNAME" \
-        -P "$MQTT_PASSWORD" \
-        -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
-        -t ""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/config" \
-        -r \
-        -m "{
-            \"name\": \"$5\",
-            \"uniq_id\": \""$MQTT_SERIAL"_$1\",
-            \"device\": { \"ids\": \""$MQTT_SERIAL"\", \"mf\": \""$MQTT_MANUFACTURER"\", \"mdl\": \""$MQTT_MODEL"\", \"name\": \""$MQTT_DEVICENAME"\", \"sw\": \""$MQTT_VER"\"},
-            \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1\",
-            \"state_class\": \"total_increasing\",
-            \"device_class\": \"$4\",
-            \"unit_of_measurement\": \"$2\",
-            \"icon\": \"mdi:$3\"
-        }"
-}
+#     mosquitto_pub \
+#         -h $MQTT_SERVER \
+#         -p $MQTT_PORT \
+#         -u "$MQTT_USERNAME" \
+#         -P "$MQTT_PASSWORD" \
+#         -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
+#         -t ""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/config" \
+#         -r \
+#         -m "{
+#             \"name\": \"$5\",
+#             \"uniq_id\": \""$MQTT_SERIAL"_$1\",
+#             \"device\": { \"ids\": \""$MQTT_SERIAL"\", \"mf\": \""$MQTT_MANUFACTURER"\", \"mdl\": \""$MQTT_MODEL"\", \"name\": \""$MQTT_DEVICENAME"\", \"sw\": \""$MQTT_VER"\"},
+#             \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1\",
+#             \"state_class\": \"total_increasing\",
+#             \"device_class\": \"$4\",
+#             \"unit_of_measurement\": \"$2\",
+#             \"icon\": \"mdi:$3\"
+#         }"
+# }
 registerModeTopic () {
     mosquitto_pub \
         -h $MQTT_SERVER \
@@ -120,14 +121,14 @@ registerModeTopic "Load_pct" "%" "brightness-percent" "None" "Load pct"
 registerModeTopic "Load_status_on" "" "power" "None" "Load status on"
 registerTopic "Load_va" "VA" "chart-bell-curve" "apparent_power" "Load va"
 registerTopic "Load_watt" "W" "chart-bell-curve" "power" "Load watt"
-registerEnergyTopic "Load_watthour" "kWh" "chart-bell-curve" "energy" "Load kWatthour"
+# registerEnergyTopic "Load_watthour" "kWh" "chart-bell-curve" "energy" "Load kWatthour"
 registerTopic "Max_charge_current" "A" "current-ac" "current" "Max charge current"
 registerTopic "Max_grid_charge_current" "A" "current-ac" "current" "Max grid charge current"
 registerModeTopic "Inverter_mode" "" "solar-power" "None" "Inverter mode" # 1 = Power_On, 2 = Standby, 3 = Line, 4 = Battery, 5 = Fault, 6 = Power_Saving, 7 = Unknown
 registerModeTopic "Out_source_priority" "" "grid" "None" "Out source priority"
 registerTopic "PV_in_current" "A" "solar-panel-large" "current" "PV in current"
 registerTopic "PV_in_voltage" "V" "solar-panel-large" "voltage" "PV in voltage"
-registerEnergyTopic "PV_in_watthour" "kWh" "solar-panel-large" "energy" "PV in kWatthour"
+# registerEnergyTopic "PV_in_watthour" "kWh" "solar-panel-large" "energy" "PV in kWatthour"
 registerTopic "PV_in_watts" "W" "solar-panel-large" "power" "PV in watts"
 registerModeTopic "SCC_charge_on" "" "power" "None" "SCC charge on"
 registerTopic "SCC_voltage" "V" "current-dc" "voltage" "SCC voltage"
