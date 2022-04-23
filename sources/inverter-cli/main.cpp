@@ -27,9 +27,7 @@
 
 bool debugFlag = false;
 bool runOnce = false;
-
 cInverter *ups = NULL;
-
 atomic_bool ups_status_changed(false);
 atomic_bool ups_qmod_changed(false);
 atomic_bool ups_qpiri_changed(false);
@@ -45,7 +43,6 @@ string devicename;
 // int runinterval;
 float ampfactor;
 float wattfactor;
-int qpiri, qpiws, qmod, qpigs;
 
 // ---------------------------------------
 
@@ -68,16 +65,13 @@ void attemptAddSetting(float *addTo, string addFrom) {
 }
 
 void getSettingsFile(string filename) {
-
     try {
         string fileline, linepart1, linepart2;
         ifstream infile;
         infile.open(filename);
-
         while(!infile.eof()) {
             getline(infile, fileline);
             size_t firstpos = fileline.find("#");
-
             if(firstpos != 0 && fileline.length() != 0) {    // Ignore lines starting with # (comment lines)
                 size_t delimiter = fileline.find("=");
                 linepart1 = fileline.substr(0, delimiter);
@@ -91,16 +85,6 @@ void getSettingsFile(string filename) {
                     attemptAddSetting(&ampfactor, linepart2);
                 else if(linepart1 == "watt_factor")
                     attemptAddSetting(&wattfactor, linepart2);
-                // else if(linepart1 == "watt_factor")
-                //     attemptAddSetting(&wattfactor, linepart2);
-                else if(linepart1 == "qpiri")
-                    attemptAddSetting(&qpiri, linepart2);
-                else if(linepart1 == "qpiws")
-                    attemptAddSetting(&qpiws, linepart2);
-                else if(linepart1 == "qmod")
-                    attemptAddSetting(&qmod, linepart2);
-                else if(linepart1 == "qpigs")
-                    attemptAddSetting(&qpigs, linepart2);
                 else
                     continue;
             }
@@ -113,56 +97,55 @@ void getSettingsFile(string filename) {
 
 int main(int argc, char* argv[]) {
 
-    // Reply1
-    float voltage_grid;
-    float freq_grid;
-    float voltage_out;
-    float freq_out;
-    int load_va;
-    int load_watt;
-    int load_percent;
-    int voltage_bus;
-    float voltage_batt;
-    int batt_charge_current;
-    int batt_capacity;
-    int temp_heatsink;
-    float pv_input_current;
-    float pv_input_voltage;
-    float pv_input_watts;
-    // float pv_input_watthour;
-    // float load_watthour = 0;
-    float scc_voltage;
-    int batt_discharge_current;
-    char device_status[9];
+// Reply1
+float voltage_grid;
+float freq_grid;
+float voltage_out;
+float freq_out;
+int load_va;
+int load_watt;
+int load_percent;
+int voltage_bus;
+float voltage_batt;
+int batt_charge_current;
+int batt_capacity;
+int temp_heatsink;
+float pv_input_current;
+float pv_input_voltage;
+float pv_input_watts;
+// float pv_input_watthour;
+// float load_watthour = 0;
+float scc_voltage;
+int batt_discharge_current;
+char device_status[9];
 
-    // Reply2
-    float grid_voltage_rating;
-    float grid_current_rating;
-    float out_voltage_rating;
-    float out_freq_rating;
-    float out_current_rating;
-    int out_va_rating;
-    int out_watt_rating;
-    float batt_rating;
-    float batt_recharge_voltage;
-    float batt_under_voltage;
-    float batt_bulk_voltage;
-    float batt_float_voltage;
-    int batt_type;
-    int max_grid_charge_current;
-    int max_charge_current;
-    int in_voltage_range;
-    int out_source_priority;
-    int charger_source_priority;
-    int machine_type;
-    int topology;
-    int out_mode;
-    float batt_redischarge_voltage;
+// Reply2
+float grid_voltage_rating;
+float grid_current_rating;
+float out_voltage_rating;
+float out_freq_rating;
+float out_current_rating;
+int out_va_rating;
+int out_watt_rating;
+float batt_rating;
+float batt_recharge_voltage;
+float batt_under_voltage;
+float batt_bulk_voltage;
+float batt_float_voltage;
+int batt_type;
+int max_grid_charge_current;
+int max_charge_current;
+int in_voltage_range;
+int out_source_priority;
+int charger_source_priority;
+int machine_type;
+int topology;
+int out_mode;
+float batt_redischarge_voltage;
 
     // Get command flag settings from the arguments (if any)
     InputParser cmdArgs(argc, argv);
     const string &rawcmd = cmdArgs.getCmdOption("-r");
-
     if(cmdArgs.cmdOptionExists("-h") || cmdArgs.cmdOptionExists("--help")) {
         return print_help();
     }
@@ -186,8 +169,7 @@ int main(int argc, char* argv[]) {
     while (flock(fd, LOCK_EX)) sleep(1);
 
     bool ups_status_changed(false);
-    ups = new cInverter(devicename,qpiri,qpiws,qmod,qpigs);
-
+    ups = new cInverter(devicename);
     // Logic to send 'raw commands' to the inverter..
     if (!rawcmd.empty()) {
         int replylen;
@@ -229,7 +211,7 @@ int main(int argc, char* argv[]) {
             replylen = qpiws;
         else replylen = 7;
         ups->ExecuteCmd(rawcmd, replylen);
-        // We're piggybacking off the qpri status response...
+      // We can piggyback on either GetStatus() function to return our result, it doesn't matter which
         printf("Reply:  %s\n", ups->GetQpiriStatus()->c_str());
         exit(0);
     }
@@ -241,17 +223,19 @@ int main(int argc, char* argv[]) {
         ups->runMultiThread();
 
     while (true) {
+        lprintf("DEBUG:  Start loop");
+      // If inverter mode changes print it to screen
+
         if (ups_status_changed) {
             int mode = ups->GetMode();
-
             if (mode)
                 lprintf("INVERTER: Mode Currently set to: %d", mode);
 
             ups_status_changed = false;
         }
 
+      // Once we receive all queries print it to screen
         if (ups_qmod_changed && ups_qpiri_changed && ups_qpigs_changed) {
-
             ups_qmod_changed = false;
             ups_qpiri_changed = false;
             ups_qpigs_changed = false;
@@ -323,7 +307,6 @@ int main(int argc, char* argv[]) {
                 // It appears on further inspection of the documentation, that the input current is actually
                 // current that is going out to the battery at battery voltage (NOT at PV voltage).  This
                 // would explain the larger discrepancy we saw before.
-
                 pv_input_watts = (scc_voltage * pv_input_current) * wattfactor;
 
                 // Calculate watt-hours generated per run interval period (given as program argument)
