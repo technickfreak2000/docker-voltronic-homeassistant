@@ -147,3 +147,22 @@ Note that in addition to merging the sample Yaml files with your Home Assistant,
 
  - [vertical-stack-in-card](https://github.com/custom-cards/vertical-stack-in-card)
  - [circle-sensor-card](https://github.com/custom-cards/circle-sensor-card)
+
+credit and many thansk for kchiem, 
+when you will use this fork you need to do the following commands on your device:
+cd /opt/ha-inverter-mqtt-agent
+sudo docker-compose down
+cd ..
+sudo rm -rf ha-inverter-mqtt-agent
+sudo git clone https://github.com/catalinbordan/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
+sudo nano config/mqtt.json 
+change it with your variables
+sudo docker-compose build
+sudo docker-compose up -d
+
+
+
+sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -r PBDV26.1'
+
+
+sudo python3 /bin/monitor.py &
