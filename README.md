@@ -148,7 +148,7 @@ Note that in addition to merging the sample Yaml files with your Home Assistant,
  - [vertical-stack-in-card](https://github.com/custom-cards/vertical-stack-in-card)
  - [circle-sensor-card](https://github.com/custom-cards/circle-sensor-card)
 
-credit and many thansk for kchiem, 
+credit and many thansk for kchiem, dilyanpalauzov, nrm21, 
 when you will use this fork you need to do the following commands on your device:
 cd /opt/ha-inverter-mqtt-agent
 sudo docker-compose down
