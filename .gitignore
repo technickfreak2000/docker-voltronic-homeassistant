@@ -7,3 +7,4 @@ cmake_install.cmake
 Makefile
 .DS_Store
 .vscode/settings.json
+sources/inverter-cli/ha_local_docker_build_v2.diff

@@ -117,7 +117,11 @@ float pv_input_watts;
 // float load_watthour = 0;
 float scc_voltage;
 int batt_discharge_current;
-char device_status[9];
+char device_status[8];
+int battery_voltage_offset_for_fans_on;
+int eeprom_version;
+int pv_charging_power;
+char device_status2[3];
 
 // Reply2
 float grid_voltage_rating;
@@ -210,7 +214,7 @@ float batt_redischarge_voltage;
             if (reply1 && reply2 && warnings) {
 
                 // Parse and display values, QPIGS, * means contained in output, ^ is not included in output
-                sscanf(reply1->c_str(), "%f %f %f %f %d %d %d %d %f %d %d %d %f %f %f %d %s",
+                sscanf(reply1->c_str(), "%f %f %f %f %d %d %d %d %f %d %d %d %f %f %f %d %s %d %d %d %s",
                        &voltage_grid,          // * Grid voltage
                        &freq_grid,             // * Grid frequency
                        &voltage_out,           // * AC output voltage
@@ -227,7 +231,12 @@ float batt_redischarge_voltage;
                        &pv_input_voltage,      // * PV Input voltage 1
                        &scc_voltage,           // * Battery voltage from SCC (V)
                        &batt_discharge_current,// * Battery discharge current
-                       &device_status);        //
+                       &device_status,        //
+                       &battery_voltage_offset_for_fans_on,
+                       &eeprom_version,
+                       &pv_charging_power,
+                       &device_status2);
+
                 char parallel_max_num; //QPIRI
                 sscanf(reply2->c_str(), "%f %f %f %f %f %d %d %f %f %f %f %f %d %d %d %d %d %d %c %d %d %d %f",
                        &grid_voltage_rating,      // ^ Grid rating voltage
@@ -298,9 +307,15 @@ float batt_redischarge_voltage;
                 printf("  \"Battery_voltage\":%.2f,\n", voltage_batt);    // QPIGS
                 printf("  \"Battery_charge_current\":%d,\n", batt_charge_current); // QPIGS 
                 printf("  \"Battery_discharge_current\":%d,\n", batt_discharge_current); // QPIGS
-                printf("  \"Load_status_on\":%c,\n", device_status[3]);   //
-                printf("  \"SCC_charge_on\":%c,\n", device_status[6]);    //
-                printf("  \"AC_charge_on\":%c,\n", device_status[7]);     //
+                printf("  \"Load_status_on\":%c,\n", device_status[3]);   // QPIGS
+                printf("  \"SCC_charge_on\":%c,\n", device_status[6]);    // QPIGS
+                printf("  \"AC_charge_on\":%c,\n", device_status[7]);     // QPIGS
+                printf("  \"Battery_voltage_offset_for_fans_on\":%d,\n", battery_voltage_offset_for_fans_on); // QPIGS
+                printf("  \"Eeprom_version\":%d,\n", eeprom_version); // QPIGS
+                printf("  \"PV_charging_power\":%d,\n", pv_charging_power); // QPIGS
+                printf("  \"Charging_to_floating_mode\":%c,\n", device_status2[0]);   // QPIGS
+                printf("  \"Switch_On\":%c,\n", device_status2[1]);    // QPIGS
+                printf("  \"Dustproof_installed\":%c,\n", device_status2[2]);     // QPIGS
                 printf("  \"Battery_recharge_voltage\":%.1f,\n", batt_recharge_voltage); // QPIRI
                 printf("  \"Battery_under_voltage\":%.1f,\n", batt_under_voltage); // QPIRI
                 printf("  \"Battery_bulk_voltage\":%.1f,\n", batt_bulk_voltage);  // QPIRI

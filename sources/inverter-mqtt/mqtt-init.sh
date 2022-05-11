@@ -114,8 +114,12 @@ registerTopic "Battery_recharge_voltage" "V" "current-dc" "voltage" "Battery rec
 registerTopic "Battery_redischarge_voltage" "V" "battery-negative" "voltage" "Battery redischarge voltage"
 registerTopic "Battery_under_voltage" "V" "current-dc" "voltage" "Battery under voltage"
 registerTopic "Battery_voltage" "V" "battery-outline" "voltage" "Battery voltage"
+registerTopic "Battery_voltage_offset_for_fans_on" "10mV" "battery-outline" "voltage" "Battery voltage offset for fans on"
 registerTopic "Bus_voltage" "V" "details" "voltage" "Bus voltage"
 registerModeTopic "Charger_source_priority" "" "solar-power" "None" "Charger source priority"
+registerModeTopic "Charging_to_floating_mode" "" "solar-power" "None" "Charging to floating mode"
+registerModeTopic "Dustproof_installed" "" "solar-power" "None" "Dustproof installed" # 1-dustproof installed,0-no dustproof
+registerModeTopic "Eeprom_version" "" "power" "None" "Eeprom version"
 registerTopic "Heatsink_temperature" "°C" "details" "temperature" "Heatsink temperature"
 registerModeTopic "Load_pct" "%" "brightness-percent" "None" "Load pct"
 registerModeTopic "Load_status_on" "" "power" "None" "Load status on"
@@ -130,8 +134,10 @@ registerTopic "PV_in_current" "A" "solar-panel-large" "current" "PV in current"
 registerTopic "PV_in_voltage" "V" "solar-panel-large" "voltage" "PV in voltage"
 # registerEnergyTopic "PV_in_watthour" "kWh" "solar-panel-large" "energy" "PV in kWatthour"
 registerTopic "PV_in_watts" "W" "solar-panel-large" "power" "PV in watts"
+registerTopic "PV_charging_power" "W" "solar-panel-large" "power" "PV charging power"
 registerModeTopic "SCC_charge_on" "" "power" "None" "SCC charge on"
 registerTopic "SCC_voltage" "V" "current-dc" "voltage" "SCC voltage"
+registerModeTopic "Switch_On" "" "power" "None" "Switch On"
 registerModeTopic "Warnings" "" "power" "None" "Warnings"
 
 # Add in a separate topic so we can send raw commands from assistant back to the inverter via MQTT (such as changing power modes etc)...
