@@ -148,21 +148,23 @@ Note that in addition to merging the sample Yaml files with your Home Assistant,
  - [vertical-stack-in-card](https://github.com/custom-cards/vertical-stack-in-card)
  - [circle-sensor-card](https://github.com/custom-cards/circle-sensor-card)
 
-credit and many thansk for kchiem, dilyanpalauzov, nrm21, 
-when you will use this fork you need to do the following commands on your device:
-cd /opt/ha-inverter-mqtt-agent
-sudo docker-compose down
-cd ..
-sudo rm -rf ha-inverter-mqtt-agent
-sudo git clone https://github.com/catalinbordan/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
-sudo nano config/mqtt.json 
-change it with your variables
-sudo docker-compose build
-sudo docker-compose up -d
+
+===========================
+
+Credit and many thanks for kchiem, dilyanpalauzov, nrm21,
+
+When you will use this fork you need to do the following commands on your device:
+1) cd /opt/ha-inverter-mqtt-agent
+2) sudo docker-compose down
+3) cd ..
+4) sudo rm -rf ha-inverter-mqtt-agent
+5) sudo git clone https://github.com/catalinbordan/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
+6) sudo nano config/mqtt.json (change it with your variables)
+7) sudo docker-compose build
+8) sudo docker-compose up -d
 
 
+example of command for Set battery re-discharge voltage to 26.1V
 
 sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -r PBDV26.1'
 
-
-sudo python3 /bin/monitor.py &
