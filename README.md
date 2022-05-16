@@ -168,3 +168,10 @@ example of command for Set battery re-discharge voltage to 26.1V
 
 sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -r PBDV26.1'
 
+
+==================================================================
+
+I have put in home assistant folder the examples of what I have for sending commands to inverter, template sensor for warnings, etc. 
+For the input buttons you will use the helpers in HA to create them. 
+The names and the option of them look in automations examples.
+
