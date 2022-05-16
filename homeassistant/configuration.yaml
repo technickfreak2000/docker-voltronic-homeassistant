@@ -1,0 +1,267 @@
+# You will need to merge with your own Home Assistant configuration.yml file...
+
+input_select:
+  solar_output_source_priority:
+    name: Solar Output Source Priority
+    options:
+      - POP00 (Utility first)
+      - POP01 (Solar first)
+      - POP02 (SBU)
+
+  solar_charger_priority:
+    name: Solar Charger Priority Order
+    options:
+      - PCP00 (Utility first)
+      - PCP01 (Solar first)
+      - PCP02 (Solar and utility)
+      - PCP03 (Solar only)
+
+
+# Automations of Solar PV Inverter (such as when to charge batteries off grid / from PV etc)...
+# This will automatically fire off the event to the inverter when changed in the UI.
+
+# mpp_92331908103079 need to be changed with what you have in mqtt.json (devicename_serial)
+
+automation:
+- id: 'set_solar_output_source'
+  alias: Solar Trigger Output Source Change
+  trigger:
+    platform: state
+    entity_id: input_select.solar_output_source_priority
+  action:
+    service: mqtt.publish
+    data_template:
+      topic: homeassistant/sensor/mpp_92331908103079/COMMANDS
+      payload: >
+        {% if is_state("input_select.solar_output_source_priority", "POP00 (Utility first)") %}
+          POP00
+        {% elif is_state("input_select.solar_output_source_priority", "POP01 (Solar first)") %}
+          POP01
+        {% elif is_state("input_select.solar_output_source_priority", "POP02 (SBU)") %}
+          POP02
+        {% endif %}
+
+- id: 'set_solar_charge_priority'
+  alias: Stolar Trigger Charge Priority Change
+  trigger:
+    platform: state
+    entity_id: input_select.solar_charger_priority
+  action:
+    service: mqtt.publish
+    data_template:
+      topic: homeassistant/sensor/mpp_92331908103079/COMMANDS
+      payload: >
+        {% if is_state("input_select.solar_charger_priority", "PCP00 (Utility first)") %}
+          PCP00
+        {% elif is_state("input_select.solar_charger_priority", "PCP01 (Solar first)") %}
+          PCP01
+        {% elif is_state("input_select.solar_charger_priority", "PCP02 (Solar and utility)") %}
+          PCP02
+        {% elif is_state("input_select.solar_charger_priority", "PCP03 (Solar only)") %}
+          PCP03
+        {% endif %}
+
+# Auto Switch to 'Solar based charging ONLY at sunrise' (will not charge batteries from the Grid to save power...)
+- id: 'switch_solar_only_charging_am'
+  alias: Auto switch to "Solar Only" charging at Sunrise
+  trigger:
+    - event: sunrise
+      platform: sun
+      offset: "00:15:00"
+  condition: []
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.solar_charger_priority
+        option: "PCP01 (Solar first)"
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.solar_output_source_priority
+        option: "POP01 (Solar first)"
+
+- id: 'switch_battery_late_evenings'
+  # Running on UPS mode seems to fuck up the 8 port tplink switch (it drops out from time to time) so it's best that we change mode after 2AM when less people are using Plex etc...
+  alias: Switch to battery preferred output late evenings
+  trigger:
+    - at: '02:00'
+      platform: time
+  condition: []
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.solar_output_source_priority
+        option: "POP02 (SBU)"
+
+
+#  new automations
+
+
+
+- id: '1651914736932'
+  alias: MPP - Setting max charging current
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.setting_max_charging_current
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: homeassistant/sensor/mpp_92331908103079/COMMANDS
+      payload: "{% if is_state(\"input_select.setting_max_charging_current\", \"010\"\
+        ) %}\n  MNCHGC010\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"020\") %}\n  MNCHGC020\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"030\") %}\n  MNCHGC030\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"040\") %}\n  MNCHGC040\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"050\") %}\n  MNCHGC050\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"060\") %}\n  MNCHGC060\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"070\") %}\n  MNCHGC070\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"080\") %}\n  MNCHGC080\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"090\") %}\n  MNCHGC090\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"100\") %}\n  MNCHGC100\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"110\") %}\n  MNCHGC110\n{% elif is_state(\"input_select.setting_max_charging_current\"\
+        , \"120\") %}\n  MNCHGC120\n{% endif %}\n"
+  mode: single
+- id: '1651915273804'
+  alias: MPP - Setting utility max charging current
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.setting_utility_max_charging_current
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: homeassistant/sensor/mpp_92331908103079/COMMANDS
+      payload: "{% if is_state(\"input_select.setting_utility_max_charging_current\"\
+        , \"002\") %}\n  MUCHGC002\n{% elif is_state(\"input_select.setting_utility_max_charging_current\"\
+        , \"010\") %}\n  MUCHGC010\n{% elif is_state(\"input_select.setting_utility_max_charging_current\"\
+        , \"020\") %}\n  MUCHGC020\n{% elif is_state(\"input_select.setting_utility_max_charging_current\"\
+        , \"030\") %}\n  MUCHGC030\n{% elif is_state(\"input_select.setting_utility_max_charging_current\"\
+        , \"040\") %}\n  MUCHGC040\n{% elif is_state(\"input_select.setting_utility_max_charging_current\"\
+        , \"050\") %}\n  MUCHGC050\n{% elif is_state(\"input_select.setting_utility_max_charging_current\"\
+        , \"060\") %}\n  MUCHGC060\n{% endif %}\n"
+  mode: single
+- id: '1651916554603'
+  alias: MPP - Setting battery FV
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.setting_battery_fv
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: homeassistant/sensor/mpp_92331908103079/COMMANDS
+      payload: "{% if is_state(\"input_select.setting_battery_fv\", \"27.0\") %}\n\
+        \  PBFT27.0\n{% elif is_state(\"input_select.setting_battery_fv\", \"27.1\"\
+        ) %}\n  PBFT27.1\n{% elif is_state(\"input_select.setting_battery_fv\", \"\
+        27.2\") %}\n  PBFT27.2\n{% elif is_state(\"input_select.setting_battery_fv\"\
+        , \"27.3\") %}\n  PBFT27.3\n{% elif is_state(\"input_select.setting_battery_fv\"\
+        , \"27.4\") %}\n  PBFT27.4\n{% elif is_state(\"input_select.setting_battery_fv\"\
+        , \"27.5\") %}\n  PBFT27.5\n{% elif is_state(\"input_select.setting_battery_fv\"\
+        , \"27.6\") %}\n  PBFT27.6\n{% elif is_state(\"input_select.setting_battery_fv\"\
+        , \"27.7\") %}\n  PBFT27.7\n{% elif is_state(\"input_select.setting_battery_fv\"\
+        , \"27.8\") %}\n  PBFT27.8\n{% elif is_state(\"input_select.setting_battery_fv\"\
+        , \"27.9\") %}\n  PBFT27.9\n{% elif is_state(\"input_select.setting_battery_fv\"\
+        , \"28.0\") %}\n  PBFT28.0\n{% elif is_state(\"input_select.setting_battery_fv\"\
+        , \"28.1\") %}\n  PBFT28.1\n  {% elif is_state(\"input_select.setting_battery_fv\"\
+        , \"28.2\") %}\n  PBFT28.2\n{% endif %}\n"
+  mode: single
+- id: '1651924381875'
+  alias: MPP - Set battery re-charge voltage
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.set_battery_re_charge_voltage
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: homeassistant/sensor/mpp_92331908103079/COMMANDS
+      payload: "{% if is_state(\"input_select.set_battery_re_charge_voltage\", \"\
+        22.0\") %}\n  PBCV22.0\n{% elif is_state(\"input_select.set_battery_re_charge_voltage\"\
+        , \"22.5\") %}\n  PBCV22.5\n{% elif is_state(\"input_select.set_battery_re_charge_voltage\"\
+        , \"23.0\") %}\n  PBCV23.0\n{% elif is_state(\"input_select.set_battery_re_charge_voltage\"\
+        , \"23.5\") %}\n  PBCV23.5\n{% elif is_state(\"input_select.set_battery_re_charge_voltage\"\
+        , \"24.0\") %}\n  PBCV24.0\n{% elif is_state(\"input_select.set_battery_re_charge_voltage\"\
+        , \"24.5\") %}\n  PBCV24.5\n{% elif is_state(\"input_select.set_battery_re_charge_voltage\"\
+        , \"25.0\") %}\n  PBCV25.0\n{% elif is_state(\"input_select.set_battery_re_charge_voltage\"\
+        , \"25.5\") %}\n  PBCV25.5\n{% endif %}\n"
+  mode: single
+- id: '1651924876395'
+  alias: MPP - Setting battery cut-off voltage
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.setting_battery_cut_off_voltage
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: homeassistant/sensor/mpp_92331908103079/COMMANDS
+      payload: "{% if is_state(\"input_select.setting_battery_cut_off_voltage\", \"\
+        22.0\") %}\n  PSDV22.0\n{% elif is_state(\"input_select.setting_battery_cut_off_voltage\"\
+        , \"22.5\") %}\n  PSDV22.5\n{% elif is_state(\"input_select.setting_battery_cut_off_voltage\"\
+        , \"23.0\") %}\n  PSDV23.0\n{% elif is_state(\"input_select.setting_battery_cut_off_voltage\"\
+        , \"23.5\") %}\n  PSDV23.5\n{% elif is_state(\"input_select.setting_battery_cut_off_voltage\"\
+        , \"24.0\") %}\n  PSDV24.0\n{% elif is_state(\"input_select.setting_battery_cut_off_voltage\"\
+        , \"21.0\") %}\n  PSDV21.0\n{% elif is_state(\"input_select.setting_battery_cut_off_voltage\"\
+        , \"21.5\") %}\n  PSDV21.5\n{% endif %}\n"
+  mode: single
+- id: '1651925389937'
+  alias: MPP - Set battery re-discharge voltage
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.set_battery_re_discharge_voltage
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: homeassistant/sensor/mpp_92331908103079/COMMANDS
+      payload: "{% if is_state(\"input_select.set_battery_re_discharge_voltage\",\
+        \ \"00.0\") %}\n  PBDV00.0\n  {% elif is_state(\"input_select.set_battery_re_discharge_voltage\"\
+        , \"24.0\") %}\n  PBDV24.0\n  {% elif is_state(\"input_select.set_battery_re_discharge_voltage\"\
+        , \"24.5\") %}\n  PBDV24.5\n{% elif is_state(\"input_select.set_battery_re_discharge_voltage\"\
+        , \"25.0\") %}\n  PBDV25.0\n{% elif is_state(\"input_select.set_battery_re_discharge_voltage\"\
+        , \"25.5\") %}\n  PBDV25.5\n{% elif is_state(\"input_select.set_battery_re_discharge_voltage\"\
+        , \"26.0\") %}\n  PBDV26.0\n{% elif is_state(\"input_select.set_battery_re_discharge_voltage\"\
+        , \"27.0\") %}\n  PBDV27.0\n  {% elif is_state(\"input_select.set_battery_re_discharge_voltage\"\
+        , \"27.5\") %}\n  PBDV27.5\n{% elif is_state(\"input_select.set_battery_re_discharge_voltage\"\
+        , \"28.0\") %}\n  PBDV28.0\n{% elif is_state(\"input_select.set_battery_re_discharge_voltage\"\
+        , \"28.5\") %}\n  PBDV28.5\n  {% elif is_state(\"input_select.set_battery_re_discharge_voltage\"\
+        , \"29.0\") %}\n  PBDV29.0\n{% endif %}\n"
+  mode: single
+- id: '1651926072242'
+  alias: MPP - Setting battery C.V.
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.setting_battery_c_v
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: homeassistant/sensor/mpp_92331908103079/COMMANDS
+      payload: "{% if is_state(\"input_select.setting_battery_c_v\", \"28.1\") %}\n\
+        \  PCVV28.1\n  {% elif is_state(\"input_select.setting_battery_c_v\", \"28.2\"\
+        ) %}\n  PCVV28.2\n  {% elif is_state(\"input_select.setting_battery_c_v\"\
+        , \"28.3\") %}\n  PCVV28.3\n{% elif is_state(\"input_select.setting_battery_c_v\"\
+        , \"28.4\") %}\n  PCVV28.4\n{% elif is_state(\"input_select.setting_battery_c_v\"\
+        , \"28.5\") %}\n  PCVV28.5\n{% elif is_state(\"input_select.setting_battery_c_v\"\
+        , \"28.6\") %}\n  PCVV28.6\n{% elif is_state(\"input_select.setting_battery_c_v\"\
+        , \"28.7\") %}\n  PCVV28.7\n  {% elif is_state(\"input_select.setting_battery_c_v\"\
+        , \"28.8\") %}\n  PCVV28.8\n{% elif is_state(\"input_select.setting_battery_c_v\"\
+        , \"28.9\") %}\n  PCVV28.9\n{% elif is_state(\"input_select.setting_battery_c_v\"\
+        , \"29.0\") %}\n  PCVV29.0\n  {% elif is_state(\"input_select.setting_battery_c_v\"\
+        , \"29.1\") %}\n  PCVV29.1\n  {% elif is_state(\"input_select.setting_battery_c_v\"\
+        , \"29.2\") %}\n  PCVV29.2\n{% endif %}\n"
+  mode: single

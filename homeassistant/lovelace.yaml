@@ -1,0 +1,125 @@
+
+views:
+  - badges: []
+    cards:
+      - cards:
+          - card:
+              image: /hacsfiles/inverter-modes/1.png
+              type: picture
+            conditions:
+              - entity: sensor.inverter_mode
+                state: '1'
+            type: conditional
+          - card:
+              image: /hacsfiles/inverter-modes/2.png
+              type: picture
+            conditions:
+              - entity: sensor.inverter_mode
+                state: '2'
+            type: conditional
+          - card:
+              image: /hacsfiles/inverter-modes/3.png
+              type: picture
+            conditions:
+              - entity: sensor.inverter_mode
+                state: '3'
+            type: conditional
+          - card:
+              image: /hacsfiles/inverter-modes/4.png
+              type: picture
+            conditions:
+              - entity: sensor.inverter_mode
+                state: '4'
+            type: conditional
+          - card:
+              image: /hacsfiles/inverter-modes/5.png
+              type: picture
+            conditions:
+              - entity: sensor.inverter_mode
+                state: '5'
+            type: conditional
+          - card:
+              image: /hacsfiles/inverter-modes/6.png
+              type: picture
+            conditions:
+              - entity: sensor.inverter_mode
+                state: '6'
+            type: conditional
+          - content: |
+              ---
+            type: markdown
+        title: null
+        type: vertical-stack
+      - entities:
+          - entity: sensor.pv_in_watts
+          - entity: sensor.pv_in_current
+          - entity: sensor.pv_in_voltage
+          - entity: sensor.battery_charge_current
+          - entity: sensor.battery_discharge_current
+          - entity: sensor.battery_voltage
+          - entity: sensor.battery_capacity
+          - entity: sensor.load_watt
+          - entity: sensor.load_va
+          - entity: sensor.load_pct
+          - entity: sensor.heatsink_temperature
+          - entity: sensor.scc_voltage
+          - entity: sensor.bus_voltage
+          - entity: sensor.ac_grid_voltage
+          - entity: sensor.ac_out_voltage
+          - entity: sensor.ac_grid_frequency
+          - entity: sensor.ac_out_frequency
+        show_header_toggle: false
+        type: entities
+      - entities:
+          - entity: sensor.inverter_mode
+            secondary_info: last-changed
+          - entity: sensor.charger_source_priority
+            secondary_info: last-changed
+          - entity: sensor.out_source_priority
+            secondary_info: last-changed
+          - entity: sensor.load_status_on
+            secondary_info: last-changed
+          - entity: sensor.ac_charge_on
+            secondary_info: last-changed
+          - entity: sensor.scc_charge_on
+            secondary_info: last-changed
+          - entity: sensor.battery_bulk_voltage
+            secondary_info: last-changed
+          - entity: sensor.battery_float_voltage
+            secondary_info: last-changed
+          - entity: sensor.battery_recharge_voltage
+            secondary_info: last-changed
+          - entity: sensor.battery_redischarge_voltage
+            secondary_info: last-changed
+          - entity: sensor.battery_under_voltage
+            secondary_info: last-changed
+          - entity: sensor.max_charge_current
+            secondary_info: last-changed
+          - entity: sensor.max_grid_charge_current
+            secondary_info: last-changed
+          - entity: sensor.mpp_commands
+            secondary_info: last-changed
+          - entity: sensor.warnings
+            secondary_info: last-changed
+          - entity: sensor.mpp_warning_verbose
+        show_header_toggle: false
+        type: entities
+      - type: entities
+        entities:
+          - entity: input_select.solar_output_source_priority
+            icon: mdi:battery
+          - entity: input_select.solar_charger_priority
+            icon: mdi:format-list-numbered
+          - entity: automation.auto_switch_to_solar_only_charging_at_sunrise
+          - entity: automation.switch_to_battery_preferred_output_late_evenings
+          - entity: input_select.setting_battery_c_v
+          - entity: input_select.setting_battery_fv
+          - entity: input_select.set_battery_re_discharge_voltage
+          - entity: input_select.set_battery_re_charge_voltage
+          - entity: input_select.setting_battery_cut_off_voltage
+          - entity: input_select.setting_max_charging_current
+          - entity: input_select.setting_utility_max_charging_current
+        state_color: true
+    panel: false
+    path: mpp
+    title: MPP
