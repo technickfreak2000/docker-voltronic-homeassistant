@@ -16,7 +16,88 @@ input_select:
       - PCP02 (Solar and utility)
       - PCP03 (Solar only)
 
+==========================================
+# sensor template for warnings
+  - platform: template
+    sensors:
+      mpp_warning_verbose:
+        value_template: >-
+          {% set warnings = states('sensor.warnings') | float(0) %}
 
+          {% if warnings == 0 %}
+            No error
+          {% elif warnings == 1000000000000000000000000000000 %}
+            Inverter fault
+          {% elif warnings == 100000000000000000000000000000 %}
+            Bus Over (fault)
+          {% elif warnings == 10000000000000000000000000000 %}
+            Bus Under (fault
+          {% elif warnings == 1000000000000000000000000000 %}
+            Bus soft fail (fault)
+          {% elif warnings == 100000000000000000000000000 %}
+            Line fail (warning)
+          {% elif warnings == 10000000000000000000000000 %}
+            OPVShort (warning)
+          {% elif warnings == 1000000000000000000000000 %}
+            Inverter voltage too low (fault)
+          {% elif warnings == 100000000000000000000000 %}
+            Inverter voltage too high (fault)
+          {% elif warnings == 10000000000000000000000 %}
+            Over temperature (warning)
+          {% elif warnings == 1000000000000000000000 %}
+            Fan locked (warning)
+          {% elif warnings == 100000000000000000000 %}
+            Battery voltage high (warning)
+          {% elif warnings == 10000000000000000000 %}
+            Battery voltage low (warning)
+          {% elif warnings == 100000000000000000 %}
+            Battery under shutdown (warning)
+          {% elif warnings == 1000000000000000 %}
+            Over load (warning)
+          {% elif warnings == 100000000000000 %}
+            Eeprom fault (warning)
+          {% elif warnings == 10000000000000 %}
+            Inverter over current (fault)
+          {% elif warnings == 1000000000000 %}
+            Inverter soft fail (fault)
+          {% elif warnings == 100000000000 %}
+            Self test fail (fault)
+          {% elif warnings == 10000000000 %}
+            OP DC Voltage over (fault)
+          {% elif warnings == 1000000000 %}
+            Bat open (fault)
+          {% elif warnings == 100000000 %}
+            Current sensor fail (fault)
+          {% elif warnings == 10000000 %}
+            Battery short (fault)
+          {% elif warnings == 1000000 %}
+            Power limit (warning)
+          {% elif warnings == 100000 %}
+            PV Voltage high (warning)
+          {% elif warnings == 10000 %}
+            MPPT overload fault (warning)
+          {% elif warnings == 1000 %}
+            MPPT overload warning (warning)
+          {% elif warnings == 100 %}
+            Battery too low to charge (warning)
+          {% elif warnings == 1000000010000000000000000000000 %}
+            Over temperature (fault)
+          {% elif warnings == 1000000001000000000000000000000 %}
+            Fan locked (fault)
+          {% elif warnings == 1000000000100000000000000000000 %}
+            Battery voltage high (fault)
+          {% elif warnings == 1000000000000001000000000000000 %}
+            Over load (fault)
+          {% else %}
+            N/A
+          {% endif %}
+        friendly_name: 'Warning description'
+        unique_id: 'ts66'
+
+
+
+
+==========================================
 # Automations of Solar PV Inverter (such as when to charge batteries off grid / from PV etc)...
 # This will automatically fire off the event to the inverter when changed in the UI.
 
