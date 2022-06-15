@@ -159,9 +159,10 @@ When you will use this fork you need to do the following commands on your device
 3) cd ..
 4) sudo rm -rf ha-inverter-mqtt-agent
 5) sudo git clone https://github.com/catalinbordan/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
-6) sudo nano config/mqtt.json (change it with your variables)
-7) sudo docker-compose build
-8) sudo docker-compose up -d
+6) cd /opt/ha-inverter-mqtt-agent
+7) sudo nano config/mqtt.json (change it with your variables)
+8) sudo docker-compose build
+9) sudo docker-compose up -d
 
 
 example of command for Set battery re-discharge voltage to 26.1V
