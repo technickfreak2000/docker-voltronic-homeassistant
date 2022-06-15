@@ -167,6 +167,7 @@ When you will use this fork you need to do the following commands on your device
 11) sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1' (this is to test to see is everything ok regarding connection between inverter and docker)
 
 this is the output result of my inverter:
+````
 Wed Jun 15 19:14:55 2022 INVERTER: Debug set
 Wed Jun 15 19:14:55 2022 DEBUG:  Current CRC: 49 C1
 Wed Jun 15 19:14:55 2022 DEBUG:  Send buffer hex bytes:  ( 51 4d 4f 44 49 c1 0d )
@@ -268,16 +269,15 @@ INVERTER: wattfactor from config is 1.00
   "Warnings":"00000000000000000000000000000000"
 }
 Wed Jun 15 19:14:57 2022 INVERTER: All queries complete, exiting loop.
-===================================================================
 
-example of command for Set battery re-discharge voltage to 26.1V
+```
 
+Example of command for Set battery re-discharge voltage to 26.1V
+```
 sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -r PBDV26.1'
+```
 
-
-==================================================================
-
-I have put in home assistant folder the examples of what I have for sending commands to inverter, template sensor for warnings, etc. 
+ I have put in home assistant folder the examples of what I have for sending commands to inverter, template sensor for warnings, etc. 
 For the input buttons you will use the helpers in HA to create them. 
 The names and the option of them look in automations examples.
 
