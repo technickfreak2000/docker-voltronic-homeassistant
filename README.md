@@ -167,7 +167,6 @@ When you will use this fork you need to do the following commands on your device
 11) sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1' (this is to test to see is everything ok regarding connection between inverter and docker)
 
 this is the output result of my inverter:
-====================================================
 Wed Jun 15 19:14:55 2022 INVERTER: Debug set
 Wed Jun 15 19:14:55 2022 DEBUG:  Current CRC: 49 C1
 Wed Jun 15 19:14:55 2022 DEBUG:  Send buffer hex bytes:  ( 51 4d 4f 44 49 c1 0d )
