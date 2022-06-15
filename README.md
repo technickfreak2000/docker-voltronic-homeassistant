@@ -164,7 +164,112 @@ When you will use this fork you need to do the following commands on your device
 8) sudo nano config/mqtt.json (change it with your variables)
 9) sudo docker-compose build
 10) sudo docker-compose up -d
+11) sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1' (this is to test to see is everything ok regarding connection between inverter and docker)
 
+this is the output result of my inverter:
+====================================================
+Wed Jun 15 19:14:55 2022 INVERTER: Debug set
+Wed Jun 15 19:14:55 2022 DEBUG:  Current CRC: 49 C1
+Wed Jun 15 19:14:55 2022 DEBUG:  Send buffer hex bytes:  ( 51 4d 4f 44 49 c1 0d )
+Wed Jun 15 19:14:55 2022 DEBUG:  7 bytes written, 7 bytes sent, 0 bytes remaining
+Wed Jun 15 19:14:55 2022 DEBUG:  8 bytes read, 8 total bytes:  28 42 e7 c9 0d 00 00 00
+Wed Jun 15 19:14:55 2022 DEBUG:  Found reply <cr> at byte: 5
+Wed Jun 15 19:14:55 2022 DEBUG:  QMOD: 8 bytes read: (B
+Wed Jun 15 19:14:55 2022 DEBUG:  QMOD query finished
+Wed Jun 15 19:14:56 2022 DEBUG:  Current CRC: B7 A9
+Wed Jun 15 19:14:56 2022 DEBUG:  Send buffer hex bytes:  ( 51 50 49 47 53 b7 a9 0d )
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes written, 8 bytes sent, 0 bytes remaining
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 8 total bytes:  28 32 33 31 2e 37 20 34
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 16 total bytes:  39 2e 39 20 32 33 30 2e
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 24 total bytes:  32 20 35 30 2e 30 20 30
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 32 total bytes:  33 39 31 20 30 31 34 37
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 40 total bytes:  20 30 31 33 20 33 35 38
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 48 total bytes:  20 32 35 2e 39 38 20 30
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 56 total bytes:  30 30 20 31 30 30 20 30
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 64 total bytes:  30 33 36 20 30 30 30 30
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 72 total bytes:  20 30 30 30 2e 30 20 30
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 80 total bytes:  30 2e 30 30 20 30 30 30
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 88 total bytes:  30 36 20 30 30 30 31 30
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 96 total bytes:  30 30 30 20 30 30 20 30
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 104 total bytes:  30 20 30 30 30 30 30 20
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 112 total bytes:  30 31 31 5c c6 0d 00 00
+Wed Jun 15 19:14:56 2022 DEBUG:  Found reply <cr> at byte: 110
+Wed Jun 15 19:14:56 2022 DEBUG:  QPIGS: 112 bytes read: (231.7 49.9 230.2 50.0 0391 0147 013 358 25.98 000 100 0036 0000 000.0 00.00 00006 00010000 00 00 00000 011
+Wed Jun 15 19:14:56 2022 DEBUG:  QPIGS query finished
+Wed Jun 15 19:14:56 2022 DEBUG:  Current CRC: F8 54
+Wed Jun 15 19:14:56 2022 DEBUG:  Send buffer hex bytes:  ( 51 50 49 52 49 f8 54 0d )
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes written, 8 bytes sent, 0 bytes remaining
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 8 total bytes:  28 32 33 30 2e 30 20 31
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 16 total bytes:  33 2e 30 20 32 33 30 2e
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 24 total bytes:  30 20 35 30 2e 30 20 31
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 32 total bytes:  33 2e 30 20 33 30 30 30
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 40 total bytes:  20 33 30 30 30 20 32 34
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 48 total bytes:  2e 30 20 32 32 2e 30 20
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 56 total bytes:  32 31 2e 30 20 32 38 2e
+Wed Jun 15 19:14:56 2022 DEBUG:  8 bytes read, 64 total bytes:  32 20 32 37 2e 34 20 32
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes read, 72 total bytes:  20 30 32 20 30 37 30 20
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes read, 80 total bytes:  31 20 32 20 32 20 31 20
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes read, 88 total bytes:  30 31 20 30 20 30 20 32
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes read, 96 total bytes:  36 2e 30 20 30 20 31 d7
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes read, 104 total bytes:  e2 0d 00 00 00 00 00 00
+Wed Jun 15 19:14:57 2022 DEBUG:  Found reply <cr> at byte: 98
+Wed Jun 15 19:14:57 2022 DEBUG:  QPIRI: 104 bytes read: (230.0 13.0 230.0 50.0 13.0 3000 3000 24.0 22.0 21.0 28.2 27.4 2 02 070 1 2 2 1 01 0 0 26.0 0 1
+Wed Jun 15 19:14:57 2022 DEBUG:  QPIRI query finished
+Wed Jun 15 19:14:57 2022 DEBUG:  Current CRC: B4 DA
+Wed Jun 15 19:14:57 2022 DEBUG:  Send buffer hex bytes:  ( 51 50 49 57 53 b4 da 0d )
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes written, 8 bytes sent, 0 bytes remaining
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes read, 8 total bytes:  28 30 30 30 30 30 30 30
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes read, 16 total bytes:  30 30 30 30 30 30 30 30
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes read, 24 total bytes:  30 30 30 30 30 30 30 30
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes read, 32 total bytes:  30 30 30 30 30 30 30 30
+Wed Jun 15 19:14:57 2022 DEBUG:  8 bytes read, 40 total bytes:  30 eb e4 0d 00 00 00 00
+Wed Jun 15 19:14:57 2022 DEBUG:  Found reply <cr> at byte: 36
+Wed Jun 15 19:14:57 2022 DEBUG:  QPIWS: 40 bytes read: (00000000000000000000000000000000
+Wed Jun 15 19:14:57 2022 DEBUG:  QPIWS query finished
+Wed Jun 15 19:14:57 2022 DEBUG:  Start loop
+INVERTER: ampfactor from config is 1.00
+INVERTER: wattfactor from config is 1.00
+{
+  "Inverter_mode":4,
+  "AC_grid_voltage":231.7,
+  "AC_grid_frequency":49.9,
+  "AC_out_voltage":230.2,
+  "AC_out_frequency":50.0,
+  "PV_in_voltage":0.0,
+  "PV_in_current":0.0,
+  "PV_in_watts":0.0,
+  "SCC_voltage":0.0000,
+  "Load_pct":13,
+  "Load_watt":147,
+  "Load_va":391,
+  "Bus_voltage":358,
+  "Heatsink_temperature":36,
+  "Battery_capacity":100,
+  "Battery_voltage":25.98,
+  "Battery_charge_current":0,
+  "Battery_discharge_current":6,
+  "Load_status_on":1,
+  "SCC_charge_on":0,
+  "AC_charge_on":0,
+  "Battery_voltage_offset_for_fans_on":0,
+  "Eeprom_version":0,
+  "PV_charging_power":0,
+  "Charging_to_floating_mode":0,
+  "Switch_On":1,
+  "Dustproof_installed":1,
+  "Battery_recharge_voltage":22.0,
+  "Battery_under_voltage":21.0,
+  "Battery_bulk_voltage":28.2,
+  "Battery_float_voltage":27.4,
+  "Max_grid_charge_current":2,
+  "Max_charge_current":70,
+  "Out_source_priority":2,
+  "Charger_source_priority":2,
+  "Battery_redischarge_voltage":26.0,
+  "Warnings":"00000000000000000000000000000000"
+}
+Wed Jun 15 19:14:57 2022 INVERTER: All queries complete, exiting loop.
+===================================================================
 
 example of command for Set battery re-discharge voltage to 26.1V
 
