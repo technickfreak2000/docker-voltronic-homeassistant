@@ -154,7 +154,7 @@ bool cInverter::query(const char *cmd) {
     n = read(fd, (void*)buf+i, 120 - i);
     if (n < 0)
     {
-      if (time(NULL) - started > 15)     // Wait 5 secs before timeout
+      if (time(NULL) - started > 5)     // Wait 5 secs before timeout
       {
         lprintf("DEBUG:  %s read timeout", cmd);
         break;
