@@ -1,11 +1,11 @@
 This is a fork from ned-kelly version with improved changes from  kchiem, dilyanpalauzov, nrm21 and many more:
 - no more needed fixes responses for QMOD, QPIRI... program it will find them.
 - changes regarding mqtt broker compatibility, topics, auto-discovery...
-- polling/transmit rate speed improved. now it transmit to HA almost 10 seconds.
+- polling/transmit rate speed improved. now it transmit to HA almost every 10 seconds.
 - now you can transmit commands to inverter bigger then 5 characters by sending them in batch of 5 characters .
 - many changes witch I don't remember :)
 
-The instructions to use this fork are at the end of readme and they consider you allready have installed and followed the intructions of original repository of ned-kelly. 
+The instructions to use this fork are at the end of readme and they consider you allready have installed and followed the intructions of original repository of ned-kelly. If you start from zero, then install docker and docker-compose and then skip to no 5.
 
 
 ==========================
