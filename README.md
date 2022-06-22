@@ -5,7 +5,7 @@ This is a fork from ned-kelly version with improved changes from  kchiem, dilyan
 - now you can transmit commands to inverter bigger then 5 characters by sending them in batch of 5 characters .
 - many changes witch I don't remember :)
 
-The instructions to use this fork are at the end of readme and they consider you allready have installed and followed the intructions of original repository of ned-kelly. If you start from zero, then install docker and docker-compose and then skip to no 5.
+**The instructions to use this fork are at the end of readme and I have taking in consideration that you allready have installed and followed the intructions of original repository of ned-kelly. If you start from zero, then install docker and docker-compose and then skip to no 5.**
 
 This is a fork for my personal use, like other 85 forks, witch I combine all the changes I found to be useful and I could understand(no programming skills). 
 Manny thanks for this people, and I am glad if is it is useful for others because I have spent a lot of time to study the changes. If it is not working for you, be sure you inverter it is working with protocol PI30 and have a good connection with inverter. If you find something bad/need to be improved and you know why/how to do, I will haply change it when I will find free time. 
