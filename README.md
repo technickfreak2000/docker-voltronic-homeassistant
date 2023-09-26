@@ -259,7 +259,7 @@ INVERTER: wattfactor from config is 1.00
   "Warnings":"00000000000000000000000000000000"
 }
 Wed Jun 15 19:14:57 2022 INVERTER: All queries complete, exiting loop.
-```
+````
 
 If you cant see this or have an endless loop, try my fix with axpert-query as I've described above.
 
