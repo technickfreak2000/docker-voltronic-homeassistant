@@ -150,8 +150,8 @@ bool cInverter::query(const char *cmd) {
   char *startbuf = 0;
   char *endbuf = 0;
   do {
-    // According to protocol manual, it appears no query should ever exceed 120 byte size in response
-    n = read(fd, (void*)buf+i, 120 - i);
+    // According to protocol manual, it appears no query should ever exceed 120 byte size in response; But this is not true! Thats why its 1000 now!
+    n = read(fd, (void*)buf+i, 1000 - i);
     if (n < 0)
     {
       if (time(NULL) - started > 5)     // Wait 5 secs before timeout
@@ -172,6 +172,11 @@ bool cInverter::query(const char *cmd) {
 
     startbuf = (char *)&buf[0];
     endbuf = strchr(startbuf, '\r');
+    if (endbuf == NULL && i >= 1000)
+    {
+      endbuf = (char *)&buf[i-1];
+    }
+    
 
     //lprintf("DEBUG:  %s Current buffer: %s", cmd, startbuf);
   } while (endbuf == NULL);     // Still haven't found end <cr> char as long as pointer is null
