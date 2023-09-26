@@ -1,22 +1,51 @@
-This is a fork from ned-kelly version with improved changes from  kchiem, dilyanpalauzov, nrm21 and many more:
-- no more needed fixes responses for QMOD, QPIRI... program it will find them.
-- changes regarding mqtt broker compatibility, topics, auto-discovery...
-- polling/transmit rate speed improved. now it transmit to HA almost every 10 seconds.
-- now you can transmit commands to inverter bigger then 5 characters by sending them in batch of 5 characters .
-- Battery redicharge voltage - now show good values.
-- many changes witch I don't remember :)
+This is a fork of a fork from catalinbordan (https://github.com/catalinbordan/docker-voltronic-homeassistant)
 
-**The instructions to use this fork are at the end of readme and I have taking in consideration that you allready have installed and followed the intructions of original repository of ned-kelly. If you start from zero, then install docker and docker-compose and then skip to no 5.**
+It didn't seem to be active anymore, so I decided to cook my own souce. 
 
-This is a fork for my personal use, like other 85 forks, witch I combine all the changes I found to be useful and I could understand(no programming skills). 
-Manny thanks for this people, and I am glad if is it is useful for others because I have spent a lot of time to study the changes. If it is not working for you, be sure you inverter it is working with protocol PI30 and have a good connection with inverter. If you find something bad/need to be improved and you know why/how to do, I will haply change it when I will find free time. 
+I ran into a couple of issues during installation and use of the original fork. 
+I hope my install.sh script mitegates most of my installation issues and helps to set it up quickly.
+Furthermore, I couldn't get this project to initialize the /dev/ttyS0. My workaround was to execute axpert-query at reboot in a crontab of my VM (Im running the docker under a Proxmox VM with ubuntu server on it).
+Check it out here: https://github.com/b48736/axpert-monitor/
+I'm planning on implementing a fix for this in this fork.
+Quick setup:
+
+```bash
+# Install cron
+sudo apt update && sudo apt install cron
+
+# Edit crontab:
+sudo crontab -e
+
+# Add '@reboot axpert-query -c QPIGS -p /dev/ttyS0'
+# Be sure to replace the paramter with your own. In in doupt, check out the project!
+```
+
+I am implementig multi inverter support.
+Thanks saschalenz for getting me started! 
+But for my inverter the command 'QPIGS2' to get data from other MPPTs inside a inverter didn't work to get data from multiple inverters.
+So I may have reverse engineered WatchPower a bit and working on a solution. 
+I may release a guide on how to do it. If i do, I'll link to it here.
+So in the meantime, if you need support for a second MPPT check out his fork: https://github.com/saschalenz/docker-voltronic-homeassistant/tree/master
+I found out that QPGSx (x = inverter number) seems to be the right command, but I am currently fixing the response to long error...
+
+Currently, this fork is work in progress, if something is brocken, please check back later. 
+For now, I just want to get my setup at home working (EFFEKTA AX M2 5000) and do not want to hussle arround with diffrent branches. 
+Feel free to create a pull request! I'll happily look over it if I find some spare time.
+
+I may port it over to ESP32 (in ESP-IDF not Arduino; I just hate the implementation...) and also add support for Pylontech (US5000) batteries...
+If I'll ever come around to do it, I'll link to it here too. 
+
+Many thanks to all people who worked on this project so hard to get it to where it is now! 
+
+I've cut out anything from the readme file that I've found not helpful.
+I encourage you to check out the readme of catalinbordan and the original branch.
 
 ==========================
 # A Docker based Home Assistant interface for MPP/Voltronic Solar Inverters 
 
 **Docker Hub:** [`bushrangers/ha-voltronic-mqtt:latest`](https://hub.docker.com/r/bushrangers/ha-voltronic-mqtt/)
 
-![License](https://img.shields.io/github/license/ned-kelly/docker-voltronic-homeassistant.svg) ![Docker Pulls](https://img.shields.io/docker/pulls/bushrangers/ha-voltronic-mqtt.png) ![buildx](https://github.com/ned-kelly/docker-voltronic-homeassistant/workflows/buildx/badge.svg)
+![License](https://img.shields.io/github/license/ned-kelly/docker-voltronic-homeassistant.svg)
 
 ----
 
@@ -52,6 +81,8 @@ _Example #2: Grafana summary allowing more detailed analysis of data collected, 
 
 ## Prerequisites
 
+If you are using the install.sh, you dont have to install docker, docker-compose or nano prior installation. 
+
 - Docker
 - Docker-compose
 - [Voltronic/Axpert/MPPSolar](https://www.ebay.com.au/sch/i.html?_from=R40&_trksid=p2334524.m570.l1313.TR11.TRC1.A0.H0.Xaxpert+inverter.TRS0&_nkw=axpert+inverter&_sacat=0&LH_TitleDesc=0&LH_PrefLoc=2&_osacat=0&_odkw=solar+inverter&LH_TitleDesc=0) based inverter that you want to monitor
@@ -59,128 +90,73 @@ _Example #2: Grafana summary allowing more detailed analysis of data collected, 
 
 
 ## Configuration & Standing Up
+### Automated methode
+If you like you you can use my install.sh:
 
-It's pretty straightforward, just clone down the sources and set the configuration files in the `config/` directory:
+```bash
+# You can either download the install.sh manually or just be lazy and download the whole source:
+git clone https://github.com/technickfreak2000/docker-voltronic-homeassistant.git
+cd docker-voltronic-homeassistant
+
+# Maybe you need to run
+chmod +x install.sh
+
+# To execute it run
+./install.sh
+
+# Or
+bash install.sh
+```
+
+### Manual methode
+It's pretty straightforward to install it manually to, just clone down the sources, compile it and set the configuration files in the `config/` directory.
+If you have an old installation, remove it first:
+
+```bash
+# Go into your old installation
+cd /opt/ha-inverter-mqtt-agent
+
+# Stop docker
+sudo docker-compose down
+
+# Delete old files (Maybe save old config for reference! Be sure not to copy only whats needed!)
+# Move out of the folder to delete it
+cd ..
+sudo rm -rf ha-inverter-mqtt-agent
+```
+
+Now you can install the project:
 
 ```bash
 # Clone down sources on the host you want to monitor...
-git clone https://github.com/ned-kelly/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
+git clone https://github.com/technickfreak2000/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
 cd /opt/ha-inverter-mqtt-agent
 
-# Configure the 'device=' directive (in inverter.conf) to suit for RS232 or USB.. 
-vi config/inverter.conf
+# Configure the 'device=' directive (in inverter.conf) to suit for RS232. Only edit this file if you don't have usb cable to inverter!
+nano config/inverter.conf
 
 # Configure your MQTT server's IP/Host Name, Port, Credentials, HA topic, and name of the Inverter that you want displayed in Home Assistant...
 # If your MQTT server does not need a username/password just leave these values empty.
+nano config/mqtt.json
 
-vi config/mqtt.json
+# Now build the docker container
+sudo docker-compose build
 ```
 
 Then, plug in your Serial or USB cable to the Inverter & stand up the container:
 
 ```bash
 docker-compose up -d
-
 ```
 
-_**Note:**_
+Test the communication with the inverter.
 
-  - builds on docker hub are currently for `linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/386` -- If you have issues standing up the image on your Linux distribution (i.e. An old Pi/ARM device) you may need to manually build the image to support your local device architecture - This can be done by uncommenting the build flag in your docker-compose.yml file.
-  
-  - The default `docker-compose.yml` file includes Watchtower, which can be  configured to auto-update this image when we push new changes to github - Please **uncomment if you wish to auto-update to the latest builds of this project**.
-
-## Integrating into Home Assistant.
-
-Providing you have setup [MQTT](https://www.home-assistant.io/components/mqtt/) with Home Assistant, the device will automatically register in your Home Assistant when the container starts for the first time -- You do not need to manually define any sensors.
-
-From here you can setup [Graphs](https://www.home-assistant.io/lovelace/history-graph/) to display sensor data, and optionally change state of the inverter by "[publishing](https://www.home-assistant.io/docs/mqtt/service/)" a string to the inverter's primary topic like so:
-
-![Example, Changing the Charge Priority](images/mqtt-publish-packet.png "Example, Changing the Charge Priority")
-_Example: Changing the Charge Priority of the Inverter_
-
-**COMMON COMMANDS THAT CAN BE SENT TO THE INVERTER**
-
-_(see [protocol manual](http://forums.aeva.asn.au/uploads/293/HS_MS_MSX_RS232_Protocol_20140822_after_current_upgrade.pdf) for complete list of supported commands)_
-
-
-
-```
-DESCRIPTION:                PAYLOAD:  OPTIONS:
-----------------------------------------------------------------
-Set output source priority  POP00     (Utility first)
-                            POP01     (Solar first)
-                            POP02     (SBU)
-
-Set charger priority        PCP00     (Utility first)
-                            PCP01     (Solar first)
-                            PCP02     (Solar and utility)
-                            PCP03     (Solar only)
-
-Set the Charge/Discharge Levels & Cutoff
-                            PBDV26.9  (Don't discharge the battery unless it is at 26.9v or more)
-                            PBCV24.8  (Switch back to 'grid' when battery below 24.8v)
-                            PBFT27.1  (Set the 'float voltage' to 27.1v)
-                            PCVV28.1  (Set the 'charge voltage' to 28.1v)
-
-Set other commands          PEa / PDa (Enable/disable buzzer)
-                            PEb / PDb (Enable/disable overload bypass)
-                            PEj / PDj (Enable/disable power saving)
-                            PEu / PDu (Enable/disable overload restart);
-                            PEx / PDx (Enable/disable backlight)
+```bash
+sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1'
 ```
 
-*NOTE:* When setting/configuring your charge, discharge, float & cutoff voltages for the first time, it's worth  understanding how to optimize charging conditions to extend service life of your battery: https://batteryuniversity.com/learn/article/charging_the_lead_acid_battery
+It should output something like that:
 
-
-### Using `inverter_poller` binary directly
-
-This project uses heavily modified sources, from [manio's](https://github.com/manio/skymax-demo) original demo, and be compiled to run standalone on Linux, Mac, and Windows (via Cygwin).
-
-Just head to the `sources/inverter-cli` directory and build it directly using: `cmake . && make`.
-
-Basic arguments supported are:
-
-```
-USAGE:  ./inverter_poller <args> [-r <command>], [-h | --help], [-1 | --run-once]
-
-SUPPORTED ARGUMENTS:
-          -r <raw-command>      TX 'raw' command to the inverter
-          -h | --help           This Help Message
-          -1 | --run-once       Runs one iteration on the inverter, and then exits
-          -d                    Additional debugging
-
-```
-
-### Bonus: Lovelace Dashboard Files
-
-_**Please refer to the screenshot above for an example of the dashboard.**_
-
-I've included some Lovelace dashboard files in the `homeassistant/` directory, however you will need to need to adapt to your own Home Assistant configuration and/or name of the inverter if you have changed it in the `mqtt.json` config file.
-
-Note that in addition to merging the sample Yaml files with your Home Assistant, you will need the following custom Lovelace cards installed if you wish to use my templates:
-
- - [vertical-stack-in-card](https://github.com/custom-cards/vertical-stack-in-card)
- - [circle-sensor-card](https://github.com/custom-cards/circle-sensor-card)
-
-
-===========================
-
-Credit and many thanks for kchiem, dilyanpalauzov, nrm21,
-
-When you will use this fork you need to do the following commands on your device:
-1) cd /opt/ha-inverter-mqtt-agent
-2) sudo docker-compose down
-3) cd ..
-4) sudo rm -rf ha-inverter-mqtt-agent
-5) sudo git clone https://github.com/catalinbordan/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
-6) cd /opt/ha-inverter-mqtt-agent
-7) sudo nano config/inverter.conf (only edit this file if you don't have usb cable to inverter)
-8) sudo nano config/mqtt.json (change it with your variables)
-9) sudo docker-compose build
-10) sudo docker-compose up -d
-11) sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1' (this is to test to see is everything ok regarding connection between inverter and docker)
-
-this is the output result of my inverter:
 ````
 Wed Jun 15 19:14:55 2022 INVERTER: Debug set
 Wed Jun 15 19:14:55 2022 DEBUG:  Current CRC: 49 C1
@@ -283,15 +259,100 @@ INVERTER: wattfactor from config is 1.00
   "Warnings":"00000000000000000000000000000000"
 }
 Wed Jun 15 19:14:57 2022 INVERTER: All queries complete, exiting loop.
+```
+
+If you cant see this or have an endless loop, try my fix with axpert-query as I've described above.
+
+## Integrating into Home Assistant.
+
+Providing you have setup [MQTT](https://www.home-assistant.io/components/mqtt/) with Home Assistant, the device will automatically register in your Home Assistant when the container starts for the first time -- You do not need to manually define any sensors.
+
+From here you can setup [Graphs](https://www.home-assistant.io/lovelace/history-graph/) to display sensor data, and optionally change state of the inverter by "[publishing](https://www.home-assistant.io/docs/mqtt/service/)" a string to the inverter's primary topic like so:
+
+![Example, Changing the Charge Priority](images/mqtt-publish-packet.png "Example, Changing the Charge Priority")
+_Example: Changing the Charge Priority of the Inverter_
+
+**COMMON COMMANDS THAT CAN BE SENT TO THE INVERTER**
+
+_(see [protocol manual](http://forums.aeva.asn.au/uploads/293/HS_MS_MSX_RS232_Protocol_20140822_after_current_upgrade.pdf) for complete list of supported commands)_
+
+```
+DESCRIPTION:                PAYLOAD:  OPTIONS:
+----------------------------------------------------------------
+Set output source priority  POP00     (Utility first)
+                            POP01     (Solar first)
+                            POP02     (SBU)
+
+Set charger priority        PCP00     (Utility first)
+                            PCP01     (Solar first)
+                            PCP02     (Solar and utility)
+                            PCP03     (Solar only)
+
+Set the Charge/Discharge Levels & Cutoff
+                            PBDV26.9  (Don't discharge the battery unless it is at 26.9v or more)
+                            PBCV24.8  (Switch back to 'grid' when battery below 24.8v)
+                            PBFT27.1  (Set the 'float voltage' to 27.1v)
+                            PCVV28.1  (Set the 'charge voltage' to 28.1v)
+
+Set other commands          PEa / PDa (Enable/disable buzzer)
+                            PEb / PDb (Enable/disable overload bypass)
+                            PEj / PDj (Enable/disable power saving)
+                            PEu / PDu (Enable/disable overload restart);
+                            PEx / PDx (Enable/disable backlight)
+```
+
+*NOTE:* When setting/configuring your charge, discharge, float & cutoff voltages for the first time, it's worth  understanding how to optimize charging conditions to extend service life of your battery: https://batteryuniversity.com/learn/article/charging_the_lead_acid_battery
+
+Since I had to dig a little deeper, I have decided to include my findings in 'Commands Inverter.ods' in the near future!
+
+### Using `inverter_poller` binary directly
+
+This project uses heavily modified sources, from [manio's](https://github.com/manio/skymax-demo) original demo, and be compiled to run standalone on Linux, Mac, and Windows (via Cygwin).
+
+Just head to the `sources/inverter-cli` directory and build it directly using: `cmake . && make`.
+
+Basic arguments supported are:
+
+```
+USAGE:  ./inverter_poller <args> [-r <command>], [-h | --help], [-1 | --run-once]
+
+SUPPORTED ARGUMENTS:
+          -r <raw-command>      TX 'raw' command to the inverter
+          -h | --help           This Help Message
+          -1 | --run-once       Runs one iteration on the inverter, and then exits
+          -d                    Additional debugging
 
 ```
 
-Example of command for Set battery re-discharge voltage to 26.1V
+### Using `inverter_poller` through docker
+
+The arguments are the same as using the inverter_poller directly.
+You only need to add the docker part.
+
+Here is a example to set the battery re-discharge voltage to 26.1V
 ```
 sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -r PBDV26.1'
 ```
 
- I have put in home assistant folder the examples of what I have for sending commands to inverter, template sensor for warnings, etc. 
-For the input buttons you will use the helpers in HA to create them. 
-The names and the option of them look in automations examples.
+### Lovelace Dashboard Files
+
+_**Please refer to the screenshot above for an example of the dashboard.**_
+
+There are some Lovelace dashboard files in the `homeassistant/` directory, however you will need to need to adapt to your own Home Assistant configuration and/or name of the inverter if you have changed it in the `mqtt.json` config file.
+
+For the input buttons you will need to use the helpers in HA to create them. 
+The names and the options of them are in the automation examples.
+
+Note that in addition to merging the sample Yaml files with your Home Assistant, you will need the following custom Lovelace cards installed if you wish to use my templates:
+
+ - [vertical-stack-in-card](https://github.com/custom-cards/vertical-stack-in-card)
+ - [circle-sensor-card](https://github.com/custom-cards/circle-sensor-card)
+
+
+
+===========================
+
+## Credit
+Credit and many thanks to catalinbordan, saschalenz, kchiem, dilyanpalauzov, nrm21 and all other who worked on this!
+
 
