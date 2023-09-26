@@ -263,16 +263,7 @@ Wed Jun 15 19:14:57 2022 INVERTER: All queries complete, exiting loop.
 
 If you cant see this or have an endless loop, try my fix with axpert-query as I've described above.
 
-## Integrating into Home Assistant.
-
-Providing you have setup [MQTT](https://www.home-assistant.io/components/mqtt/) with Home Assistant, the device will automatically register in your Home Assistant when the container starts for the first time -- You do not need to manually define any sensors.
-
-From here you can setup [Graphs](https://www.home-assistant.io/lovelace/history-graph/) to display sensor data, and optionally change state of the inverter by "[publishing](https://www.home-assistant.io/docs/mqtt/service/)" a string to the inverter's primary topic like so:
-
-![Example, Changing the Charge Priority](images/mqtt-publish-packet.png "Example, Changing the Charge Priority")
-_Example: Changing the Charge Priority of the Inverter_
-
-**COMMON COMMANDS THAT CAN BE SENT TO THE INVERTER**
+## Common commands that can be sent to the inverter
 
 _(see [protocol manual](http://forums.aeva.asn.au/uploads/293/HS_MS_MSX_RS232_Protocol_20140822_after_current_upgrade.pdf) for complete list of supported commands)_
 
@@ -334,9 +325,17 @@ Here is a example to set the battery re-discharge voltage to 26.1V
 sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -r PBDV26.1'
 ```
 
-### Lovelace Dashboard Files
+## Integrating into Home Assistant
 
-_**Please refer to the screenshot above for an example of the dashboard.**_
+Providing you have setup [MQTT](https://www.home-assistant.io/components/mqtt/) with Home Assistant, the device will automatically register in your Home Assistant when the container starts for the first time -- You do not need to manually define any sensors.
+
+From here you can setup [Graphs](https://www.home-assistant.io/lovelace/history-graph/) to display sensor data, and optionally change state of the inverter by "[publishing](https://www.home-assistant.io/docs/mqtt/service/)" a string to the inverter's primary topic like so:
+
+![Example, Changing the Charge Priority](images/mqtt-publish-packet.png "Example, Changing the Charge Priority")
+_Example: Changing the Charge Priority of the Inverter_
+
+
+### Lovelace Dashboard Files
 
 There are some Lovelace dashboard files in the `homeassistant/` directory, however you will need to need to adapt to your own Home Assistant configuration and/or name of the inverter if you have changed it in the `mqtt.json` config file.
 
@@ -348,11 +347,5 @@ Note that in addition to merging the sample Yaml files with your Home Assistant,
  - [vertical-stack-in-card](https://github.com/custom-cards/vertical-stack-in-card)
  - [circle-sensor-card](https://github.com/custom-cards/circle-sensor-card)
 
-
-
-===========================
-
 ## Credit
 Credit and many thanks to catalinbordan, saschalenz, kchiem, dilyanpalauzov, nrm21 and all other who worked on this!
-
-
