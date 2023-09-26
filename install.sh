@@ -11,7 +11,7 @@ PATH_TO_NEW_INSTALL=/opt/ha-inverter-mqtt-agent
 
 clear
 echo "Lets install a better client for your Inverter"
-echo "No more peace of sh!!# WatchPower!"
+echo "No more piece of sh!!# WatchPower!"
 echo ""
 echo "Before running this script please make sure you have a compatiple inverter. Every inverter using WatchPower should in theorie work."
 echo "Furthermore, make sure your Homeassistant and MQTT server is up, accassible and running."

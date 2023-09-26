@@ -1,4 +1,4 @@
-# A Docker based Home Assistant interface for MPP/Voltronic Solar Inverters 
+# A Docker based Home Assistant interface for WatchPower based Solar Inverters 
 ![License](https://img.shields.io/github/license/ned-kelly/docker-voltronic-homeassistant.svg)
 
 This is a fork of a fork from catalinbordan (https://github.com/catalinbordan/docker-voltronic-homeassistant)
