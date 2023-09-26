@@ -1,3 +1,6 @@
+# A Docker based Home Assistant interface for MPP/Voltronic Solar Inverters 
+![License](https://img.shields.io/github/license/ned-kelly/docker-voltronic-homeassistant.svg)
+
 This is a fork of a fork from catalinbordan (https://github.com/catalinbordan/docker-voltronic-homeassistant)
 
 It didn't seem to be active anymore, so I decided to cook my own souce. 
@@ -40,21 +43,7 @@ Many thanks to all people who worked on this project so hard to get it to where 
 I've cut out anything from the readme file that I've found not helpful.
 I encourage you to check out the readme of catalinbordan and the original branch.
 
-==========================
-# A Docker based Home Assistant interface for MPP/Voltronic Solar Inverters 
-
-**Docker Hub:** [`bushrangers/ha-voltronic-mqtt:latest`](https://hub.docker.com/r/bushrangers/ha-voltronic-mqtt/)
-
-![License](https://img.shields.io/github/license/ned-kelly/docker-voltronic-homeassistant.svg)
-
 ----
-
-The following other projects may also run on the same SBC _(using the same style docker setup as this)_, to give you a fully featured solution with other sensors and devices:
-
- - [EPEver MPPT Stats (MQTT, Docker Image)](https://github.com/ned-kelly/docker-epever-homeassistant)
- - [LeChacal.com's CT Clamp Current/Energy Monitors for your Breaker Box](https://github.com/ned-kelly/docker-lechacal-homeassistant)
-
----
 
 This project [was derived](https://github.com/manio/skymax-demo) from the 'skymax' [C based monitoring application](https://skyboo.net/2017/03/monitoring-voltronic-power-axpert-mex-inverter-under-linux/) designed to take the monitoring data from Voltronic, Axpert, Mppsolar PIP, Voltacon, Effekta, and other branded OEM Inverters and send it to a [Home Assistant](https://www.home-assistant.io/) MQTT server for ingestion...
 
