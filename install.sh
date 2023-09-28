@@ -81,8 +81,10 @@ case $yn in
 	[yY] ) 
         read -p "Directory to old installation: " -i "$PATH_TO_OLD_INSTALL" -e PATH_TO_OLD_INSTALL
 
+        echo ""
         echo "The use of an old configuration could potentially brick your install."
-        echo "It can be a time saver thoe. If in doubt, skip it. Otherwise just check the config."
+        echo "It can be a time saver tho. If in doubt, skip it. Otherwise just check the config."
+        echo ""
 
         #### Check if user wants to save the old config
         while true; do
