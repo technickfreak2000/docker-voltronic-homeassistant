@@ -83,9 +83,8 @@ If you are using the install.sh, you dont have to install docker, docker-compose
 If you like you you can use my install.sh:
 
 ```bash
-# You can either download the install.sh manually or just be lazy and download the whole source:
-git clone https://github.com/technickfreak2000/docker-voltronic-homeassistant.git
-cd docker-voltronic-homeassistant
+# Let's download the install.sh manually:
+wget https://raw.githubusercontent.com/technickfreak2000/docker-voltronic-homeassistant/master/install.sh
 
 # Maybe you need to run
 chmod +x install.sh
