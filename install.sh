@@ -3,6 +3,9 @@
 # Simple script to build/install / update 
 # For ubuntu based systems only!
 
+# Enable debug output
+DEBUG=false
+
 # Path to old installation
 PATH_TO_OLD_INSTALL=/opt/ha-inverter-mqtt-agent
 
@@ -56,8 +59,12 @@ case $yn in
 	[yY] ) echo "Ok, installing docker, docker-compose and nano";
         sudo apt update 
         sudo apt install docker docker-compose nano -y
-        for i in {3..1};do echo -n "$i." && sleep 1; done
-        clear
+        echo ""
+        if ! [ "$DEBUG" = true ] ; then
+            for i in {3..1};do echo -n "$i." && sleep 1; done
+            clear
+        fi
+        
 		break;;
 	[nN] ) echo "I see, not doing anything...";
         echo ""
@@ -161,7 +168,13 @@ done
 echo "Building Container..."
 
 sudo docker-compose build
-for i in {5..1};do echo -n "$i." && sleep 1; done
+
+echo ""
+
+if ! [ "$DEBUG" = true ] ; then
+    for i in {3..1};do echo -n "$i." && sleep 1; done
+    clear
+fi
 
 #### Start container?
 while true; do
@@ -192,7 +205,10 @@ echo "In case you missed it, you can talk to the inverter directly with: "
 echo "sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -h'"
 echo ""
 
-for i in {3..1};do echo -n "$i." && sleep 1; done
+if ! [ "$DEBUG" = true ] ; then
+    for i in {3..1};do echo -n "$i." && sleep 1; done
+    echo ""
+fi
 
 echo "Lets do a quick test: "
 echo "Running: sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1'"
