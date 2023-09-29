@@ -213,11 +213,14 @@ echo "In case you missed it, you can talk to the inverter directly with: "
 echo "sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -h'"
 echo ""
 
-if ! [ "$DEBUG" = true ] ; then
-    for i in {3..1};do echo -n "$i." && sleep 1; done
-    echo ""
-fi
+case $yn in 
+	[yY] ) 
+        if ! [ "$DEBUG" = true ] ; then
+            for i in {3..1};do echo -n "$i." && sleep 1; done
+            echo ""
+        fi
 
-echo "Lets do a quick test: "
-echo "Running: sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1'"
-sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1'
+        echo "Lets do a quick test: "
+        echo "Running: sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1'"
+        sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1'
+esac
