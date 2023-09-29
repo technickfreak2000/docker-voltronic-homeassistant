@@ -3,6 +3,8 @@
 
 #define LOG_FILE "/dev/null"
 
+double roundToTwoDecimalPlaces(double num);
+
 void lprintf(const char *format, ...);
 int print_help();
 

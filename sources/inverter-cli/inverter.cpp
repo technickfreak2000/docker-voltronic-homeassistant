@@ -86,6 +86,9 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
            device_status2                               // Device status bits 2
     );
 
+    // Round every float number to nearest value
+    qpigsn->voltage_grid = roundToTwoDecimalPlaces(qpigsn->voltage_grid);
+
     // Parse through device status bits
     qpigsn->add_sbu_priority_version.store(device_status[0] == '1');
     qpigsn->configuration_status_change.store(device_status[1] == '1');
@@ -387,7 +390,7 @@ void cInverter::poll()
       m.lock();
       inv_data_avail = true;
       m.unlock();
-      
+
       if (quit_thread || runOnce)
         return;
     }

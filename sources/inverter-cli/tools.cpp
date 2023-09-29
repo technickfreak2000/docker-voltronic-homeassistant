@@ -5,12 +5,17 @@
 #include <sys/time.h>
 #include <string>
 #include <string.h>
+#include <math.h>
 #include <time.h>
 #include <unistd.h>
 #include "main.h"
 #include "tools.h"
 
 std::mutex log_mutex;
+
+double roundToTwoDecimalPlaces(double num) {
+    return round(num * 100.0) / 100.0;
+}
 
 void lprintf(const char *format, ...) {
   // Only print if debug flag is set, else do nothing
