@@ -147,6 +147,8 @@ cd "$PATH_TO_NEW_INSTALL"
 
 sudo mv -f /tmp/docker-voltronic-hass/config/* "$PATH_TO_NEW_INSTALL/config/"
 
+echo ""
+
 #### Edit config?
 while true; do
 
