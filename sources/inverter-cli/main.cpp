@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
             QPIRI *qpiri = &inv->qpiri;
             QPIWS *qpiws = &inv->qpiws;
 
-            if (qmod->inverter_mode_int != NULL)
+            if (qmod->inverter_mode_int != 0)
             {
                 lprintf("INVERTER: Mode Currently set to: %d", qmod->inverter_mode_int);
             }
@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
             char *jsonString = cJSON_Print(json);
 
             printf("%s\n", jsonString);
-            
+
             cJSON_free(jsonString);
             cJSON_Delete(json);
 
