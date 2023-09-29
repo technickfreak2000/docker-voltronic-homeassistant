@@ -19,21 +19,21 @@ typedef struct // Modus of first inverter
 typedef struct QPIGSn // Standard charging, mppt, etc information of all controllers of a single Inverter
 {
   double voltage_grid;
-  float freq_grid;
-  float voltage_out;
-  float freq_out;
+  double freq_grid;
+  double voltage_out;
+  double freq_out;
   int load_va;
   int load_watt;
   int load_percent;
   int voltage_bus;
-  float voltage_batt;
+  double voltage_batt;
   int batt_charge_current;
   int batt_capacity;
   int temp_heatsink;
-  float pv_input_current;
-  float pv_input_voltage;
-  float pv_input_watts;
-  float scc_voltage;
+  double pv_input_current;
+  double pv_input_voltage;
+  double pv_input_watts;
+  double scc_voltage;
   int batt_discharge_current;
   atomic_bool add_sbu_priority_version;                 // b7
   atomic_bool configuration_status_change;              // b6
@@ -61,18 +61,18 @@ typedef struct QPGSn // All kinds of information + QPIGS of all inverter
 
 typedef struct QPIRI // "global" values of inverter for battery settings, ...
 {
-  float grid_voltage_rating;
-  float grid_current_rating;
-  float out_voltage_rating;
-  float out_freq_rating;
-  float out_current_rating;
+  double grid_voltage_rating;
+  double grid_current_rating;
+  double out_voltage_rating;
+  double out_freq_rating;
+  double out_current_rating;
   int out_va_rating;
   int out_watt_rating;
-  float batt_rating;
-  float batt_recharge_voltage;
-  float batt_under_voltage;
-  float batt_bulk_voltage;
-  float batt_float_voltage;
+  double batt_rating;
+  double batt_recharge_voltage;
+  double batt_under_voltage;
+  double batt_bulk_voltage;
+  double batt_float_voltage;
   int batt_type;
   int max_grid_charge_current;
   int max_charge_current;
@@ -82,7 +82,7 @@ typedef struct QPIRI // "global" values of inverter for battery settings, ...
   int machine_type;
   int topology;
   int out_mode;
-  float batt_redischarge_voltage;
+  double batt_redischarge_voltage;
   char parallel_max_num;
 } QPIRI;
 

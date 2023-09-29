@@ -62,7 +62,7 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
     char device_status2[3];
 
     // Parse values
-    sscanf(tmpData->c_str(), "%lf %f %f %f %d %d %d %d %f %d %d %d %f %f %f %d %s %d %d %d %s",
+    sscanf(tmpData->c_str(), "%lf %lf %lf %lf %d %d %d %d %lf %d %d %d %lf %lf %lf %d %s %d %d %d %s",
            &qpigsn->voltage_grid,                       // Grid voltage
            &qpigsn->freq_grid,                          // Grid frequency
            &qpigsn->voltage_out,                        // AC output voltage
@@ -85,9 +85,6 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
            &qpigsn->pv_charging_power,                  // PV charging power (W)
            device_status2                               // Device status bits 2
     );
-
-    // Round every float number to nearest value
-    // qpigsn->voltage_grid = roundToTwoDecimalPlaces(qpigsn->voltage_grid);
 
     // Parse through device status bits
     qpigsn->add_sbu_priority_version.store(device_status[0] == '1');
@@ -122,7 +119,7 @@ void cInverter::GetQPIRI(QPIRI *qpiri)
     string *tmpData = new string((const char *)buf + 1);
 
     // Parse values
-    sscanf(tmpData->c_str(), "%f %f %f %f %f %d %d %f %f %f %f %f %d %d %d %d %d %d %c %d %d %d %f",
+    sscanf(tmpData->c_str(), "%lf %lf %lf %lf %lf %d %d %lf %lf %lf %lf %lf %d %d %d %d %d %d %c %d %d %d %lf",
            &qpiri->grid_voltage_rating,       // ^ Grid rating voltage
            &qpiri->grid_current_rating,       // ^ Grid rating current per protocol, frequency in practice
            &qpiri->out_voltage_rating,        // ^ AC output rating voltage
