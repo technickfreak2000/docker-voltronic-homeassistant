@@ -101,6 +101,9 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
     qpigsn->switch_on.store(device_status2[1] == '1');
     qpigsn->dustproof_installed.store(device_status2[2] == '1');
 
+    // Calculate pv input wattage
+    qpigsn->pv_input_watts = qpigsn->pv_input_current * qpigsn->pv_input_voltage;
+
     delete tmpData;
     m.unlock();
   }
