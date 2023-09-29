@@ -62,7 +62,7 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
     char device_status2[3];
 
     // Parse values
-    sscanf(tmpData->c_str(), "%f %f %f %f %d %d %d %d %f %d %d %d %f %f %f %d %s %d %d %d %s",
+    sscanf(tmpData->c_str(), "%lf %f %f %f %d %d %d %d %f %d %d %d %f %f %f %d %s %d %d %d %s",
            &qpigsn->voltage_grid,                       // Grid voltage
            &qpigsn->freq_grid,                          // Grid frequency
            &qpigsn->voltage_out,                        // AC output voltage
@@ -87,7 +87,7 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
     );
 
     // Round every float number to nearest value
-    qpigsn->voltage_grid = roundToTwoDecimalPlaces(qpigsn->voltage_grid);
+    // qpigsn->voltage_grid = roundToTwoDecimalPlaces(qpigsn->voltage_grid);
 
     // Parse through device status bits
     qpigsn->add_sbu_priority_version.store(device_status[0] == '1');

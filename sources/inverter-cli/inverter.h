@@ -18,7 +18,7 @@ typedef struct // Modus of first inverter
 
 typedef struct QPIGSn // Standard charging, mppt, etc information of all controllers of a single Inverter
 {
-  float voltage_grid;
+  double voltage_grid;
   float freq_grid;
   float voltage_out;
   float freq_out;
