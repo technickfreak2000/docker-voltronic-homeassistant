@@ -208,6 +208,13 @@ int main(int argc, char *argv[])
             cJSON_AddNumberToObject(json, "Charger_source_priority", qpiri->charger_source_priority);                        // QPIRI
             cJSON_AddNumberToObject(json, "Battery_redischarge_voltage", qpiri->batt_redischarge_voltage);                   // QPIRI
 
+            char *jsonString = cJSON_Print(json);
+
+            printf("%s\n", jsonString);
+            
+            cJSON_free(jsonString);
+            cJSON_Delete(json);
+
             if (runOnce)
             {
                 // there is no thread -- ups->terminateThread();
