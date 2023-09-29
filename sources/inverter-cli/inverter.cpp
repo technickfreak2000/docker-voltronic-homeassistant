@@ -101,8 +101,6 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
     qpigsn->switch_on.store(device_status2[1] == '1');
     qpigsn->dustproof_installed.store(device_status2[2] == '1');
 
-    delete device_status;
-    delete device_status2;
     delete tmpData;
     m.unlock();
   }
