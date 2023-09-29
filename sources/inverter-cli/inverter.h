@@ -190,7 +190,7 @@ public:
   QPIGSn qpigsn;
   QPIRI qpiri;
   QPIWS qpiws;
-  atomic_bool inv_data_avail;
+  atomic_bool inv_data_avail = false;
 
   string *ExecuteCmd(const std::string cmd);
 };
