@@ -12,75 +12,209 @@
 cInverter::cInverter(std::string devicename)
 {
   device = devicename;
-  status1[0] = 0;
-  status2[0] = 0;
-  warnings[0] = 0;
-  mode = 0;
 }
 
-string *cInverter::GetQpigsStatus()
+void cInverter::GetQMOD(QMOD *qmod)
 {
-  m.lock();
-  string *result = new string(status1);
-  m.unlock();
-  return result;
-}
-
-string *cInverter::GetQpiriStatus()
-{
-  m.lock();
-  string *result = new string(status2);
-  m.unlock();
-  return result;
-}
-
-string *cInverter::GetWarnings()
-{
-  m.lock();
-  string *result = new string(warnings);
-  m.unlock();
-  return result;
-}
-
-void cInverter::SetMode(char newmode)
-{
-  m.lock();
-  if (mode && newmode != mode)
-    ups_status_changed = true;
-  mode = newmode;
-  m.unlock();
-}
-
-int cInverter::GetMode()
-{
-  int result;
-  m.lock();
-  switch (mode)
+  if (query("QMOD") &&
+      strcmp((char *)&buf[1], "NAK") != 0)
   {
-  case 'P':
-    result = 1;
-    break; // Power_On
-  case 'S':
-    result = 2;
-    break; // Standby
-  case 'L':
-    result = 3;
-    break; // Line
-  case 'B':
-    result = 4;
-    break; // Battery
-  case 'F':
-    result = 5;
-    break; // Fault
-  case 'H':
-    result = 6;
-    break; // Power_Saving
-  default:
-    result = 0;
-    break; // Unknown
+    m.lock();
+    qmod->inverter_mode[0] = buf[1];
+    qmod->inverter_mode[1] = '\0';
+
+    switch (qmod->inverter_mode[0])
+    {
+    case 'P':
+      qmod->inverter_mode_int = 1;
+      break; // Power_On
+    case 'S':
+      qmod->inverter_mode_int = 2;
+      break; // Standby
+    case 'L':
+      qmod->inverter_mode_int = 3;
+      break; // Line
+    case 'B':
+      qmod->inverter_mode_int = 4;
+      break; // Battery
+    case 'F':
+      qmod->inverter_mode_int = 5;
+      break; // Fault
+    case 'H':
+      qmod->inverter_mode_int = 6;
+      break; // Power_Saving
+    default:
+      qmod->inverter_mode_int = 0;
+      break; // Unknown
+    }
+    m.unlock();
   }
-  m.unlock();
-  return result;
+}
+
+void cInverter::GetQPIGSn(QPIGSn *qpigsn)
+{
+  if (query("QPIGS") &&
+      strcmp((char *)&buf[1], "NAK") != 0)
+  {
+    m.lock();
+    string *tmpData = new string((const char *)buf + 1);
+    char device_status[8];
+    char device_status2[3];
+
+    // Parse values
+    sscanf(tmpData->c_str(), "%f %f %f %f %d %d %d %d %f %d %d %d %f %f %f %d %s %d %d %d %s",
+           &qpigsn->voltage_grid,                       // Grid voltage
+           &qpigsn->freq_grid,                          // Grid frequency
+           &qpigsn->voltage_out,                        // AC output voltage
+           &qpigsn->freq_out,                           // AC output frequency
+           &qpigsn->load_va,                            // AC output apparent power (VA)
+           &qpigsn->load_watt,                          // AC output active power (Watt)
+           &qpigsn->load_percent,                       // Output load percent - Maximum of W% or VA%., VA% is a percent of apparent power., W% is a percent of active power.
+           &qpigsn->voltage_bus,                        // BUS voltage
+           &qpigsn->voltage_batt,                       // Battery voltage
+           &qpigsn->batt_charge_current,                // Battery charging current
+           &qpigsn->batt_capacity,                      // Battery capacity
+           &qpigsn->temp_heatsink,                      // Inverter heat sink temperature
+           &qpigsn->pv_input_current,                   // PV Input current for battery.
+           &qpigsn->pv_input_voltage,                   // PV Input voltage 1
+           &qpigsn->scc_voltage,                        // Battery voltage from SCC (Solar Charge Controller) (V)
+           &qpigsn->batt_discharge_current,             // Battery discharge current
+           device_status,                               // Device Status bits
+           &qpigsn->battery_voltage_offset_for_fans_on, // Battery voltage offset for fans
+           &qpigsn->eeprom_version,                     // EEPROM version
+           &qpigsn->pv_charging_power,                  // PV charging power (W)
+           device_status2                               // Device status bits 2
+    );
+
+    // Parse through device status bits
+    qpigsn->add_sbu_priority_version.store(device_status[0] == '1');
+    qpigsn->configuration_status_change.store(device_status[1] == '1');
+    qpigsn->scc_firmware_version_change.store(device_status[2] == '1');
+    qpigsn->load_status.store(device_status[3] == '1');
+    qpigsn->battery_voltage_to_steady_while_charging.store(device_status[4] == '1');
+    qpigsn->charging_status_charging.store(device_status[5] == '1');
+    qpigsn->charging_status_scc.store(device_status[6] == '1');
+    qpigsn->charging_status_ac.store(device_status[7] == '1');
+
+    // Parse through other device status bits
+    qpigsn->charging_to_floating_mode.store(device_status2[0] == '1');
+    qpigsn->switch_on.store(device_status2[1] == '1');
+    qpigsn->dustproof_installed.store(device_status2[2] == '1');
+
+    delete device_status;
+    delete device_status2;
+    delete tmpData;
+    m.unlock();
+  }
+}
+
+void cInverter::GetQPGSn(QPGSn *qpgsn)
+{
+}
+
+void cInverter::GetQPIRI(QPIRI *qpiri)
+{
+  if (query("QPIRI") &&
+      strcmp((char *)&buf[1], "NAK") != 0)
+  {
+    m.lock();
+    string *tmpData = new string((const char *)buf + 1);
+
+    // Parse values
+    sscanf(tmpData->c_str(), "%f %f %f %f %f %d %d %f %f %f %f %f %d %d %d %d %d %d %c %d %d %d %f",
+           &qpiri->grid_voltage_rating,       // ^ Grid rating voltage
+           &qpiri->grid_current_rating,       // ^ Grid rating current per protocol, frequency in practice
+           &qpiri->out_voltage_rating,        // ^ AC output rating voltage
+           &qpiri->out_freq_rating,           // ^ AC output rating frequency
+           &qpiri->out_current_rating,        // ^ AC output rating current
+           &qpiri->out_va_rating,             // ^ AC output rating apparent power
+           &qpiri->out_watt_rating,           // ^ AC output rating active power
+           &qpiri->batt_rating,               // ^ Battery rating voltage
+           &qpiri->batt_recharge_voltage,     // * Battery re-charge voltage
+           &qpiri->batt_under_voltage,        // * Battery under voltage
+           &qpiri->batt_bulk_voltage,         // * Battery bulk voltage
+           &qpiri->batt_float_voltage,        // * Battery float voltage
+           &qpiri->batt_type,                 // ^ Battery type - 0 AGM, 1 Flooded, 2 User
+           &qpiri->max_grid_charge_current,   // * Current max AC charging current
+           &qpiri->max_charge_current,        // * Current max charging current
+           &qpiri->in_voltage_range,          // ^ Input voltage range, 0 Appliance 1 UPS
+           &qpiri->out_source_priority,       // * Output source priority, 0 Utility first, 1 solar first, 2 SUB first
+           &qpiri->charger_source_priority,   // * Charger source priority 0 Utility first, 1 solar first, 2 Solar + utility, 3 only solar charging permitted
+           &qpiri->parallel_max_num,          // ^ Parallel max number 0-9
+           &qpiri->machine_type,              // ^ Machine type 00 Grid tie, 01 Off grid, 10 hybrid
+           &qpiri->topology,                  // ^ Topology  0 transformerless 1 transformer
+           &qpiri->out_mode,                  // ^ Output mode 00: single machine output, 01: parallel output, 02: Phase 1 of 3 Phase output, 03: Phase 2 of 3 Phase output, 04: Phase 3 of 3 Phase output
+           &qpiri->batt_redischarge_voltage); // * Battery re-discharge voltage
+                                              // ^ PV OK condition for parallel
+                                              // ^ PV power balance
+    delete tmpData;
+    m.unlock();
+  }
+}
+
+void cInverter::GetQPIWS(QPIWS *qpiws)
+{
+  if (query("QPIWS") &&
+      strcmp((char *)&buf[1], "NAK") != 0)
+  {
+    m.lock();
+    char *tmpData = (char *)buf + 1;
+
+    // Parse warning bits a0-a31
+    qpiws->reserved.store(tmpData[0] == '1');
+    qpiws->inverter_fault.store(tmpData[1] == '1');
+    qpiws->bus_over.store(tmpData[2] == '1');
+    qpiws->bus_under.store(tmpData[3] == '1');
+    qpiws->bus_soft_fail.store(tmpData[4] == '1');
+    qpiws->line_fail.store(tmpData[5] == '1');
+    qpiws->opv_short.store(tmpData[6] == '1');
+    qpiws->inverter_voltage_too_low.store(tmpData[7] == '1');
+    qpiws->inverter_voltage_too_high.store(tmpData[8] == '1');
+    qpiws->over_temperature.store(tmpData[9] == '1');
+    qpiws->fan_locked.store(tmpData[10] == '1');
+    qpiws->battery_voltage_high.store(tmpData[11] == '1');
+    qpiws->battery_low_alarm.store(tmpData[12] == '1');
+    qpiws->overcharge.store(tmpData[13] == '1');
+    qpiws->battery_under_shutdown.store(tmpData[14] == '1');
+    qpiws->battery_derating.store(tmpData[15] == '1');
+    qpiws->over_load.store(tmpData[16] == '1');
+    qpiws->eeprom_fault.store(tmpData[17] == '1');
+    qpiws->inverter_over_current.store(tmpData[18] == '1');
+    qpiws->inverter_soft_fail.store(tmpData[19] == '1');
+    qpiws->self_test_fail.store(tmpData[20] == '1');
+    qpiws->op_dc_voltage_over.store(tmpData[21] == '1');
+    qpiws->bat_open.store(tmpData[22] == '1');
+    qpiws->current_sensor_fail.store(tmpData[23] == '1');
+    qpiws->battery_short.store(tmpData[24] == '1');
+    qpiws->power_limit.store(tmpData[25] == '1');
+    qpiws->pv_voltage_high.store(tmpData[26] == '1');
+    qpiws->mppt_overload_fault.store(tmpData[27] == '1');
+    qpiws->mppt_overload_warning.store(tmpData[28] == '1');
+    qpiws->battery_too_low_to_charge.store(tmpData[29] == '1');
+    qpiws->dc_dc_over_current.store(tmpData[30] == '1');
+
+    // Parse fault code (a32-a33)
+    strncpy(qpiws->fault_code, tmpData + 32, 2);
+    qpiws->fault_code[2] = '\0';
+
+    m.unlock();
+  }
+}
+
+void cInverter::GetQVWFn(QVFWn *qvwfn)
+{
+}
+
+void cInverter::GetQMN(QMN *qmn)
+{
+}
+
+void cInverter::GetQFLAG(QFLAG *qflag)
+{
+}
+
+void cInverter::GetQID(QID *qid)
+{
 }
 
 bool cInverter::query(const char *cmd)
@@ -233,70 +367,45 @@ void cInverter::poll()
 
   while (true)
   {
-    // Reading mode
-    if (!ups_qmod_changed)
+    if (inv_data_avail)
     {
-      if (query("QMOD") &&
-          strcmp((char *)&buf[1], "NAK") != 0)
-      {
-        SetMode(buf[1]);
-        ups_qmod_changed = true;
-      }
+      if (quit_thread || runOnce)
+        return;
+    }
+    else
+    {
+      // Reading mode
+      GetQMOD(&qmod);
+
+      // Reading QPIGS status
+      GetQPIGSn(&qpigsn);
+
+      // Reading QPIRI status
+      GetQPIRI(&qpiri);
+
+      // Get any device warnings...
+      GetQPIWS(&qpiws);
+
+      m.lock();
+      inv_data_avail = true;
+      m.unlock();
     }
 
-    // Reading QPIGS status
-    if (!ups_qpigs_changed)
-    {
-      if (query("QPIGS") &&
-          strcmp((char *)&buf[1], "NAK") != 0)
-      {
-        m.lock();
-        strcpy(status1, (const char *)buf + 1);
-        m.unlock();
-        ups_qpigs_changed = true;
-      }
-    }
-
-    // Reading QPIRI status
-    if (!ups_qpiri_changed)
-    {
-      if (query("QPIRI") &&
-          strcmp((char *)&buf[1], "NAK") != 0)
-      {
-        m.lock();
-        strcpy(status2, (const char *)buf + 1);
-        m.unlock();
-        ups_qpiri_changed = true;
-      }
-    }
-
-    // Get any device warnings...
-    if (!ups_qpiws_changed)
-    {
-      if (query("QPIWS") &&
-          strcmp((char *)&buf[1], "NAK") != 0)
-      {
-        m.lock();
-        strcpy(warnings, (const char *)buf + 1);
-        m.unlock();
-        ups_qpiws_changed = true;
-      }
-    }
-    if (quit_thread || runOnce)
-      return;
     sleep(5);
   }
 }
 
-void cInverter::ExecuteCmd(const string cmd)
+string *cInverter::ExecuteCmd(const string cmd)
 {
+  string *return_string;
   // Sending any command raw
   if (query(cmd.data()))
   {
     m.lock();
-    strcpy(status2, (const char *)buf + 1);
+    return_string = new string((const char *)buf + 1);
     m.unlock();
   }
+  return return_string;
 }
 
 uint16_t cInverter::cal_crc_half(uint8_t *pin, uint8_t len)
