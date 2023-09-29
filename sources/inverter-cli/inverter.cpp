@@ -387,6 +387,9 @@ void cInverter::poll()
       m.lock();
       inv_data_avail = true;
       m.unlock();
+      
+      if (quit_thread || runOnce)
+        return;
     }
 
     sleep(5);
