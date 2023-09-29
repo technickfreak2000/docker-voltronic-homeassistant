@@ -18,109 +18,109 @@ typedef struct // Modus of first inverter
 
 typedef struct QPIGSn // Standard charging, mppt, etc information of all controllers of a single Inverter
 {
-  double voltage_grid;
-  double freq_grid;
-  double voltage_out;
-  double freq_out;
-  int load_va;
-  int load_watt;
-  int load_percent;
-  int voltage_bus;
-  double voltage_batt;
-  int batt_charge_current;
-  int batt_capacity;
-  int temp_heatsink;
-  double pv_input_current;
-  double pv_input_voltage;
-  double pv_input_watts;
-  double scc_voltage;
-  int batt_discharge_current;
-  atomic_bool add_sbu_priority_version;                 // b7
-  atomic_bool configuration_status_change;              // b6
-  atomic_bool scc_firmware_version_change;              // b5
-  atomic_bool load_status;                              // b4
-  atomic_bool battery_voltage_to_steady_while_charging; // b3
-  atomic_bool charging_status_charging;                 // b2
-  atomic_bool charging_status_scc;                      // b1
-  atomic_bool charging_status_ac;                       // b0
-  int battery_voltage_offset_for_fans_on;
-  int eeprom_version;
-  int pv_charging_power;
-  atomic_bool charging_to_floating_mode; // b10
-  atomic_bool switch_on;                 // b9
-  atomic_bool dustproof_installed;       // b8   Axpert V series only?
+  double voltage_grid = 0;
+  double freq_grid = 0;
+  double voltage_out = 0;
+  double freq_out = 0;
+  int load_va = 0;
+  int load_watt = 0;
+  int load_percent = 0;
+  int voltage_bus = 0;
+  double voltage_batt = 0;
+  int batt_charge_current = 0;
+  int batt_capacity = 0;
+  int temp_heatsink = 0;
+  double pv_input_current = 0;
+  double pv_input_voltage = 0;
+  double pv_input_watts = 0;
+  double scc_voltage = 0;
+  int batt_discharge_current = 0;
+  atomic_bool add_sbu_priority_version = ATOMIC_VAR_INIT(false);                 // b7
+  atomic_bool configuration_status_change = ATOMIC_VAR_INIT(false);              // b6
+  atomic_bool scc_firmware_version_change = ATOMIC_VAR_INIT(false);              // b5
+  atomic_bool load_status = ATOMIC_VAR_INIT(false);                              // b4
+  atomic_bool battery_voltage_to_steady_while_charging = ATOMIC_VAR_INIT(false); // b3
+  atomic_bool charging_status_charging = ATOMIC_VAR_INIT(false);                 // b2
+  atomic_bool charging_status_scc = ATOMIC_VAR_INIT(false);                      // b1
+  atomic_bool charging_status_ac = ATOMIC_VAR_INIT(false);                       // b0
+  int battery_voltage_offset_for_fans_on = 0;
+  int eeprom_version = 0;
+  int pv_charging_power = 0;
+  atomic_bool charging_to_floating_mode = ATOMIC_VAR_INIT(false); // b10
+  atomic_bool switch_on = ATOMIC_VAR_INIT(false);                 // b9
+  atomic_bool dustproof_installed = ATOMIC_VAR_INIT(false);       // b8   Axpert V series only?
 
-  struct QPIGSn *next;
+  struct QPIGSn *next = NULL;
 } QPIGSn;
 
 typedef struct QPGSn // All kinds of information + QPIGS of all inverter
 {
 
-  struct QPGSn *next;
+  struct QPGSn *next = NULL;
 } QPGSn;
 
 typedef struct QPIRI // "global" values of inverter for battery settings, ...
 {
-  double grid_voltage_rating;
-  double grid_current_rating;
-  double out_voltage_rating;
-  double out_freq_rating;
-  double out_current_rating;
-  int out_va_rating;
-  int out_watt_rating;
-  double batt_rating;
-  double batt_recharge_voltage;
-  double batt_under_voltage;
-  double batt_bulk_voltage;
-  double batt_float_voltage;
-  int batt_type;
-  int max_grid_charge_current;
-  int max_charge_current;
-  int in_voltage_range;
-  int out_source_priority;
-  int charger_source_priority;
-  int machine_type;
-  int topology;
-  int out_mode;
-  double batt_redischarge_voltage;
-  char parallel_max_num;
+  double grid_voltage_rating = 0;
+  double grid_current_rating = 0;
+  double out_voltage_rating = 0;
+  double out_freq_rating = 0;
+  double out_current_rating = 0;
+  int out_va_rating = 0;
+  int out_watt_rating = 0;
+  double batt_rating = 0;
+  double batt_recharge_voltage = 0;
+  double batt_under_voltage = 0;
+  double batt_bulk_voltage = 0;
+  double batt_float_voltage = 0;
+  int batt_type = 0;
+  int max_grid_charge_current = 0;
+  int max_charge_current = 0;
+  int in_voltage_range = 0;
+  int out_source_priority = 0;
+  int charger_source_priority = 0;
+  int machine_type = 0;
+  int topology = 0;
+  int out_mode = 0;
+  double batt_redischarge_voltage = 0;
+  char parallel_max_num = 0;
 } QPIRI;
 
 typedef struct QPIWS // Warning bits of first inverter
 {
   // warning status a0-a31
-  atomic_bool reserved;                  // a0
-  atomic_bool inverter_fault;            // a1
-  atomic_bool bus_over;                  // a2
-  atomic_bool bus_under;                 // a3
-  atomic_bool bus_soft_fail;             // a4
-  atomic_bool line_fail;                 // a5
-  atomic_bool opv_short;                 // a6
-  atomic_bool inverter_voltage_too_low;  // a7
-  atomic_bool inverter_voltage_too_high; // a8
-  atomic_bool over_temperature;          // a9
-  atomic_bool fan_locked;                // a10
-  atomic_bool battery_voltage_high;      // a11
-  atomic_bool battery_low_alarm;         // a12
-  atomic_bool overcharge;                // a13
-  atomic_bool battery_under_shutdown;    // a14
-  atomic_bool battery_derating;          // a15
-  atomic_bool over_load;                 // a16
-  atomic_bool eeprom_fault;              // a17
-  atomic_bool inverter_over_current;     // a18
-  atomic_bool inverter_soft_fail;        // a19
-  atomic_bool self_test_fail;            // a20
-  atomic_bool op_dc_voltage_over;        // a21
-  atomic_bool bat_open;                  // a22
-  atomic_bool current_sensor_fail;       // a23
-  atomic_bool battery_short;             // a24
-  atomic_bool power_limit;               // a25
-  atomic_bool pv_voltage_high;           // a26
-  atomic_bool mppt_overload_fault;       // a27
-  atomic_bool mppt_overload_warning;     // a28
-  atomic_bool battery_too_low_to_charge; // a29
-  atomic_bool dc_dc_over_current;        // a30
-  atomic_bool reserved2;                 // a31
+  atomic_bool reserved = ATOMIC_VAR_INIT(false);                  // a0
+  atomic_bool inverter_fault = ATOMIC_VAR_INIT(false);            // a1
+  atomic_bool bus_over = ATOMIC_VAR_INIT(false);                  // a2
+  atomic_bool bus_under = ATOMIC_VAR_INIT(false);                 // a3
+  atomic_bool bus_soft_fail = ATOMIC_VAR_INIT(false);             // a4
+  atomic_bool line_fail = ATOMIC_VAR_INIT(false);                 // a5
+  atomic_bool opv_short = ATOMIC_VAR_INIT(false);                 // a6
+  atomic_bool inverter_voltage_too_low = ATOMIC_VAR_INIT(false);  // a7
+  atomic_bool inverter_voltage_too_high = ATOMIC_VAR_INIT(false); // a8
+  atomic_bool over_temperature = ATOMIC_VAR_INIT(false);          // a9
+  atomic_bool fan_locked = ATOMIC_VAR_INIT(false);                // a10
+  atomic_bool battery_voltage_high = ATOMIC_VAR_INIT(false);      // a11
+  atomic_bool battery_low_alarm = ATOMIC_VAR_INIT(false);         // a12
+  atomic_bool overcharge = ATOMIC_VAR_INIT(false);                // a13
+  atomic_bool battery_under_shutdown = ATOMIC_VAR_INIT(false);    // a14
+  atomic_bool battery_derating = ATOMIC_VAR_INIT(false);          // a15
+  atomic_bool over_load = ATOMIC_VAR_INIT(false);                 // a16
+  atomic_bool eeprom_fault = ATOMIC_VAR_INIT(false);              // a17
+  atomic_bool inverter_over_current = ATOMIC_VAR_INIT(false);     // a18
+  atomic_bool inverter_soft_fail = ATOMIC_VAR_INIT(false);        // a19
+  atomic_bool self_test_fail = ATOMIC_VAR_INIT(false);            // a20
+  atomic_bool op_dc_voltage_over = ATOMIC_VAR_INIT(false);        // a21
+  atomic_bool bat_open = ATOMIC_VAR_INIT(false);                  // a22
+  atomic_bool current_sensor_fail = ATOMIC_VAR_INIT(false);       // a23
+  atomic_bool battery_short = ATOMIC_VAR_INIT(false);             // a24
+  atomic_bool power_limit = ATOMIC_VAR_INIT(false);               // a25
+  atomic_bool pv_voltage_high = ATOMIC_VAR_INIT(false);           // a26
+  atomic_bool mppt_overload_fault = ATOMIC_VAR_INIT(false);       // a27
+  atomic_bool mppt_overload_warning = ATOMIC_VAR_INIT(false);     // a28
+  atomic_bool battery_too_low_to_charge = ATOMIC_VAR_INIT(false); // a29
+  atomic_bool dc_dc_over_current = ATOMIC_VAR_INIT(false);        // a30
+  atomic_bool reserved2 = ATOMIC_VAR_INIT(false);                 // a31
 
   // Seems to be for king only?
   char fault_code[3]; // a32-33
@@ -129,7 +129,7 @@ typedef struct QPIWS // Warning bits of first inverter
 typedef struct QVFWn // Firmware version of all processors inside first inverter
 {
 
-  struct QVFWn *next;
+  struct QVFWn *next = NULL;
 } QVFWn;
 
 typedef struct QMN // Model name
