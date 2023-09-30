@@ -49,5 +49,15 @@ BASH_HASH=$(echo $POLLER_JSON | jq -r '. | to_entries | .[] | @sh "[\(.key)]=\(.
 eval "declare -A INVERTER_DATA=($BASH_HASH)"
 
 for key in "${!INVERTER_DATA[@]}"; do
-    pushMQTTData "$key" "${INVERTER_DATA[$key]}"
+    value="${INVERTER_DATA[$key]}"
+    
+    # Check if the value is "true" and convert it to 1, or "false" and convert it to 0
+    # Otherwise dont change the value  
+    if [ "$value" == "true" ]; then
+        value=1
+    elif [ "$value" == "false" ]; then
+        value=0
+    fi
+    
+    pushMQTTData "$key" "$value"
 done
