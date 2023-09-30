@@ -413,7 +413,7 @@ void cInverter::poll()
       GetQMN(&qmn);
 
       // Get id of inverter
-      GetQMN(&qmn);
+      GetQID(&qid);
 
       // Reading mode
       GetQMOD(&qmod);
