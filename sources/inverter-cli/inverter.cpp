@@ -218,6 +218,8 @@ void cInverter::GetQMN(QMN *qmn)
     {
       free(qmn->model_name);
     }
+
+    lprintf("DEBUG:  Length of char model name is %d)", strlen(tmpData));
     
     qmn->model_name = (char *)malloc(strlen(tmpData));
     memcpy(qmn->model_name, tmpData, strlen(tmpData));
