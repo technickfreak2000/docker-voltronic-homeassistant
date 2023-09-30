@@ -2,16 +2,16 @@
 #
 # Simple script to register the MQTT topics when the container starts for the first time...
 
-MQTT_SERVER=`cat /etc/inverter/mqtt.json | jq '.server' -r`
-MQTT_PORT=`cat /etc/inverter/mqtt.json | jq '.port' -r`
-MQTT_TOPIC=`cat /etc/inverter/mqtt.json | jq '.topic' -r`
-MQTT_DEVICENAME=`cat /etc/inverter/mqtt.json | jq '.devicename' -r`
-MQTT_MANUFACTURER=`cat /etc/inverter/mqtt.json | jq '.manufacturer' -r`
-MQTT_MODEL=`cat /etc/inverter/mqtt.json | jq '.model' -r`
-MQTT_SERIAL=`cat /etc/inverter/mqtt.json | jq '.serial' -r`
-MQTT_VER=`cat /etc/inverter/mqtt.json | jq '.ver' -r`
-MQTT_USERNAME=`cat /etc/inverter/mqtt.json | jq '.username' -r`
-MQTT_PASSWORD=`cat /etc/inverter/mqtt.json | jq '.password' -r`
+MQTT_SERVER=$(cat /etc/inverter/mqtt.json | jq '.server' -r)
+MQTT_PORT=$(cat /etc/inverter/mqtt.json | jq '.port' -r)
+MQTT_TOPIC=$(cat /etc/inverter/mqtt.json | jq '.topic' -r)
+MQTT_DEVICENAME=$(cat /etc/inverter/mqtt.json | jq '.devicename' -r)
+MQTT_MANUFACTURER=$(cat /etc/inverter/mqtt.json | jq '.manufacturer' -r)
+MQTT_MODEL=$(cat /etc/inverter/mqtt.json | jq '.model' -r)
+MQTT_SERIAL=$(cat /etc/inverter/mqtt.json | jq '.serial' -r)
+MQTT_VER=$(cat /etc/inverter/mqtt.json | jq '.ver' -r)
+MQTT_USERNAME=$(cat /etc/inverter/mqtt.json | jq '.username' -r)
+MQTT_PASSWORD=$(cat /etc/inverter/mqtt.json | jq '.password' -r)
 
 registerTopic () {
     mosquitto_pub \
