@@ -158,6 +158,7 @@ int main(int argc, char *argv[])
         if (inv->inv_data_avail)
         {
             QMN *qmn = &inv->qmn;
+            QID *qid = &inv->qid;
             QMOD *qmod = &inv->qmod;
             QPIGSn *qpigsn = &inv->qpigsn;
             QPIRI *qpiri = &inv->qpiri;
@@ -179,6 +180,9 @@ int main(int argc, char *argv[])
 
             // QMN
             cJSON_AddStringToObject(json, "Inverter_model_name", qmn->model_name);
+
+            // QID
+            cJSON_AddStringToObject(json, "Inverter_id", qid->inverter_id);
 
             // QMOD
             cJSON_AddNumberToObject(json, "Inverter_mode", qmod->inverter_mode_int);

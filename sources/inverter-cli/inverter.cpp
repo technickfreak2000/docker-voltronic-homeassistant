@@ -233,6 +233,23 @@ void cInverter::GetQFLAG(QFLAG *qflag)
 
 void cInverter::GetQID(QID *qid)
 {
+  if (query("QID") &&
+      strcmp((char *)&buf[1], "NAK") != 0)
+  {
+    m.lock();
+    char *tmpData = (char *)buf + 1;
+
+    if (qid->inverter_id != NULL)
+    {
+      free(qid->inverter_id);
+    }
+
+    size_t inverter_id_length = strlen(tmpData) + 1;
+    qid->inverter_id = (char *)malloc(inverter_id_length);
+    memcpy(qid->inverter_id, tmpData, inverter_id_length);
+
+    m.unlock();
+  }
 }
 
 bool cInverter::query(const char *cmd)

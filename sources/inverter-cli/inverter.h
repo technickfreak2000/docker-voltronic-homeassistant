@@ -144,7 +144,7 @@ typedef struct QFLAG // Inverter capabilities
 
 typedef struct QID // ID of inverter
 {
-
+  char *inverter_id = NULL;
 } QID;
 
 class cInverter
@@ -187,6 +187,7 @@ public:
   }
 
   QMN qmn;
+  QID qid;
   QMOD qmod;
   QPIGSn qpigsn;
   QPIRI qpiri;
