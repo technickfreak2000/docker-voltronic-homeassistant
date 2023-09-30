@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
                 lprintf("INVERTER: All queries complete, exiting loop.");
                 exit(0);
             }
-            inv->inv_data_avail = false;
+            inv->inv_data_avail.store(false);
         }
 
         sleep(1);
