@@ -229,6 +229,73 @@ void cInverter::GetQMN(QMN *qmn)
 
 void cInverter::GetQFLAG(QFLAG *qflag)
 {
+  if (query("QFLAG") &&
+      strcmp((char *)&buf[1], "NAK") != 0)
+  {
+    m.lock();
+    char *tmpData = (char *)buf + 1;
+    size_t tmpData_length = strlen(tmpData) + 1;
+
+    atomic_bool D_not_found = ATOMIC_VAR_INIT(true);
+
+    for (size_t i = 0; i < tmpData_length; i++)
+    {
+      switch (tmpData[i])
+      {
+      case 'E':
+        D_not_found.store(true);
+        break;
+
+      case 'D':
+        D_not_found.store(false);
+        break;
+
+      case 'a':
+        qflag->silence_open_buzzer.store(D_not_found);
+        break;
+
+      case 'b':
+        qflag->bypass_function.store(D_not_found);
+        break;
+
+      case 'c':
+        qflag->bypass_function_forbidden.store(D_not_found);
+        break;
+
+      case 'j':
+        qflag->power_saving.store(D_not_found);
+        break;
+
+      case 'k':
+        qflag->lcd_timeout_default_page.store(D_not_found);
+        break;
+
+      case 'u':
+        qflag->overload_restart.store(D_not_found);
+        break;
+
+      case 'v':
+        qflag->overtemperature_restart.store(D_not_found);
+        break;
+
+      case 'x':
+        qflag->lcd_backlight.store(D_not_found);
+        break;
+
+      case 'y':
+        qflag->alarm_primary_input.store(D_not_found);
+        break;
+
+      case 'z':
+        qflag->fault_code_record.store(D_not_found);
+        break;
+
+      default:
+        break;
+      }
+    }
+    m.unlock();
+  }
 }
 
 void cInverter::GetQID(QID *qid)
@@ -414,6 +481,9 @@ void cInverter::poll()
 
       // Get id of inverter
       GetQID(&qid);
+
+      // Get id of inverter
+      GetQFLAG(&qflag);
 
       // Reading mode
       GetQMOD(&qmod);

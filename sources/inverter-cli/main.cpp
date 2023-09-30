@@ -160,6 +160,7 @@ int main(int argc, char *argv[])
             QMN *qmn = &inv->qmn;
             QID *qid = &inv->qid;
             QMOD *qmod = &inv->qmod;
+            QFLAG *qflag = &inv->qflag;
             QPIGSn *qpigsn = &inv->qpigsn;
             QPIRI *qpiri = &inv->qpiri;
             QPIWS *qpiws = &inv->qpiws;
@@ -186,6 +187,18 @@ int main(int argc, char *argv[])
 
             // QMOD
             cJSON_AddNumberToObject(json, "Inverter_mode", qmod->inverter_mode_int);
+
+            // QFLAG
+            cJSON_AddBoolToObject(json, "Silence_open_buzzer", qflag->silence_open_buzzer);
+            cJSON_AddBoolToObject(json, "Bypass_function", qflag->bypass_function);
+            cJSON_AddBoolToObject(json, "Bypass_function_forbidden", qflag->bypass_function_forbidden);
+            cJSON_AddBoolToObject(json, "Power_saving", qflag->power_saving);
+            cJSON_AddBoolToObject(json, "Lcd_timeout_default_page", qflag->lcd_timeout_default_page);
+            cJSON_AddBoolToObject(json, "Overload_restart", qflag->overload_restart);
+            cJSON_AddBoolToObject(json, "Overtemperature_restart", qflag->overtemperature_restart);
+            cJSON_AddBoolToObject(json, "Lcd_backlight", qflag->lcd_backlight);
+            cJSON_AddBoolToObject(json, "Alarm_primary_input", qflag->alarm_primary_input);
+            cJSON_AddBoolToObject(json, "Fault_code_record", qflag->fault_code_record);
 
             // QPIGS
             cJSON_AddNumberToObject(json, "AC_grid_voltage", qpigsn->voltage_grid);

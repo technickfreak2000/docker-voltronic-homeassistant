@@ -139,7 +139,16 @@ typedef struct QMN // Model name
 
 typedef struct QFLAG // Inverter capabilities
 {
-
+  atomic_bool silence_open_buzzer = ATOMIC_VAR_INIT(false);       // Enable/disable silence or open buzzer
+  atomic_bool bypass_function = ATOMIC_VAR_INIT(false);           // Enable/disable bypass function
+  atomic_bool bypass_function_forbidden = ATOMIC_VAR_INIT(false); // Enable/forbid bypass function
+  atomic_bool power_saving = ATOMIC_VAR_INIT(false);              // Enable/disable power saving
+  atomic_bool lcd_timeout_default_page = ATOMIC_VAR_INIT(false);  // Enable/disable LCD display escape to default page after 1min timeout
+  atomic_bool overload_restart = ATOMIC_VAR_INIT(false);          // Enable/disable overload restart
+  atomic_bool overtemperature_restart = ATOMIC_VAR_INIT(false);   // Enable/disable over temperature restart
+  atomic_bool lcd_backlight = ATOMIC_VAR_INIT(false);             // Enable/disable backlight
+  atomic_bool alarm_primary_input = ATOMIC_VAR_INIT(false);       // Enable/disable alarm when primary input interrupts
+  atomic_bool fault_code_record = ATOMIC_VAR_INIT(false);         // Enable/disable fault code record
 } QFLAG;
 
 typedef struct QID // ID of inverter
@@ -188,6 +197,7 @@ public:
 
   QMN qmn;
   QID qid;
+  QFLAG qflag;
   QMOD qmod;
   QPIGSn qpigsn;
   QPIRI qpiri;
