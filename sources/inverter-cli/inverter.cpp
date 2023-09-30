@@ -219,8 +219,8 @@ void cInverter::GetQMN(QMN *qmn)
       free(qmn->model_name);
     }
     
-    qmn->model_name = (char *)malloc(sizeof(*tmpData));
-    memcpy(qmn->model_name, tmpData, sizeof(*tmpData));
+    qmn->model_name = (char *)malloc(strlen(tmpData));
+    memcpy(qmn->model_name, tmpData, strlen(tmpData));
 
     m.unlock();
   }
