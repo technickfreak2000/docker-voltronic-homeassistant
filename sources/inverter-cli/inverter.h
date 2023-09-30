@@ -134,7 +134,7 @@ typedef struct QVFWn // Firmware version of all processors inside first inverter
 
 typedef struct QMN // Model name
 {
-  string model_name;
+  char *model_name = NULL;
 } QMN;
 
 typedef struct QFLAG // Inverter capabilities
@@ -186,6 +186,7 @@ public:
     t1.join();
   }
 
+  QMN qmn;
   QMOD qmod;
   QPIGSn qpigsn;
   QPIRI qpiri;

@@ -157,56 +157,72 @@ int main(int argc, char *argv[])
         // Once we receive all queries print it to screen
         if (inv->inv_data_avail)
         {
+            QMN *qmn = &inv->qmn;
             QMOD *qmod = &inv->qmod;
             QPIGSn *qpigsn = &inv->qpigsn;
             QPIRI *qpiri = &inv->qpiri;
             QPIWS *qpiws = &inv->qpiws;
 
+            if (qmn->model_name != NULL)
+            {
+                lprintf("INVERTER: Model name: %s", qmn->model_name);
+            }
+
             if (qmod->inverter_mode_int != 0)
             {
-                lprintf("INVERTER: Mode Currently set to: %d", qmod->inverter_mode_int);
+                lprintf("INVERTER: Mode currently set to: %d", qmod->inverter_mode_int);
             }
 
             cJSON *json = cJSON_CreateObject();
 
-            cJSON_AddNumberToObject(json, "Inverter_mode", qmod->inverter_mode_int);  // QMOD
-            cJSON_AddNumberToObject(json, "AC_grid_voltage", qpigsn->voltage_grid);   // QPIGS
-            cJSON_AddNumberToObject(json, "AC_grid_frequency", qpigsn->freq_grid);    // QPIGS
-            cJSON_AddNumberToObject(json, "AC_out_voltage", qpigsn->voltage_out);     // QPIGS
-            cJSON_AddNumberToObject(json, "AC_out_frequency", qpigsn->freq_out);      // QPIGS
-            cJSON_AddNumberToObject(json, "PV_in_voltage", qpigsn->pv_input_voltage); // QPIGS
-            cJSON_AddNumberToObject(json, "PV_in_current", qpigsn->pv_input_current); // QPIGS This seems to be only the PV charging input current, NOT THE ACTUAL PV CURRENT ITSELF!!! At the moment, I havn't found a way to get the actual input current!
-            cJSON_AddNumberToObject(json, "PV_in_watts", qpigsn->pv_input_watts);     // QPIGS This seems to be only the PV charging input current * voltage, NOT THE ACTUAL PV WATTAGE ITSELF!!!
-            // cJSON_AddNumberToObject(json, "PV_in_watthour", qpigsn->pv_input_watthour);                 // QPIGS?
-            cJSON_AddNumberToObject(json, "SCC_voltage", qpigsn->scc_voltage); // QPIGS
-            cJSON_AddNumberToObject(json, "Load_pct", qpigsn->load_percent);   // QPIGS
-            cJSON_AddNumberToObject(json, "Load_watt", qpigsn->load_watt);     // QPIGS
-            // cJSON_AddNumberToObject(json, "Load_watthour", qpigsn->load_watthour);                      // QPIGS?
-            cJSON_AddNumberToObject(json, "Load_va", qpigsn->load_va);                                                       // QPIGS
-            cJSON_AddNumberToObject(json, "Bus_voltage", qpigsn->voltage_bus);                                               // QPIGS
-            cJSON_AddNumberToObject(json, "Heatsink_temperature", qpigsn->temp_heatsink);                                    // QPIGS
-            cJSON_AddNumberToObject(json, "Battery_capacity", qpigsn->batt_capacity);                                        // QPIGS
-            cJSON_AddNumberToObject(json, "Battery_voltage", qpigsn->voltage_batt);                                          // QPIGS
-            cJSON_AddNumberToObject(json, "Battery_charge_current", qpigsn->batt_charge_current);                            // QPIGS
-            cJSON_AddNumberToObject(json, "Battery_discharge_current", qpigsn->batt_discharge_current);                      // QPIGS
-            cJSON_AddBoolToObject(json, "Load_status_on", qpigsn->load_status);                                              // QPIGS
-            cJSON_AddBoolToObject(json, "SCC_charge_on", qpigsn->charging_status_scc);                                       // QPIGS
-            cJSON_AddBoolToObject(json, "AC_charge_on", qpigsn->charging_status_ac);                                         // QPIGS
-            cJSON_AddNumberToObject(json, "Battery_voltage_offset_for_fans_on", qpigsn->battery_voltage_offset_for_fans_on); // QPIGS
-            cJSON_AddNumberToObject(json, "Eeprom_version", qpigsn->eeprom_version);                                         // QPIGS
-            cJSON_AddNumberToObject(json, "PV_charging_power", qpigsn->pv_charging_power);                                   // QPIGS
-            cJSON_AddBoolToObject(json, "Charging_to_floating_mode", qpigsn->charging_to_floating_mode);                     // QPIGS
-            cJSON_AddBoolToObject(json, "Switch_On", qpigsn->switch_on);                                                     // QPIGS
-            cJSON_AddBoolToObject(json, "Dustproof_installed", qpigsn->dustproof_installed);                                 // QPIGS
-            cJSON_AddNumberToObject(json, "Battery_recharge_voltage", qpiri->batt_recharge_voltage);                         // QPIRI
-            cJSON_AddNumberToObject(json, "Battery_under_voltage", qpiri->batt_under_voltage);                               // QPIRI
-            cJSON_AddNumberToObject(json, "Battery_bulk_voltage", qpiri->batt_bulk_voltage);                                 // QPIRI
-            cJSON_AddNumberToObject(json, "Battery_float_voltage", qpiri->batt_float_voltage);                               // QPIRI
-            cJSON_AddNumberToObject(json, "Max_grid_charge_current", qpiri->max_grid_charge_current);                        // QPIRI
-            cJSON_AddNumberToObject(json, "Max_charge_current", qpiri->max_charge_current);                                  // QPIRI
-            cJSON_AddNumberToObject(json, "Out_source_priority", qpiri->out_source_priority);                                // QPIRI
-            cJSON_AddNumberToObject(json, "Charger_source_priority", qpiri->charger_source_priority);                        // QPIRI
-            cJSON_AddNumberToObject(json, "Battery_redischarge_voltage", qpiri->batt_redischarge_voltage);                   // QPIRI
+            // Here the json gets build, you can customize the outbut based on the first inverter model name
+
+            // QMN
+            cJSON_AddStringToObject(json, "Inverter_model_name", qmn->model_name);
+
+            // QMOD
+            cJSON_AddNumberToObject(json, "Inverter_mode", qmod->inverter_mode_int);
+
+            // QPIGS
+            cJSON_AddNumberToObject(json, "AC_grid_voltage", qpigsn->voltage_grid);
+            cJSON_AddNumberToObject(json, "AC_grid_frequency", qpigsn->freq_grid);
+            cJSON_AddNumberToObject(json, "AC_out_voltage", qpigsn->voltage_out);
+            cJSON_AddNumberToObject(json, "AC_out_frequency", qpigsn->freq_out);
+            cJSON_AddNumberToObject(json, "PV_in_voltage", qpigsn->pv_input_voltage);
+            cJSON_AddNumberToObject(json, "PV_in_current", qpigsn->pv_input_current); // This seems to be only the PV charging input current, NOT THE ACTUAL PV CURRENT ITSELF!!! At the moment, I havn't found a way to get the actual input current!
+            cJSON_AddNumberToObject(json, "PV_in_watts", qpigsn->pv_input_watts);     // This seems to be only the PV charging input current * voltage, NOT THE ACTUAL PV WATTAGE ITSELF!!!
+            // cJSON_AddNumberToObject(json, "PV_in_watthour", qpigsn->pv_input_watthour);
+            cJSON_AddNumberToObject(json, "SCC_voltage", qpigsn->scc_voltage);
+            cJSON_AddNumberToObject(json, "Load_pct", qpigsn->load_percent);
+            cJSON_AddNumberToObject(json, "Load_watt", qpigsn->load_watt);
+            // cJSON_AddNumberToObject(json, "Load_watthour", qpigsn->load_watthour);
+            cJSON_AddNumberToObject(json, "Load_va", qpigsn->load_va);
+            cJSON_AddNumberToObject(json, "Bus_voltage", qpigsn->voltage_bus);
+            cJSON_AddNumberToObject(json, "Heatsink_temperature", qpigsn->temp_heatsink);
+            cJSON_AddNumberToObject(json, "Battery_capacity", qpigsn->batt_capacity);
+            cJSON_AddNumberToObject(json, "Battery_voltage", qpigsn->voltage_batt);
+            cJSON_AddNumberToObject(json, "Battery_charge_current", qpigsn->batt_charge_current);
+            cJSON_AddNumberToObject(json, "Battery_discharge_current", qpigsn->batt_discharge_current);
+            cJSON_AddBoolToObject(json, "Load_status_on", qpigsn->load_status);
+            cJSON_AddBoolToObject(json, "SCC_charge_on", qpigsn->charging_status_scc);
+            cJSON_AddBoolToObject(json, "AC_charge_on", qpigsn->charging_status_ac);
+            cJSON_AddNumberToObject(json, "Battery_voltage_offset_for_fans_on", qpigsn->battery_voltage_offset_for_fans_on);
+            cJSON_AddNumberToObject(json, "Eeprom_version", qpigsn->eeprom_version);
+            cJSON_AddNumberToObject(json, "PV_charging_power", qpigsn->pv_charging_power);
+            cJSON_AddBoolToObject(json, "Charging_to_floating_mode", qpigsn->charging_to_floating_mode);
+            cJSON_AddBoolToObject(json, "Switch_On", qpigsn->switch_on);
+            cJSON_AddBoolToObject(json, "Dustproof_installed", qpigsn->dustproof_installed);
+
+            // QPIRI
+            cJSON_AddNumberToObject(json, "Battery_recharge_voltage", qpiri->batt_recharge_voltage);
+            cJSON_AddNumberToObject(json, "Battery_under_voltage", qpiri->batt_under_voltage);
+            cJSON_AddNumberToObject(json, "Battery_bulk_voltage", qpiri->batt_bulk_voltage);
+            cJSON_AddNumberToObject(json, "Battery_float_voltage", qpiri->batt_float_voltage);
+            cJSON_AddNumberToObject(json, "Max_grid_charge_current", qpiri->max_grid_charge_current);
+            cJSON_AddNumberToObject(json, "Max_charge_current", qpiri->max_charge_current);
+            cJSON_AddNumberToObject(json, "Out_source_priority", qpiri->out_source_priority);
+            cJSON_AddNumberToObject(json, "Charger_source_priority", qpiri->charger_source_priority);
+            cJSON_AddNumberToObject(json, "Battery_redischarge_voltage", qpiri->batt_redischarge_voltage);
 
             char *jsonString = cJSON_Print(json);
 

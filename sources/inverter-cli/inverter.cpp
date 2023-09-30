@@ -208,6 +208,22 @@ void cInverter::GetQVWFn(QVFWn *qvwfn)
 
 void cInverter::GetQMN(QMN *qmn)
 {
+  if (query("QMN") &&
+      strcmp((char *)&buf[1], "NAK") != 0)
+  {
+    m.lock();
+    char *tmpData = (char *)buf + 1;
+
+    if (qmn->model_name != NULL)
+    {
+      free(qmn->model_name);
+    }
+    
+    qmn->model_name = (char *)malloc(sizeof(*tmpData));
+    memcpy(qmn->model_name, tmpData, sizeof(*tmpData));
+
+    m.unlock();
+  }
 }
 
 void cInverter::GetQFLAG(QFLAG *qflag)
@@ -375,6 +391,9 @@ void cInverter::poll()
     }
     else
     {
+      // Get model name of inverter
+      GetQMN(&qmn);
+
       // Reading mode
       GetQMOD(&qmod);
 
