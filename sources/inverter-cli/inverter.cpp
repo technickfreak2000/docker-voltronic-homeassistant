@@ -224,14 +224,14 @@ void cInverter::GetQVWFn(QVFWn *qvwfn)
 
   // First element is static allocated in inverter, free all previous next elements
   QVFWn *current = qvwfn;
-  while (current != NULL)
+  while (current->next != NULL)
   {
-    QVFWn *next = current->next;
+    QVFWn *next = current->next->next;
     if (current->fw_version != NULL)
     {
       free(current->fw_version);
     }
-    free(current);
+    free(current->next);
     current = next;
   }
 
