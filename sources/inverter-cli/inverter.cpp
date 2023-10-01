@@ -261,6 +261,7 @@ void cInverter::GetQVWFn(QVFWn *qvwfn)
 
     current = current->next;
   }
+  free(combined_query);
 }
 
 void cInverter::GetQMN(QMN *qmn)

@@ -204,18 +204,19 @@ int main(int argc, char *argv[])
             // QVFWn
             QVFWn *current = qvwfn;
             size_t counter = 0;
+            char *combined_query = (char *)malloc(20 * sizeof(char));
             while (current != NULL)
             {
-                QVFWn *next = current->next;
+                lprintf("INVERTER: GOT QVWFN");
                 if (current->fw_version != NULL)
                 {
-                    char *combined_query = (char *)malloc(20 * sizeof(char));
                     sprintf(combined_query, "Fw_version_%d", counter);
                     cJSON_AddStringToObject(json, combined_query, current->fw_version);
                 }
                 counter++;
-                current = next;
+                current = current->next;
             }
+            free(combined_query);
 
             // QPIGS
             cJSON_AddNumberToObject(json, "AC_grid_voltage", qpigsn->voltage_grid);
