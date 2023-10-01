@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
             QID *qid = &inv->qid;
             QMOD *qmod = &inv->qmod;
             QFLAG *qflag = &inv->qflag;
-            QVFWn *qvwfn = &inv->qvfwn;
+            QVFWn *qvfwn = &inv->qvfwn;
             QPIGSn *qpigsn = &inv->qpigsn;
             QPIRI *qpiri = &inv->qpiri;
             QPIWS *qpiws = &inv->qpiws;
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
             cJSON_AddBoolToObject(json, "Fault_code_record", qflag->fault_code_record);
 
             // QVFWn
-            QVFWn *current = qvwfn;
+            QVFWn *current = qvfwn;
             size_t counter = 0;
             char *combined_query = (char *)malloc(20 * sizeof(char));
             while (current != NULL)
