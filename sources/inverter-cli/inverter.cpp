@@ -223,15 +223,15 @@ void cInverter::GetQVWFn(QVFWn *qvwfn)
   }
 
   // First element is static allocated in inverter, free all previous next elements
-  QVFWn *current = qvwfn;
-  while (current->next != NULL)
+  QVFWn *current = qvwfn->next;
+  while (current != NULL)
   {
-    QVFWn *next = current->next->next;
+    QVFWn *next = current->next;
     if (current->fw_version != NULL)
     {
       free(current->fw_version);
     }
-    free(current->next);
+    free(current);
     current = next;
   }
 
@@ -256,7 +256,7 @@ void cInverter::GetQVWFn(QVFWn *qvwfn)
     size_t fw_version_length = strlen(tmpData) + 1;
     current->next->fw_version = (char *)malloc(fw_version_length);
     memcpy(current->next->fw_version, tmpData, fw_version_length);
-
+    lprintf(current->next->fw_version);
     m.unlock();
 
     current = current->next;
