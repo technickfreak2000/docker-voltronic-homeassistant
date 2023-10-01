@@ -128,6 +128,7 @@ typedef struct QPIWS // Warning bits of first inverter
 
 typedef struct QVFWn // Firmware version of all processors inside first inverter
 {
+  char *fw_version = NULL;
 
   struct QVFWn *next = NULL;
 } QVFWn;
@@ -198,6 +199,7 @@ public:
   QMN qmn;
   QID qid;
   QFLAG qflag;
+  QVFWn qvfwn;
   QMOD qmod;
   QPIGSn qpigsn;
   QPIRI qpiri;

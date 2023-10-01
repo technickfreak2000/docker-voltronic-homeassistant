@@ -204,6 +204,63 @@ void cInverter::GetQPIWS(QPIWS *qpiws)
 
 void cInverter::GetQVWFn(QVFWn *qvwfn)
 {
+  if (query("QVFW") &&
+      strcmp((char *)&buf[1], "NAK") != 0)
+  {
+    m.lock();
+    char *tmpData = (char *)buf + 1;
+
+    if (qvwfn->fw_version != NULL)
+    {
+      free(qvwfn->fw_version);
+    }
+
+    size_t fw_version_length = strlen(tmpData) + 1;
+    qvwfn->fw_version = (char *)malloc(fw_version_length);
+    memcpy(qvwfn->fw_version, tmpData, fw_version_length);
+
+    m.unlock();
+  }
+
+  // First element is static allocated in inverter, free all previous next elements
+  QVFWn *current = qvwfn->next;
+  while (current != NULL)
+  {
+    QVFWn *next = current->next;
+    if (current->fw_version != NULL)
+    {
+      free(current->fw_version);
+    }
+    free(current);
+    current = next;
+  }
+
+  // 0, 1, dosn't exist, start at 2
+  size_t query_number = 2;
+  current = qvwfn->next;
+  char *combined_query = (char *)malloc(10 * sizeof(char));
+
+  sprintf(combined_query, "QVFW%d", query_number);
+
+  while (query(combined_query) &&
+         strcmp((char *)&buf[1], "NAK") != 0)
+  {
+    query_number++;
+    sprintf(combined_query, "QVFW%d", query_number);
+
+    current = (QVFWn *)malloc(sizeof(QVFWn));
+
+    m.lock();
+    char *tmpData = (char *)buf + 1;
+
+    size_t fw_version_length = strlen(tmpData) + 1;
+    current->fw_version = (char *)malloc(fw_version_length);
+    memcpy(current->fw_version, tmpData, fw_version_length);
+
+    m.unlock();
+
+    current = current->next;
+  }
 }
 
 void cInverter::GetQMN(QMN *qmn)
@@ -482,8 +539,11 @@ void cInverter::poll()
       // Get id of inverter
       GetQID(&qid);
 
-      // Get id of inverter
+      // Get inverter capabilities
       GetQFLAG(&qflag);
+
+      // Get firmware version of all processors
+      GetQVWFn(&qvfwn);
 
       // Reading mode
       GetQMOD(&qmod);

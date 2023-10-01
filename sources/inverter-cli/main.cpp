@@ -161,6 +161,7 @@ int main(int argc, char *argv[])
             QID *qid = &inv->qid;
             QMOD *qmod = &inv->qmod;
             QFLAG *qflag = &inv->qflag;
+            QVFWn *qvwfn = &inv->qvfwn;
             QPIGSn *qpigsn = &inv->qpigsn;
             QPIRI *qpiri = &inv->qpiri;
             QPIWS *qpiws = &inv->qpiws;
@@ -199,6 +200,22 @@ int main(int argc, char *argv[])
             cJSON_AddBoolToObject(json, "Lcd_backlight", qflag->lcd_backlight);
             cJSON_AddBoolToObject(json, "Alarm_primary_input", qflag->alarm_primary_input);
             cJSON_AddBoolToObject(json, "Fault_code_record", qflag->fault_code_record);
+
+            // QVFWn
+            QVFWn *current = qvwfn;
+            size_t counter = 0;
+            while (current != NULL)
+            {
+                QVFWn *next = current->next;
+                if (current->fw_version != NULL)
+                {
+                    char *combined_query = (char *)malloc(20 * sizeof(char));
+                    sprintf(combined_query, "Fw_version_%d", counter);
+                    cJSON_AddStringToObject(json, combined_query, current->fw_version);
+                }
+                counter++;
+                current = next;
+            }
 
             // QPIGS
             cJSON_AddNumberToObject(json, "AC_grid_voltage", qpigsn->voltage_grid);
@@ -240,6 +257,40 @@ int main(int argc, char *argv[])
             cJSON_AddNumberToObject(json, "Out_source_priority", qpiri->out_source_priority);
             cJSON_AddNumberToObject(json, "Charger_source_priority", qpiri->charger_source_priority);
             cJSON_AddNumberToObject(json, "Battery_redischarge_voltage", qpiri->batt_redischarge_voltage);
+
+            // QPIWS
+            cJSON_AddBoolToObject(json, "Reserved", qpiws->reserved);
+            cJSON_AddBoolToObject(json, "Inverter_fault", qpiws->inverter_fault);
+            cJSON_AddBoolToObject(json, "Bus_over", qpiws->bus_over);
+            cJSON_AddBoolToObject(json, "Bus_under", qpiws->bus_under);
+            cJSON_AddBoolToObject(json, "Bus_soft_fail", qpiws->bus_soft_fail);
+            cJSON_AddBoolToObject(json, "Line_fail", qpiws->line_fail);
+            cJSON_AddBoolToObject(json, "OPV_short", qpiws->opv_short);
+            cJSON_AddBoolToObject(json, "Inverter_voltage_too_low", qpiws->inverter_voltage_too_low);
+            cJSON_AddBoolToObject(json, "Inverter_voltage_too_high", qpiws->inverter_voltage_too_high);
+            cJSON_AddBoolToObject(json, "Over_temperature", qpiws->over_temperature);
+            cJSON_AddBoolToObject(json, "Fan_locked", qpiws->fan_locked);
+            cJSON_AddBoolToObject(json, "Battery_voltage_high", qpiws->battery_voltage_high);
+            cJSON_AddBoolToObject(json, "Battery_low_alarm", qpiws->battery_low_alarm);
+            cJSON_AddBoolToObject(json, "Overcharge", qpiws->overcharge);
+            cJSON_AddBoolToObject(json, "Battery_under_shutdown", qpiws->battery_under_shutdown);
+            cJSON_AddBoolToObject(json, "Battery_derating", qpiws->battery_derating);
+            cJSON_AddBoolToObject(json, "Over_load", qpiws->over_load);
+            cJSON_AddBoolToObject(json, "EEPROM_fault", qpiws->eeprom_fault);
+            cJSON_AddBoolToObject(json, "Inverter_over_current", qpiws->inverter_over_current);
+            cJSON_AddBoolToObject(json, "Inverter_soft_fail", qpiws->inverter_soft_fail);
+            cJSON_AddBoolToObject(json, "Self_test_fail", qpiws->self_test_fail);
+            cJSON_AddBoolToObject(json, "OP_DC_voltage_over", qpiws->op_dc_voltage_over);
+            cJSON_AddBoolToObject(json, "BAT_open", qpiws->bat_open);
+            cJSON_AddBoolToObject(json, "Current_sensor_fail", qpiws->current_sensor_fail);
+            cJSON_AddBoolToObject(json, "Battery_short", qpiws->battery_short);
+            cJSON_AddBoolToObject(json, "Power_limit", qpiws->power_limit);
+            cJSON_AddBoolToObject(json, "PV_voltage_high", qpiws->pv_voltage_high);
+            cJSON_AddBoolToObject(json, "MPPT_overload_fault", qpiws->mppt_overload_fault);
+            cJSON_AddBoolToObject(json, "MPPT_overload_warning", qpiws->mppt_overload_warning);
+            cJSON_AddBoolToObject(json, "Battery_too_low_to_charge", qpiws->battery_too_low_to_charge);
+            cJSON_AddBoolToObject(json, "DC_DC_over_current", qpiws->dc_dc_over_current);
+            cJSON_AddBoolToObject(json, "Reserved2", qpiws->reserved2);
 
             char *jsonString = cJSON_Print(json);
 
