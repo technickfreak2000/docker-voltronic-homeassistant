@@ -207,6 +207,7 @@ int main(int argc, char *argv[])
             char *combined_query = (char *)malloc(20 * sizeof(char));
             while (current != NULL)
             {
+                lprintf(current->fw_version);
                 lprintf("INVERTER: GOT QVWFN");
                 if (current->fw_version != NULL)
                 {
