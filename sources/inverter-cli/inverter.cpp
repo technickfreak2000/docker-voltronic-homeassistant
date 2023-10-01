@@ -237,7 +237,7 @@ void cInverter::GetQVWFn(QVFWn *qvwfn)
 
   // 0, 1, dosn't exist, start at 2
   size_t query_number = 2;
-  current = qvwfn->next;
+  current = qvwfn;
   char *combined_query = (char *)malloc(10 * sizeof(char));
 
   sprintf(combined_query, "QVFW%d", query_number);
@@ -248,14 +248,14 @@ void cInverter::GetQVWFn(QVFWn *qvwfn)
     query_number++;
     sprintf(combined_query, "QVFW%d", query_number);
 
-    current = (QVFWn *)malloc(sizeof(QVFWn));
+    current->next = (QVFWn *)malloc(sizeof(QVFWn));
 
     m.lock();
     char *tmpData = (char *)buf + 1;
 
     size_t fw_version_length = strlen(tmpData) + 1;
-    current->fw_version = (char *)malloc(fw_version_length);
-    memcpy(current->fw_version, tmpData, fw_version_length);
+    current->next->fw_version = (char *)malloc(fw_version_length);
+    memcpy(current->next->fw_version, tmpData, fw_version_length);
 
     m.unlock();
 
