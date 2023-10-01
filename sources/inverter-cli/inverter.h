@@ -185,6 +185,7 @@ class cInverter
 
 public:
   cInverter(std::string devicename);
+  bool runOnce = false  ;
   void poll();
   void runMultiThread()
   {

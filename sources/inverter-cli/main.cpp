@@ -145,8 +145,10 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    if (runOnce)
+    if (runOnce){
+        inv->runOnce = true;
         inv->poll();
+    }
     else
         inv->runMultiThread();
 

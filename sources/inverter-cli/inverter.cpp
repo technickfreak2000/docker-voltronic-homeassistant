@@ -524,7 +524,6 @@ bool cInverter::query(const char *cmd)
 
 void cInverter::poll()
 {
-  extern const int runOnce;
 
   while (true)
   {
