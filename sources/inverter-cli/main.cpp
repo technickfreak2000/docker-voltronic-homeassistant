@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
                 }
                 counter++;
                 current = current->next;
-                if (current == NULL)
+                if (current->next == NULL)
                 {
                     break;
                 }
