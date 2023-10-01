@@ -216,6 +216,10 @@ int main(int argc, char *argv[])
                 }
                 counter++;
                 current = current->next;
+                if (current == NULL)
+                {
+                    break;
+                }
             }
             free(combined_query);
 
