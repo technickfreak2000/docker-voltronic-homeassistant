@@ -528,6 +528,7 @@ void cInverter::poll()
 
   while (true)
   {
+    lprintf("%d", runOnce);
     if (inv_data_avail)
     {
       if (quit_thread || runOnce)
