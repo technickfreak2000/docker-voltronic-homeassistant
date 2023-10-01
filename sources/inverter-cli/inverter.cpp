@@ -260,6 +260,7 @@ void cInverter::GetQVWFn(QVFWn *qvwfn)
     m.unlock();
 
     current = current->next;
+    current->next = NULL;
   }
   free(combined_query);
 }
