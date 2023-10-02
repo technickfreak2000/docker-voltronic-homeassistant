@@ -128,8 +128,8 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
     m.unlock();
     current = current->next;
   }
-  free(current->next);
-  current->next = NULL;
+  free(current);
+  current = NULL;
 }
 
 void cInverter::GetQPGSn(QPGSn *qpgsn)
