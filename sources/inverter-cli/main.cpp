@@ -145,7 +145,8 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    if (runOnce){
+    if (runOnce)
+    {
         inv->runOnce = true;
         inv->poll();
     }
@@ -167,6 +168,9 @@ int main(int argc, char *argv[])
             QPIGSn *qpigsn = &inv->qpigsn;
             QPIRI *qpiri = &inv->qpiri;
             QPIWS *qpiws = &inv->qpiws;
+
+            int counter = 0;
+            char *combined_query = NULL;
 
             if (qmn->model_name != NULL)
             {
@@ -204,52 +208,82 @@ int main(int argc, char *argv[])
             cJSON_AddBoolToObject(json, "Fault_code_record", qflag->fault_code_record);
 
             // QVFWn
-            QVFWn *current = qvfwn;
-            size_t counter = 0;
-            char *combined_query = (char *)malloc(20 * sizeof(char));
-            while (current != NULL)
+            QVFWn *current_qvfwn = qvfwn;
+            combined_query = (char *)malloc(20 * sizeof(char));
+            while (current_qvfwn != NULL)
             {
-                lprintf(current->fw_version);
-                lprintf("INVERTER: GOT QVWFN");
-                if (current->fw_version != NULL)
-                {
-                    sprintf(combined_query, "Fw_version_%d", counter);
-                    cJSON_AddStringToObject(json, combined_query, current->fw_version);
-                }
+                sprintf(combined_query, "Fw_version_%d", counter);
+                cJSON_AddStringToObject(json, combined_query, current_qvfwn->fw_version);
+
                 counter++;
-                current = current->next;
+                current_qvfwn = current_qvfwn->next;
             }
             free(combined_query);
 
             // QPIGS
-            cJSON_AddNumberToObject(json, "AC_grid_voltage", qpigsn->voltage_grid);
-            cJSON_AddNumberToObject(json, "AC_grid_frequency", qpigsn->freq_grid);
-            cJSON_AddNumberToObject(json, "AC_out_voltage", qpigsn->voltage_out);
-            cJSON_AddNumberToObject(json, "AC_out_frequency", qpigsn->freq_out);
-            cJSON_AddNumberToObject(json, "PV_in_voltage", qpigsn->pv_input_voltage);
-            cJSON_AddNumberToObject(json, "PV_in_current", qpigsn->pv_input_current); // This seems to be only the PV charging input current, NOT THE ACTUAL PV CURRENT ITSELF!!! At the moment, I havn't found a way to get the actual input current!
-            cJSON_AddNumberToObject(json, "PV_in_watts", qpigsn->pv_input_watts);     // This seems to be only the PV charging input current * voltage, NOT THE ACTUAL PV WATTAGE ITSELF!!!
-            // cJSON_AddNumberToObject(json, "PV_in_watthour", qpigsn->pv_input_watthour);
-            cJSON_AddNumberToObject(json, "SCC_voltage", qpigsn->scc_voltage);
-            cJSON_AddNumberToObject(json, "Load_pct", qpigsn->load_percent);
-            cJSON_AddNumberToObject(json, "Load_watt", qpigsn->load_watt);
-            // cJSON_AddNumberToObject(json, "Load_watthour", qpigsn->load_watthour);
-            cJSON_AddNumberToObject(json, "Load_va", qpigsn->load_va);
-            cJSON_AddNumberToObject(json, "Bus_voltage", qpigsn->voltage_bus);
-            cJSON_AddNumberToObject(json, "Heatsink_temperature", qpigsn->temp_heatsink);
-            cJSON_AddNumberToObject(json, "Battery_capacity", qpigsn->batt_capacity);
-            cJSON_AddNumberToObject(json, "Battery_voltage", qpigsn->voltage_batt);
-            cJSON_AddNumberToObject(json, "Battery_charge_current", qpigsn->batt_charge_current);
-            cJSON_AddNumberToObject(json, "Battery_discharge_current", qpigsn->batt_discharge_current);
-            cJSON_AddBoolToObject(json, "Load_status_on", qpigsn->load_status);
-            cJSON_AddBoolToObject(json, "SCC_charge_on", qpigsn->charging_status_scc);
-            cJSON_AddBoolToObject(json, "AC_charge_on", qpigsn->charging_status_ac);
-            cJSON_AddNumberToObject(json, "Battery_voltage_offset_for_fans_on", qpigsn->battery_voltage_offset_for_fans_on);
-            cJSON_AddNumberToObject(json, "Eeprom_version", qpigsn->eeprom_version);
-            cJSON_AddNumberToObject(json, "PV_charging_power", qpigsn->pv_charging_power);
-            cJSON_AddBoolToObject(json, "Charging_to_floating_mode", qpigsn->charging_to_floating_mode);
-            cJSON_AddBoolToObject(json, "Switch_On", qpigsn->switch_on);
-            cJSON_AddBoolToObject(json, "Dustproof_installed", qpigsn->dustproof_installed);
+            QPIGSn *current_qpigsn = qpigsn;
+            counter = 0;
+            combined_query = (char *)malloc(50 * sizeof(char));
+            while (current_qvfwn != NULL)
+            {
+                sprintf(combined_query, "SCC_%d_AC_grid_frequency", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->freq_grid);
+                sprintf(combined_query, "SCC_%d_AC_out_voltage", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->voltage_out);
+                sprintf(combined_query, "SCC_%d_AC_out_frequency", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->freq_out);
+                sprintf(combined_query, "SCC_%d_PV_in_voltage", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->pv_input_voltage);
+                sprintf(combined_query, "SCC_%d_PV_in_current", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->pv_input_current);
+                sprintf(combined_query, "SCC_%d_PV_in_watts", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->pv_input_watts);
+                // sprintf(combined_query, "SCC_%d_PV_in_watthour", counter);
+                // cJSON_AddNumberToObject(json, combined_query, current_qpigsn->pv_input_watthour);
+                sprintf(combined_query, "SCC_%d_SCC_voltage", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->scc_voltage);
+                sprintf(combined_query, "SCC_%d_Load_pct", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->load_percent);
+                sprintf(combined_query, "SCC_%d_Load_watt", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->load_watt);
+                sprintf(combined_query, "SCC_%d_Load_va", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->load_va);
+                // sprintf(combined_query, "SCC_%d_Load_watthour", counter);
+                // cJSON_AddNumberToObject(json, combined_query, current_qpigsn->load_watthour);
+                sprintf(combined_query, "SCC_%d_Bus_voltage", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->voltage_bus);
+                sprintf(combined_query, "SCC_%d_Heatsink_temperature", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->temp_heatsink);
+                sprintf(combined_query, "SCC_%d_Battery_capacity", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->batt_capacity);
+                sprintf(combined_query, "SCC_%d_Battery_voltage", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->voltage_batt);
+                sprintf(combined_query, "SCC_%d_Battery_charge_current", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->batt_charge_current);
+                sprintf(combined_query, "SCC_%d_Battery_discharge_current", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->batt_discharge_current);
+                sprintf(combined_query, "SCC_%d_Load_status_on", counter);
+                cJSON_AddBoolToObject(json, combined_query, current_qpigsn->load_status);
+                sprintf(combined_query, "SCC_%d_SCC_charge_on", counter);
+                cJSON_AddBoolToObject(json, combined_query, current_qpigsn->charging_status_scc);
+                sprintf(combined_query, "SCC_%d_AC_charge_on", counter);
+                cJSON_AddBoolToObject(json, combined_query, current_qpigsn->charging_status_ac);
+                sprintf(combined_query, "SCC_%d_Battery_voltage_offset_for_fans_on", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->battery_voltage_offset_for_fans_on);
+                sprintf(combined_query, "SCC_%d_Eeprom_version", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->eeprom_version);
+                sprintf(combined_query, "SCC_%d_PV_charging_power", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->pv_charging_power);
+                sprintf(combined_query, "SCC_%d_Charging_to_floating_mode", counter);
+                cJSON_AddBoolToObject(json, combined_query, current_qpigsn->charging_to_floating_mode);
+                sprintf(combined_query, "SCC_%d_Switch_On", counter);
+                cJSON_AddBoolToObject(json, combined_query, current_qpigsn->switch_on);
+                sprintf(combined_query, "SCC_%d_Dustproof_installed", counter);
+                cJSON_AddBoolToObject(json, combined_query, current_qpigsn->dustproof_installed);
+                counter++;
+                current_qpigsn = current_qpigsn->next;
+            }
+            free(combined_query);
 
             // QPIRI
             cJSON_AddNumberToObject(json, "Battery_recharge_voltage", qpiri->batt_recharge_voltage);

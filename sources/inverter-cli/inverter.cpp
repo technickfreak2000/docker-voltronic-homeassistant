@@ -53,9 +53,29 @@ void cInverter::GetQMOD(QMOD *qmod)
 
 void cInverter::GetQPIGSn(QPIGSn *qpigsn)
 {
-  if (query("QPIGS") &&
+  // First element is static allocated in inverter, free all previous next elements
+  QPIGSn *current = qpigsn->next;
+  while (current != NULL)
+  {
+    QPIGSn *next = current->next;
+    free(current);
+    current = next;
+  }
+  current = qpigsn;
+
+  // 0, 1, dosn't exist, start at 2
+  size_t query_number = 2;
+  char *combined_query = (char *)malloc(10 * sizeof(char));
+
+  sprintf(combined_query, "QPIGS");
+
+  while (query(combined_query) &&
       strcmp((char *)&buf[1], "NAK") != 0)
   {
+    sprintf(combined_query, "QPIGS%d", query_number);
+    query_number++;
+    current->next = (QPIGSn *)malloc(sizeof(QPIGSn));
+
     m.lock();
     string *tmpData = new string((const char *)buf + 1);
     char device_status[8];
@@ -63,50 +83,53 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
 
     // Parse values
     sscanf(tmpData->c_str(), "%lf %lf %lf %lf %d %d %d %d %lf %d %d %d %lf %lf %lf %d %s %d %d %d %s",
-           &qpigsn->voltage_grid,                       // Grid voltage
-           &qpigsn->freq_grid,                          // Grid frequency
-           &qpigsn->voltage_out,                        // AC output voltage
-           &qpigsn->freq_out,                           // AC output frequency
-           &qpigsn->load_va,                            // AC output apparent power (VA)
-           &qpigsn->load_watt,                          // AC output active power (Watt)
-           &qpigsn->load_percent,                       // Output load percent - Maximum of W% or VA%., VA% is a percent of apparent power., W% is a percent of active power.
-           &qpigsn->voltage_bus,                        // BUS voltage
-           &qpigsn->voltage_batt,                       // Battery voltage
-           &qpigsn->batt_charge_current,                // Battery charging current
-           &qpigsn->batt_capacity,                      // Battery capacity
-           &qpigsn->temp_heatsink,                      // Inverter heat sink temperature
-           &qpigsn->pv_input_current,                   // PV Input current for battery.
-           &qpigsn->pv_input_voltage,                   // PV Input voltage 1
-           &qpigsn->scc_voltage,                        // Battery voltage from SCC (Solar Charge Controller) (V)
-           &qpigsn->batt_discharge_current,             // Battery discharge current
+           &current->voltage_grid,                       // Grid voltage
+           &current->freq_grid,                          // Grid frequency
+           &current->voltage_out,                        // AC output voltage
+           &current->freq_out,                           // AC output frequency
+           &current->load_va,                            // AC output apparent power (VA)
+           &current->load_watt,                          // AC output active power (Watt)
+           &current->load_percent,                       // Output load percent - Maximum of W% or VA%., VA% is a percent of apparent power., W% is a percent of active power.
+           &current->voltage_bus,                        // BUS voltage
+           &current->voltage_batt,                       // Battery voltage
+           &current->batt_charge_current,                // Battery charging current
+           &current->batt_capacity,                      // Battery capacity
+           &current->temp_heatsink,                      // Inverter heat sink temperature
+           &current->pv_input_current,                   // PV Input current for battery.
+           &current->pv_input_voltage,                   // PV Input voltage 1
+           &current->scc_voltage,                        // Battery voltage from SCC (Solar Charge Controller) (V)
+           &current->batt_discharge_current,             // Battery discharge current
            device_status,                               // Device Status bits
-           &qpigsn->battery_voltage_offset_for_fans_on, // Battery voltage offset for fans
-           &qpigsn->eeprom_version,                     // EEPROM version
-           &qpigsn->pv_charging_power,                  // PV charging power (W)
+           &current->battery_voltage_offset_for_fans_on, // Battery voltage offset for fans
+           &current->eeprom_version,                     // EEPROM version
+           &current->pv_charging_power,                  // PV charging power (W)
            device_status2                               // Device status bits 2
     );
 
     // Parse through device status bits
-    qpigsn->add_sbu_priority_version.store(device_status[0] == '1');
-    qpigsn->configuration_status_change.store(device_status[1] == '1');
-    qpigsn->scc_firmware_version_change.store(device_status[2] == '1');
-    qpigsn->load_status.store(device_status[3] == '1');
-    qpigsn->battery_voltage_to_steady_while_charging.store(device_status[4] == '1');
-    qpigsn->charging_status_charging.store(device_status[5] == '1');
-    qpigsn->charging_status_scc.store(device_status[6] == '1');
-    qpigsn->charging_status_ac.store(device_status[7] == '1');
+    current->add_sbu_priority_version.store(device_status[0] == '1');
+    current->configuration_status_change.store(device_status[1] == '1');
+    current->scc_firmware_version_change.store(device_status[2] == '1');
+    current->load_status.store(device_status[3] == '1');
+    current->battery_voltage_to_steady_while_charging.store(device_status[4] == '1');
+    current->charging_status_charging.store(device_status[5] == '1');
+    current->charging_status_scc.store(device_status[6] == '1');
+    current->charging_status_ac.store(device_status[7] == '1');
 
     // Parse through other device status bits
-    qpigsn->charging_to_floating_mode.store(device_status2[0] == '1');
-    qpigsn->switch_on.store(device_status2[1] == '1');
-    qpigsn->dustproof_installed.store(device_status2[2] == '1');
+    current->charging_to_floating_mode.store(device_status2[0] == '1');
+    current->switch_on.store(device_status2[1] == '1');
+    current->dustproof_installed.store(device_status2[2] == '1');
 
     // Calculate pv input wattage
-    qpigsn->pv_input_watts = qpigsn->pv_input_current * qpigsn->pv_input_voltage;
+    current->pv_input_watts = current->pv_input_current * current->pv_input_voltage;
 
     delete tmpData;
     m.unlock();
+    current = current->next;
   }
+  free(current->next);
+  current->next = NULL;
 }
 
 void cInverter::GetQPGSn(QPGSn *qpgsn)
