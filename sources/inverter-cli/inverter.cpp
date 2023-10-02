@@ -72,6 +72,7 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
   while (query(combined_query) &&
       strcmp((char *)&buf[1], "NAK") != 0)
   {
+    current = current->next;
     sprintf(combined_query, "QPIGS%d", query_number);
     query_number++;
     current->next = (QPIGSn *)malloc(sizeof(QPIGSn));
@@ -126,10 +127,9 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
 
     delete tmpData;
     m.unlock();
-    current = current->next;
   }
-  free(current);
-  current = NULL;
+  free(current->next);
+  current->next = NULL;
 }
 
 void cInverter::GetQPGSn(QPGSn *qpgsn)
