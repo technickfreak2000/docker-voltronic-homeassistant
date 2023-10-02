@@ -69,10 +69,11 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
 
   sprintf(combined_query, "QPIGS");
 
+  QPIGSn *last = qpigsn;
+
   while (query(combined_query) &&
-      strcmp((char *)&buf[1], "NAK") != 0)
+         strcmp((char *)&buf[1], "NAK") != 0)
   {
-    current = current->next;
     sprintf(combined_query, "QPIGS%d", query_number);
     query_number++;
     current->next = (QPIGSn *)malloc(sizeof(QPIGSn));
@@ -100,11 +101,11 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
            &current->pv_input_voltage,                   // PV Input voltage 1
            &current->scc_voltage,                        // Battery voltage from SCC (Solar Charge Controller) (V)
            &current->batt_discharge_current,             // Battery discharge current
-           device_status,                               // Device Status bits
+           device_status,                                // Device Status bits
            &current->battery_voltage_offset_for_fans_on, // Battery voltage offset for fans
            &current->eeprom_version,                     // EEPROM version
            &current->pv_charging_power,                  // PV charging power (W)
-           device_status2                               // Device status bits 2
+           device_status2                                // Device status bits 2
     );
 
     // Parse through device status bits
@@ -127,9 +128,14 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
 
     delete tmpData;
     m.unlock();
+    last = current;
+    current = current->next;
   }
-  free(current->next);
-  current->next = NULL;
+  if (last->next != NULL)
+  {
+    free(last->next);
+    last->next = NULL;
+  }
 }
 
 void cInverter::GetQPGSn(QPGSn *qpgsn)
