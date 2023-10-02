@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
             QPIGSn *current_qpigsn = qpigsn;
             counter = 0;
             combined_query = (char *)malloc(50 * sizeof(char));
-            while (current_qvfwn != NULL)
+            while (current_qpigsn != NULL)
             {
                 sprintf(combined_query, "SCC_%d_AC_grid_frequency", counter);
                 cJSON_AddNumberToObject(json, combined_query, current_qpigsn->freq_grid);
