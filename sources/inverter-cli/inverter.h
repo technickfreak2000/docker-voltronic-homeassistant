@@ -10,7 +10,7 @@
 using namespace std;
 
 // Declaration of implemented read commands
-typedef struct // Modus of first inverter
+typedef struct QMOD // Modus of first inverter
 {
   char inverter_mode[2];
   int inverter_mode_int;
@@ -55,6 +55,43 @@ typedef struct QPIGSn // Standard charging, mppt, etc information of all control
 
 typedef struct QPGSn // All kinds of information + QPIGS of all inverter
 {
+  atomic_bool parallel_num_exists = ATOMIC_VAR_INIT(false);
+  char inverter_id[15];
+  char inverter_mode[2];
+  int inverter_mode_int;
+  char fault_code[3];
+  double voltage_grid = 0;
+  double freq_grid = 0;
+  double voltage_out = 0;
+  double freq_out = 0;
+  int load_va = 0;
+  int load_watt = 0;
+  int load_percent = 0;
+  double voltage_batt = 0;
+  int batt_charge_current = 0;
+  int batt_capacity = 0;
+  double pv_input_voltage = 0;
+  int batt_charge_current_total = 0;
+  int load_va_total = 0;
+  int load_watt_total = 0;
+  int load_percent_total = 0;
+  atomic_bool scc_ok = ATOMIC_VAR_INIT(false);                // b7
+  atomic_bool charging_status_ac = ATOMIC_VAR_INIT(false);    // b6
+  atomic_bool charging_status_scc = ATOMIC_VAR_INIT(false);   // b5
+  atomic_bool battery_open = ATOMIC_VAR_INIT(false);          // b4 == 1 && b3 == 0
+  atomic_bool battery_under = ATOMIC_VAR_INIT(false);         // b4 == 0 && b3 == 1
+  atomic_bool battery_normal = ATOMIC_VAR_INIT(false);        // b4 == 0 && b3 == 0
+  atomic_bool ac_loss = ATOMIC_VAR_INIT(false);               // b2
+  atomic_bool ac_ok = ATOMIC_VAR_INIT(false);                 // b1
+  atomic_bool configuration_changed = ATOMIC_VAR_INIT(false); // b0
+  int output_mode = 0;
+  int charger_source_priority = 0;
+  int max_charger_current = 0;
+  int max_charger_range = 0;
+  int max_ac_charger_current = 0;
+  double pv_input_current = 0;
+  int batt_discharge_current = 0;
+  double pv_input_watts = 0;
 
   struct QPGSn *next = NULL;
 } QPGSn;
@@ -185,7 +222,7 @@ class cInverter
 
 public:
   cInverter(std::string devicename);
-  bool runOnce = false  ;
+  bool runOnce = false;
   void poll();
   void runMultiThread()
   {
@@ -203,6 +240,7 @@ public:
   QVFWn qvfwn;
   QMOD qmod;
   QPIGSn qpigsn;
+  QPGSn qpgsn;
   QPIRI qpiri;
   QPIWS qpiws;
   atomic_bool inv_data_avail = ATOMIC_VAR_INIT(false);

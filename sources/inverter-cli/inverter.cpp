@@ -140,6 +140,89 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
 
 void cInverter::GetQPGSn(QPGSn *qpgsn)
 {
+  // First element is static allocated in inverter, free all previous next elements
+  QPGSn *current = qpgsn->next;
+  while (current != NULL)
+  {
+    QPGSn *next = current->next;
+    free(current);
+    current = next;
+  }
+  current = qpgsn;
+
+  // 0, 1, the same master inverter
+  size_t query_number = 1;
+  char *combined_query = (char *)malloc(10 * sizeof(char));
+
+  sprintf(combined_query, "QPGS%d", query_number);
+
+  QPGSn *last = qpgsn;
+
+  while (query(combined_query) &&
+         ((strcmp((char *)&buf[1], "NAK") != 0) || (strncmp((char *)&buf[1], "0", 1) != 0)))
+  {
+    sprintf(combined_query, "QPGS%d", query_number);
+    query_number++;
+    current->next = (QPGSn *)malloc(sizeof(QPGSn));
+
+    m.lock();
+    string *tmpData = new string((const char *)buf + 1);
+    char device_status[8];
+
+    // Parse values
+    sscanf(tmpData->c_str(), "%s %s %d %s %lf %lf %lf %lf %d %d %d %lf %d %d %lf %d %d %d %d %d %d %d %d %d %lf %d",
+           &current->inverter_id,
+           &current->inverter_mode,
+           &current->inverter_mode_int,
+           &current->fault_code,
+           &current->voltage_grid,
+           &current->freq_grid,
+           &current->voltage_out,
+           &current->freq_out,
+           &current->load_va,
+           &current->load_watt,
+           &current->load_percent,
+           &current->voltage_batt,
+           &current->batt_charge_current,
+           &current->batt_capacity,
+           &current->pv_input_voltage,
+           &current->batt_charge_current_total,
+           &current->load_va_total,
+           &current->load_watt_total,
+           &current->load_percent_total,
+           device_status,
+           &current->output_mode,
+           &current-> charger_source_priority,
+           &current->max_charger_current,
+           &current->max_charger_range,
+           &current->max_ac_charger_current,
+           &current->pv_input_current,
+           &current->batt_discharge_current);
+
+    // Parse through device status bits
+    current->scc_ok.store(device_status[0] == '1');
+    current->charging_status_ac.store(device_status[1] == '1');
+    current->charging_status_scc.store(device_status[2] == '1');
+    current->battery_open.store(device_status[3] == '1' && device_status[4] == '0');
+    current->battery_under.store(device_status[3] == '0' && device_status[4] == '1');
+    current->battery_normal.store(device_status[3] == '0' && device_status[4] == '0');
+    current->ac_loss.store(device_status[5] == '1');
+    current->ac_ok.store(device_status[6] == '1');
+    current->configuration_changed.store(device_status[7] == '1');
+
+    // Calculate pv input wattage
+    current->pv_input_watts = current->pv_input_current * current->pv_input_voltage;
+
+    delete tmpData;
+    m.unlock();
+    last = current;
+    current = current->next;
+  }
+  if (last->next != NULL)
+  {
+    free(last->next);
+    last->next = NULL;
+  }
 }
 
 void cInverter::GetQPIRI(QPIRI *qpiri)
