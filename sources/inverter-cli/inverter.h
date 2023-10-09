@@ -221,7 +221,7 @@ class cInverter
   void GetQID(QID *qid);
 
 public:
-  cInverter(std::string devicename);
+  cInverter(std::string device_connection);
   bool runOnce = false;
   void poll();
   void runMultiThread()

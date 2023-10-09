@@ -26,6 +26,7 @@
 
 #include <cJSON.h>
 
+bool mqtt = false;
 bool debugFlag = false;
 bool runOnce = false;
 cInverter *inv = NULL;
@@ -33,9 +34,12 @@ cInverter *inv = NULL;
 // ---------------------------------------
 // Global configs read from 'inverter.conf'
 
-string devicename;
+string device_connection;
 float ampfactor;
 float wattfactor;
+
+// MQTT
+CONFIG_MQTT config_mqtt;
 
 // ---------------------------------------
 
@@ -83,9 +87,21 @@ void getSettingsFile(string filename)
                 linepart2 = fileline.substr(delimiter + 1, string::npos - delimiter);
 
                 if (linepart1 == "device")
-                    devicename = linepart2;
-                // else if(linepart1 == "run_interval")
-                //     attemptAddSetting(&runinterval, linepart2);
+                    device_connection = linepart2;
+                else if (linepart1 == "server")
+                    config_mqtt.server;
+                else if (linepart1 == "port")
+                    config_mqtt.port;
+                else if (linepart1 == "topic")
+                    config_mqtt.topic;
+                else if (linepart1 == "devicename")
+                    config_mqtt.device_name;
+                else if (linepart1 == "manufacturer")
+                    config_mqtt.manufacturer;
+                else if (linepart1 == "username")
+                    config_mqtt.username;
+                else if (linepart1 == "password")
+                    config_mqtt.password;
                 else if (linepart1 == "amperage_factor")
                     attemptAddSetting(&ampfactor, linepart2);
                 else if (linepart1 == "watt_factor")
@@ -95,6 +111,17 @@ void getSettingsFile(string filename)
             }
         }
         infile.close();
+        if (mqtt)
+        {
+            lprintf("MQTT: Settings loaded");
+            lprintf("MQTT: Server: %s", config_mqtt.server.c_str());
+            lprintf("MQTT: Port: %s", config_mqtt.port.c_str());
+            lprintf("MQTT: Topic: %s", config_mqtt.topic.c_str());
+            lprintf("MQTT: Devicename: %s", config_mqtt.device_name.c_str());
+            lprintf("MQTT: Manufacturer: %s", config_mqtt.manufacturer.c_str());
+            lprintf("MQTT: Username: %s", config_mqtt.username.c_str());
+            lprintf("MQTT: Password: %s", config_mqtt.password.c_str());
+        }
     }
     catch (...)
     {
@@ -110,6 +137,10 @@ int main(int argc, char *argv[])
     if (cmdArgs.cmdOptionExists("-h") || cmdArgs.cmdOptionExists("--help"))
     {
         return print_help();
+    }
+    if (cmdArgs.cmdOptionExists("-m") || cmdArgs.cmdOptionExists("--mqtt"))
+    {
+        mqtt = true;
     }
     if (cmdArgs.cmdOptionExists("-d"))
     {
@@ -136,7 +167,7 @@ int main(int argc, char *argv[])
     while (flock(fd, LOCK_EX))
         sleep(1);
 
-    inv = new cInverter(devicename);
+    inv = new cInverter(device_connection);
     // Logic to send 'raw commands' to the inverter..
     if (!rawcmd.empty())
     {
@@ -152,6 +183,11 @@ int main(int argc, char *argv[])
     }
     else
         inv->runMultiThread();
+
+    if (mqtt)
+    {
+        /* code */
+    }
 
     while (true)
     {

@@ -9,9 +9,9 @@
 
 #include <termios.h>
 
-cInverter::cInverter(std::string devicename)
+cInverter::cInverter(std::string device_connection)
 {
-  device = devicename;
+  device = device_connection;
 }
 
 void cInverter::GetQMOD(QMOD *qmod)

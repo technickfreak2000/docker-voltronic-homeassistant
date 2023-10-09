@@ -13,34 +13,37 @@
 
 std::mutex log_mutex;
 
-double roundToTwoDecimalPlaces(double num) {
+double roundToTwoDecimalPlaces(double num)
+{
     return round(num * 100.0) / 100.0;
 }
 
-void lprintf(const char *format, ...) {
-  // Only print if debug flag is set, else do nothing
-  if (debugFlag) {
+void lprintf(const char *format, ...)
+{
+    // Only print if debug flag is set, else do nothing
+    if (debugFlag)
+    {
         va_list ap;
         char fmt[2048];
 
-        //actual time
+        // actual time
         time_t rawtime;
         struct tm *timeinfo;
         time(&rawtime);
         timeinfo = localtime(&rawtime);
         char buf[256];
         strcpy(buf, asctime(timeinfo));
-        buf[strlen(buf)-1] = 0;
+        buf[strlen(buf) - 1] = 0;
 
-        //connect with args
+        // connect with args
         snprintf(fmt, sizeof(fmt), "%s %s\n", buf, format);
 
-        //put on screen:
+        // put on screen:
         va_start(ap, format);
         vprintf(fmt, ap);
         va_end(ap);
 
-        //to the logfile:
+        // to the logfile:
         static FILE *log;
         log_mutex.lock();
         log = fopen(LOG_FILE, "a");
@@ -52,12 +55,14 @@ void lprintf(const char *format, ...) {
     }
 }
 
-int print_help() {
+int print_help()
+{
     printf("\nUSAGE:  ./inverter_poller <args> [-r <command>], [-h | --help], [-1 | --run-once]\n\n");
 
     printf("SUPPORTED ARGUMENTS:\n");
     printf("          -r <raw-command>      TX 'raw' command to the inverter\n");
     printf("          -h | --help           This Help Message\n");
+    printf("          -m | --mqtt           Sends data to Home Assistant using mqtt\n");
     printf("          -1 | --run-once       Runs one iteration on the inverter, and then exits\n");
     printf("          -d                    Additional debugging\n\n");
 
@@ -76,4 +81,9 @@ int print_help() {
     printf("                            PEx / PDx (Enable/disable backlight)\n\n");
 
     return 1;
+}
+
+void mqtt_publish_and_json_print()
+{
+    
 }

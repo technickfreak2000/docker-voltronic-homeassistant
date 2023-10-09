@@ -33,37 +33,6 @@ registerTopic () {
             \"icon\": \"mdi:$3\"
         }"
 }
-# Remove the energy topic because they are not good for HA. Device class:total increasing or total it will add in statistics the differences between states, and we need to make sum of states. Best cases it is useful for influxdb.
-# registerEnergyTopic () {
-#     mosquitto_pub \
-#         -h $MQTT_SERVER \
-#         -p $MQTT_PORT \
-#         -u "$MQTT_USERNAME" \
-#         -P "$MQTT_PASSWORD" \
-#         -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
-#         -t "$MQTT_TOPIC/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/LastReset" \
-#         -r \
-#         -m "1970-01-01T00:00:00+00:00"
-
-#     mosquitto_pub \
-#         -h $MQTT_SERVER \
-#         -p $MQTT_PORT \
-#         -u "$MQTT_USERNAME" \
-#         -P "$MQTT_PASSWORD" \
-#         -i ""$MQTT_DEVICENAME"_"$MQTT_SERIAL"" \
-#         -t ""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1/config" \
-#         -r \
-#         -m "{
-#             \"name\": \"$5\",
-#             \"uniq_id\": \""$MQTT_SERIAL"_$1\",
-#             \"device\": { \"ids\": \""$MQTT_SERIAL"\", \"mf\": \""$MQTT_MANUFACTURER"\", \"mdl\": \""$MQTT_MODEL"\", \"name\": \""$MQTT_DEVICENAME"\", \"sw\": \""$MQTT_VER"\"},
-#             \"state_topic\": \""$MQTT_TOPIC"/sensor/"$MQTT_DEVICENAME"_"$MQTT_SERIAL"/$1\",
-#             \"state_class\": \"total_increasing\",
-#             \"device_class\": \"$4\",
-#             \"unit_of_measurement\": \"$2\",
-#             \"icon\": \"mdi:$3\"
-#         }"
-# }
 registerModeTopic () {
     mosquitto_pub \
         -h $MQTT_SERVER \
