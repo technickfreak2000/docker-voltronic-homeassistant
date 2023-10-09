@@ -1,3 +1,6 @@
 [submodule "sources/inverter-cli/lib/cJSON"]
 	path = sources/inverter-cli/lib/cJSON
 	url = https://github.com/DaveGamble/cJSON.git
+[submodule "sources/inverter-cli/lib/paho-mqtt"]
+	path = sources/inverter-cli/lib/paho-mqtt
+	url = https://github.com/eclipse/paho.mqtt.cpp.git
