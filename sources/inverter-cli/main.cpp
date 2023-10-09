@@ -26,7 +26,14 @@
 
 #include <cJSON.h>
 
-bool mqtt = false;
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+#include <chrono>
+#include <memory>
+#include <mqtt/async_client.h>
+
+bool mqtt_sel = false;
 bool debugFlag = false;
 bool runOnce = false;
 cInverter *inv = NULL;
@@ -111,7 +118,7 @@ void getSettingsFile(string filename)
             }
         }
         infile.close();
-        if (mqtt)
+        if (mqtt_sel)
         {
             lprintf("MQTT: Settings loaded");
             lprintf("MQTT: Server: %s", config_mqtt.server.c_str());
@@ -140,7 +147,7 @@ int main(int argc, char *argv[])
     }
     if (cmdArgs.cmdOptionExists("-m") || cmdArgs.cmdOptionExists("--mqtt"))
     {
-        mqtt = true;
+        mqtt_sel = true;
     }
     if (cmdArgs.cmdOptionExists("-d"))
     {
@@ -184,7 +191,7 @@ int main(int argc, char *argv[])
     else
         inv->runMultiThread();
 
-    if (mqtt)
+    if (mqtt_sel)
     {
         /* code */
     }
