@@ -18,7 +18,7 @@ RUN apt update && apt install -y \
         build-essential \
         cmake \
         jq \
-        mosquitto-clients
+        libpaho-mqttpp-dev
 
 ADD sources/ /opt/
 ADD config/ /etc/inverter/
