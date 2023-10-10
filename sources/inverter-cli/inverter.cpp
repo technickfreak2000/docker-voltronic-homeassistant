@@ -74,7 +74,7 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
   while (query(combined_query) &&
          strcmp((char *)&buf[1], "NAK") != 0)
   {
-    sprintf(combined_query, "QPIGS%d", query_number);
+    sprintf(combined_query, "QPIGS%ld", query_number);
     query_number++;
     current->next = (QPIGSn *)malloc(sizeof(QPIGSn));
 
@@ -154,14 +154,14 @@ void cInverter::GetQPGSn(QPGSn *qpgsn)
   size_t query_number = 1;
   char *combined_query = (char *)malloc(10 * sizeof(char));
 
-  sprintf(combined_query, "QPGS%d", query_number);
+  sprintf(combined_query, "QPGS%ld", query_number);
 
   QPGSn *last = qpgsn;
 
   while (query(combined_query) &&
          ((strcmp((char *)&buf[1], "NAK") != 0) || (strncmp((char *)&buf[1], "0", 1) != 0)))
   {
-    sprintf(combined_query, "QPGS%d", query_number);
+    sprintf(combined_query, "QPGS%ld", query_number);
     query_number++;
     current->next = (QPGSn *)malloc(sizeof(QPGSn));
 
@@ -170,11 +170,11 @@ void cInverter::GetQPGSn(QPGSn *qpgsn)
     char device_status[8];
 
     // Parse values
-    sscanf(tmpData->c_str(), "%s %s %d %s %lf %lf %lf %lf %d %d %d %lf %d %d %lf %d %d %d %d %d %d %d %d %d %lf %d",
-           &current->inverter_id,
-           &current->inverter_mode,
+    sscanf(tmpData->c_str(), "%s %s %d %s %lf %lf %lf %lf %d %d %d %lf %d %d %lf %d %d %d %d %s %d %d %d %d %d %lf %d",
+           current->inverter_id,
+           current->inverter_mode,
            &current->inverter_mode_int,
-           &current->fault_code,
+           current->fault_code,
            &current->voltage_grid,
            &current->freq_grid,
            &current->voltage_out,
@@ -352,13 +352,13 @@ void cInverter::GetQVWFn(QVFWn *qvwfn)
   current = qvwfn;
   char *combined_query = (char *)malloc(10 * sizeof(char));
 
-  sprintf(combined_query, "QVFW%d", query_number);
+  sprintf(combined_query, "QVFW%ld", query_number);
 
   while (query(combined_query) &&
          strcmp((char *)&buf[1], "NAK") != 0)
   {
     query_number++;
-    sprintf(combined_query, "QVFW%d", query_number);
+    sprintf(combined_query, "QVFW%ld", query_number);
 
     current->next = (QVFWn *)malloc(sizeof(QVFWn));
 
