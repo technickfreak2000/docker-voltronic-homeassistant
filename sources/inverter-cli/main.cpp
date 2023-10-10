@@ -197,6 +197,9 @@ int main(int argc, char *argv[])
         string address = "tcp://" + string(config_mqtt.server) + ":" + string(config_mqtt.port);
         string client_id = config_mqtt.device_name;
 
+        // Set calback topic
+        string mqtt_sub_tobic = "";
+
         mqtt::async_client cli(address, client_id);
 
         // MQTT connection options
@@ -205,7 +208,7 @@ int main(int argc, char *argv[])
         connOpts.set_clean_session(false);
 
         // Install the callback(s) before connecting
-        callback cb(cli, connOpts);
+        callback cb(cli, connOpts, &mqtt_sub_tobic, &client_id);
         cli.set_callback(cb);
 
         try
