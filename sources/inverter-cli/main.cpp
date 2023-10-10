@@ -193,7 +193,12 @@ int main(int argc, char *argv[])
 
     if (mqtt_sel)
     {
-        /* code */
+        string address = "tcp://" + string(config_mqtt.server) + ":" + string(config_mqtt.port);
+        string client_id = config_mqtt.device_name;
+
+        auto cli = std::make_shared<mqtt::async_client>(address, client_id);
+
+        
     }
 
     while (true)

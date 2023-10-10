@@ -7,7 +7,10 @@ INCLUDE_DIRECTORIES(lib/cJSON)
 add_library(cJSON lib/cJSON/cJSON.c)
 
 INCLUDE_DIRECTORIES(lib/paho-mqtt/src/)
+add_library(MQTT lib/paho-mqtt/src/mqtt)
+set_target_properties(MQTT PROPERTIES LINKER_LANGUAGE CXX)
+link_directories(lib/paho-mqtt/src/)
 
 file(GLOB SOURCES *.cpp)
 ADD_EXECUTABLE(inverter_poller ${SOURCES})
-target_link_libraries(inverter_poller cJSON -lpthread)
+target_link_libraries(inverter_poller cJSON MQTT -lpthread)
