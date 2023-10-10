@@ -640,6 +640,9 @@ void cInverter::poll()
   while (true)
   {
     lprintf("%d", runOnce);
+    // Check if new message to send to inverter is in mqtt que
+    // if found, execute, send response back to hass, watch pout for concurent mqtt sends
+
     if (inv_data_avail)
     {
       if (quit_thread || runOnce)

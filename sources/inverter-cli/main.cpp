@@ -32,6 +32,7 @@
 #include <chrono>
 #include <memory>
 #include <mqtt/async_client.h>
+#include "mqtt_tools.h"
 
 bool mqtt_sel = false;
 bool debugFlag = false;
@@ -196,9 +197,28 @@ int main(int argc, char *argv[])
         string address = "tcp://" + string(config_mqtt.server) + ":" + string(config_mqtt.port);
         string client_id = config_mqtt.device_name;
 
-        auto cli = std::make_shared<mqtt::async_client>(address, client_id);
+        mqtt::async_client cli(address, client_id);
 
-        
+        // MQTT connection options
+        // clean_session is set to false to retain previous values
+        mqtt::connect_options connOpts;
+        connOpts.set_clean_session(false);
+
+        // Install the callback(s) before connecting
+        callback cb(cli, connOpts);
+        cli.set_callback(cb);
+
+        try
+        {
+            std::cout << "Connecting to the MQTT server..." << std::flush;
+            cli.connect(connOpts, nullptr, cb);
+        }
+        catch (const mqtt::exception &exc)
+        {
+            std::cerr << "\nERROR: Unable to connect to MQTT server: '"
+                      << address << "'" << exc << std::endl;
+            return 1;
+        }
     }
 
     while (true)
