@@ -117,7 +117,7 @@ Now you can install the project:
 
 ```bash
 # Clone down sources on the host you want to monitor...
-git clone https://github.com/technickfreak2000/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
+git clone --recurse-submodules https://github.com/technickfreak2000/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
 cd /opt/ha-inverter-mqtt-agent
 
 # Configure the 'device=' directive (in inverter.conf) to suit for RS232. Only edit this file if you don't have usb cable to inverter!

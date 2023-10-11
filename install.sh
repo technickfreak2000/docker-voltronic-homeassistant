@@ -141,7 +141,7 @@ read -p "Directory to new installation: " -i "$PATH_TO_NEW_INSTALL" -e PATH_TO_N
 
 echo ""
 
-sudo git clone https://github.com/technickfreak2000/docker-voltronic-homeassistant.git "$PATH_TO_NEW_INSTALL"
+sudo git clone --recurse-submodules https://github.com/technickfreak2000/docker-voltronic-homeassistant.git "$PATH_TO_NEW_INSTALL"
 
 cd "$PATH_TO_NEW_INSTALL"
 
