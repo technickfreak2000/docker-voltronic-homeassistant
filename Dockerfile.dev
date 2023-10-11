@@ -1,13 +1,13 @@
-FROM debian:stretch
+FROM debian:bullseye
 
-# Update stretch repositories
+# Update bullseye repositories
 RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' \
            -e 's|security.debian.org|archive.debian.org/|g' \
-           -e '/stretch-updates/d' /etc/apt/sources.list
-           # Add "deb-src" lines for developer packages
+           -e '/bullseye-updates/d' /etc/apt/sources.list
+
+# Add "deb-src" lines for developer packages
 RUN sed -i -e '/^deb / s/$/ contrib non-free/' /etc/apt/sources.list
 RUN sed -i -e '/^deb-src / s/$/ main contrib non-free/' /etc/apt/sources.list
-
 
 RUN apt update && apt install -y \
         curl \
@@ -15,7 +15,7 @@ RUN apt update && apt install -y \
         build-essential \
         cmake \
         jq \
-        libpaho-mqttpp-dev
+        libpaho-mqtt-dev
 
 ADD sources/ /opt/
 ADD config/ /etc/inverter/
