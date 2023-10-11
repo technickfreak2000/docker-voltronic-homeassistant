@@ -1,13 +1,6 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
-# Update bullseye repositories
-RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' \
-           -e 's|security.debian.org|archive.debian.org/|g' \
-           -e '/bullseye-updates/d' /etc/apt/sources.list
-
-# Add "deb-src" lines for developer packages
-RUN sed -i -e '/^deb / s/$/ contrib non-free/' /etc/apt/sources.list
-RUN sed -i -e '/^deb-src / s/$/ main contrib non-free/' /etc/apt/sources.list
+RUN sed -i -- 's/Types: deb/Types: deb deb-src/g' /etc/apt/sources.list.d/debian.sources
 
 RUN apt update && apt install -y \
         curl \
