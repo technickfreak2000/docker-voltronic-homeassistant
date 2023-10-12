@@ -8,7 +8,8 @@ RUN apt update && apt install -y \
         build-essential \
         cmake \
         jq \
-        libpaho-mqttpp-dev
+        libpaho-mqttpp-dev \
+        libpaho-mqtt-dev
 
 ADD sources/ /opt/
 ADD config/ /etc/inverter/
