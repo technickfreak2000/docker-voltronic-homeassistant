@@ -97,19 +97,19 @@ void getSettingsFile(string filename)
                 if (linepart1 == "device")
                     device_connection = linepart2;
                 else if (linepart1 == "server")
-                    config_mqtt.server;
+                    config_mqtt.server = linepart2;
                 else if (linepart1 == "port")
-                    config_mqtt.port;
+                    config_mqtt.port = linepart2;
                 else if (linepart1 == "topic")
-                    config_mqtt.topic;
+                    config_mqtt.topic = linepart2;
                 else if (linepart1 == "devicename")
-                    config_mqtt.device_name;
+                    config_mqtt.device_name = linepart2;
                 else if (linepart1 == "manufacturer")
-                    config_mqtt.manufacturer;
+                    config_mqtt.manufacturer = linepart2;
                 else if (linepart1 == "username")
-                    config_mqtt.username;
+                    config_mqtt.username = linepart2;
                 else if (linepart1 == "password")
-                    config_mqtt.password;
+                    config_mqtt.password = linepart2;
                 else if (linepart1 == "amperage_factor")
                     attemptAddSetting(&ampfactor, linepart2);
                 else if (linepart1 == "watt_factor")
