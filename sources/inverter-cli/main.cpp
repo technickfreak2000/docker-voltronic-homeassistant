@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
         callback cb(cli, connOpts, &mqtt_sub_tobic, &client_id);
         cli.set_callback(cb);
 
-        lprintf("DEBUG: MQTT Address: %s, MQTT Client ID: %s, MQTT sub Topic: %S", address, client_id, mqtt_sub_tobic);
+        lprintf("DEBUG: MQTT Address: %s, MQTT Client ID: %s, MQTT sub Topic: %S", address.c_str(), client_id.c_str(), mqtt_sub_tobic.c_str());
         try
         {
             std::cout << "Connecting to the MQTT server..." << std::flush;
