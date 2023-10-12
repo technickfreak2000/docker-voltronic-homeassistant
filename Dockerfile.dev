@@ -1,7 +1,5 @@
 FROM debian:bookworm
 
-#RUN sed -i -- 's/Types: deb/Types: deb deb-src/g' /etc/apt/sources.list.d/debian.sources
-
 RUN apt update && apt install -y \
         curl \
         git \
