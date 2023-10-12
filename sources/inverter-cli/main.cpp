@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
         string client_id = config_mqtt.device_name;
 
         // Set calback topic
-        string mqtt_sub_tobic = "";
+        string mqtt_sub_tobic = "test";
 
         mqtt::async_client cli(address, client_id);
 
@@ -211,6 +211,7 @@ int main(int argc, char *argv[])
         callback cb(cli, connOpts, &mqtt_sub_tobic, &client_id);
         cli.set_callback(cb);
 
+        lprintf("DEBUG: MQTT Address: %s, MQTT Client ID: %s, MQTT sub Topic: %S", address, client_id, mqtt_sub_tobic);
         try
         {
             std::cout << "Connecting to the MQTT server..." << std::flush;
