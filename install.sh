@@ -58,7 +58,7 @@ fi
 case $yn in 
 	[yY] ) echo "Ok, installing docker, docker-compose and nano";
         sudo apt update 
-        sudo apt install docker docker-compose nano -y
+        sudo apt install docker.io docker-compose nano -y
         echo ""
         if ! [ "$DEBUG" = true ] ; then
             for i in {3..1};do echo -n "$i." && sleep 1; done
