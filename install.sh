@@ -56,7 +56,7 @@ if [ -z "$yn" ]; then
 fi
 
 case $yn in 
-	[yY] ) echo "Ok, installing docker, docker-compose and nano";
+	[yY] ) echo "Ok, installing docker, docker compose and nano";
         sudo apt update 
         sudo apt install ca-certificates curl nano -y
 	sudo install -m 0755 -d /etc/apt/keyrings
@@ -69,7 +69,7 @@ case $yn in
 	  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
 	  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 	sudo apt-get update
- 	sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+ 	sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker compose-plugin -y
         echo ""
         if ! [ "$DEBUG" = true ] ; then
             for i in {3..1};do echo -n "$i." && sleep 1; done
@@ -103,7 +103,7 @@ case $yn in
 
         echo ""
         echo "Trying to stop docker..."
-        docker-compose stop
+        docker compose stop
 
         echo ""
         echo "The use of an old configuration could potentially brick your install."
@@ -186,7 +186,7 @@ done
 
 echo "Building Container..."
 
-sudo docker-compose build
+sudo docker compose build
 
 echo ""
 
@@ -207,7 +207,7 @@ fi
 
 case $yn in 
 	[yY] ) echo "Starting container..."
-        sudo docker-compose up -d
+        sudo docker compose up -d
 		break;;
 	[nN] ) echo "Moving on...";
         echo ""
