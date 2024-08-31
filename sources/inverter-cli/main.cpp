@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
     if (!rawcmd.empty())
     {
         // Execute and return
-        printf("Reply:  %s.\n", inv->ExecuteCmd(rawcmd)->c_str());
+        printf("Reply:  %s\n", inv->ExecuteCmd(rawcmd)->c_str());
         exit(0);
     }
 
