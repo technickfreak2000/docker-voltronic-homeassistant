@@ -161,7 +161,7 @@ void cInverter::GetQPGSn(QPGSn *qpgsn)
   while (query(combined_query) &&
          ((strncmp((char *)&buf[1], "NAK", 3) != 0) || (strncmp((char *)&buf[1], "0", 1) != 0)))
   {
-    printf("HELP ME UNDERSTAND:  %c %c %c\n", &buf[1], &buf[2], &buf[3]);
+    printf("HELP ME UNDERSTAND:  %c %c %c\n", buf[1], buf[2], buf[3]);
     sprintf(combined_query, "QPGS%ld", query_number);
     query_number++;
     current->next = (QPGSn *)malloc(sizeof(QPGSn));
