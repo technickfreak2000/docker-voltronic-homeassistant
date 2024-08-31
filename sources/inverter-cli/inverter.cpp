@@ -159,7 +159,7 @@ void cInverter::GetQPGSn(QPGSn *qpgsn)
   QPGSn *last = qpgsn;
 
   while (query(combined_query) &&
-         ((strcmp((char *)&buf[1], "(NAK") != 0) || (strncmp((char *)&buf[1], "0", 1) != 0)))
+         ((strcmp((char *)&buf[1], "NAK") != 0) || (strncmp((char *)&buf[1], "0", 1) != 0)))
   {
     sprintf(combined_query, "QPGS%ld", query_number);
     query_number++;
