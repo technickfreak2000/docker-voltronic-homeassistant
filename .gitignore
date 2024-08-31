@@ -10,3 +10,5 @@ Makefile
 sources/inverter-cli/ha_local_docker_build_v2.diff
 sources/inverter-cli/inverter_poller
 sources/inverter-cli/libcJSON.a
+build
+.vscode
