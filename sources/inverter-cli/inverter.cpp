@@ -668,6 +668,8 @@ void cInverter::poll()
       // Reading QPIGS status
       GetQPIGSn(&qpigsn);
 
+      GetQPGSn(&qpgsn);
+
       // Reading QPIRI status
       GetQPIRI(&qpiri);
 
