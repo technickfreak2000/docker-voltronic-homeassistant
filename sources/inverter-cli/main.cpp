@@ -238,6 +238,7 @@ int main(int argc, char *argv[])
             QFLAG *qflag = &inv->qflag;
             QVFWn *qvfwn = &inv->qvfwn;
             QPIGSn *qpigsn = &inv->qpigsn;
+            QPGSn *qpgsn = &inv->qpgsn;
             QPIRI *qpiri = &inv->qpiri;
             QPIWS *qpiws = &inv->qpiws;
 
@@ -354,6 +355,89 @@ int main(int argc, char *argv[])
                 cJSON_AddBoolToObject(json, combined_query, current_qpigsn->dustproof_installed);
                 counter++;
                 current_qpigsn = current_qpigsn->next;
+            }
+            free(combined_query);
+
+            // QPGS
+            QPGSn *current_qpgsn = qpgsn;
+            counter = 0;
+            combined_query = (char *)malloc(50 * sizeof(char));
+            while (current_qpgsn != NULL)
+            {
+                sprintf(combined_query, "INV_%d_Inverter_ID", counter);
+                cJSON_AddStringToObject(json, combined_query, current_qpgsn->inverter_id);
+                sprintf(combined_query, "INV_%d_Inverter_Mode", counter);
+                cJSON_AddStringToObject(json, combined_query, current_qpgsn->inverter_mode);
+                sprintf(combined_query, "INV_%d_Inverter_Mode_Int", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->inverter_mode_int);
+                sprintf(combined_query, "INV_%d_Fault_Code", counter);
+                cJSON_AddStringToObject(json, combined_query, current_qpgsn->fault_code);
+                sprintf(combined_query, "INV_%d_Voltage_Grid", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->voltage_grid);
+                sprintf(combined_query, "INV_%d_Freq_Grid", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->freq_grid);
+                sprintf(combined_query, "INV_%d_Voltage_Out", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->voltage_out);
+                sprintf(combined_query, "INV_%d_Freq_Out", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->freq_out);
+                sprintf(combined_query, "INV_%d_Load_VA", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->load_va);
+                sprintf(combined_query, "INV_%d_Load_Watt", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->load_watt);
+                sprintf(combined_query, "INV_%d_Load_Percent", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->load_percent);
+                sprintf(combined_query, "INV_%d_Voltage_Batt", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->voltage_batt);
+                sprintf(combined_query, "INV_%d_Batt_Charge_Current", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->batt_charge_current);
+                sprintf(combined_query, "INV_%d_Batt_Capacity", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->batt_capacity);
+                sprintf(combined_query, "INV_%d_PV_Input_Voltage", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->pv_input_voltage);
+                sprintf(combined_query, "INV_%d_Batt_Charge_Current_Total", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->batt_charge_current_total);
+                sprintf(combined_query, "INV_%d_Load_VA_Total", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->load_va_total);
+                sprintf(combined_query, "INV_%d_Load_Watt_Total", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->load_watt_total);
+                sprintf(combined_query, "INV_%d_Load_Percent_Total", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->load_percent_total);
+                sprintf(combined_query, "INV_%d_SCC_OK", counter);
+                cJSON_AddBoolToObject(json, combined_query, atomic_load(&current_qpgsn->scc_ok));
+                sprintf(combined_query, "INV_%d_Charging_Status_AC", counter);
+                cJSON_AddBoolToObject(json, combined_query, atomic_load(&current_qpgsn->charging_status_ac));
+                sprintf(combined_query, "INV_%d_Charging_Status_SCC", counter);
+                cJSON_AddBoolToObject(json, combined_query, atomic_load(&current_qpgsn->charging_status_scc));
+                sprintf(combined_query, "INV_%d_Battery_Open", counter);
+                cJSON_AddBoolToObject(json, combined_query, atomic_load(&current_qpgsn->battery_open));
+                sprintf(combined_query, "INV_%d_Battery_Under", counter);
+                cJSON_AddBoolToObject(json, combined_query, atomic_load(&current_qpgsn->battery_under));
+                sprintf(combined_query, "INV_%d_Battery_Normal", counter);
+                cJSON_AddBoolToObject(json, combined_query, atomic_load(&current_qpgsn->battery_normal));
+                sprintf(combined_query, "INV_%d_AC_Loss", counter);
+                cJSON_AddBoolToObject(json, combined_query, atomic_load(&current_qpgsn->ac_loss));
+                sprintf(combined_query, "INV_%d_AC_OK", counter);
+                cJSON_AddBoolToObject(json, combined_query, atomic_load(&current_qpgsn->ac_ok));
+                sprintf(combined_query, "INV_%d_Configuration_Changed", counter);
+                cJSON_AddBoolToObject(json, combined_query, atomic_load(&current_qpgsn->configuration_changed));
+                sprintf(combined_query, "INV_%d_Output_Mode", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->output_mode);
+                sprintf(combined_query, "INV_%d_Charger_Source_Priority", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->charger_source_priority);
+                sprintf(combined_query, "INV_%d_Max_Charger_Current", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->max_charger_current);
+                sprintf(combined_query, "INV_%d_Max_Charger_Range", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->max_charger_range);
+                sprintf(combined_query, "INV_%d_Max_AC_Charger_Current", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->max_ac_charger_current);
+                sprintf(combined_query, "INV_%d_PV_Input_Current", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->pv_input_current);
+                sprintf(combined_query, "INV_%d_Batt_Discharge_Current", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->batt_discharge_current);
+                sprintf(combined_query, "INV_%d_PV_Input_Watts", counter);
+                cJSON_AddNumberToObject(json, combined_query, current_qpgsn->pv_input_watts);
+                counter++;
+                current_qpgsn = current_qpgsn->next;
             }
             free(combined_query);
 
