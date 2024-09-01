@@ -222,7 +222,8 @@ int main(int argc, char *argv[])
             while (true)
             {
                 // Wait for messages
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                printf("Waiting for messages");
+                std::this_thread::sleep_for(std::chrono::milliseconds(10000));
             }
 
             mqtt::token_ptr disconnectionToken = client.disconnect();
