@@ -172,58 +172,7 @@ int main(int argc, char *argv[])
     }
     getSettingsFile(settings);
 
-    // class PublisherCallback : public virtual mqtt::callback
-    // {
-    // public:
-    //     void connection_lost(const std::string& cause) override
-    //     {
-    //         std::cout << "Connection lost: " << cause << std::endl;
-    //     }
-
-    //     void delivery_complete(mqtt::delivery_token_ptr token) override
-    //     {
-    //         std::cout << "Message delivered" << std::endl;
-    //     }
-    // };
-
-    // if(mqtt_sel){
-    //     string address = "tcp://" + string(config_mqtt.server) + ":" + string(config_mqtt.port);
-    //     string client_id = config_mqtt.device_name;
-    //     mqtt::async_client client(address, client_id);
-
-    //     // auto connOpts = mqtt::connect_options_builder()     
-    //     //     .clean_session()
-    //     //     .user_name(config_mqtt.username)
-    //     //     .password(config_mqtt.password)
-    //     //     .finalize();
-
-    //     mqtt::connect_options connOpts;
-    //     connOpts.set_keep_alive_interval(20);
-    //     connOpts.set_clean_session(true);
-    //     connOpts.set_user_name(config_mqtt.username);
-    //     connOpts.set_password(config_mqtt.password);
-
-    //     try
-    //     {
-    //         PublisherCallback callback;
-    //         client.set_callback(callback);
-
-    //         mqtt::token_ptr connectionToken = client.connect(connOpts);
-    //         connectionToken->wait();
-
-
-    //         mqtt::message_ptr pubMessage = mqtt::make_message("test", "TEST MESSAGE!! TEST MESSAGE!!", QOS, false);
-    //         client.publish(pubMessage)->wait();
-
-    //         mqtt::token_ptr disconnectionToken = client.disconnect();
-    //         disconnectionToken->wait();
-    //     }
-    //     catch (const mqtt::exception& ex)
-    //     {
-    //         std::cerr << "MQTT Exception: " << ex.what() << ex.get_error_str() << std::endl;
-    //         return 1;
-    //     }
-    // }
+    
     int fd = open(settings, O_RDWR);
     while (flock(fd, LOCK_EX))
         sleep(1);
@@ -245,41 +194,46 @@ int main(int argc, char *argv[])
     else
         inv->runMultiThread();
 
-    if (mqtt_sel)
-    {
+    if(mqtt_sel){
         string address = "tcp://" + string(config_mqtt.server) + ":" + string(config_mqtt.port);
         string client_id = config_mqtt.device_name;
+        mqtt::async_client client(address, client_id);
 
-        // Set calback topic
-        string mqtt_sub_tobic = "test";
-
-        mqtt::async_client cli(address, client_id);
-
-        // MQTT connection options
-        // clean_session is set to false to retain previous values
         mqtt::connect_options connOpts;
-        connOpts.set_clean_session(false);
+        connOpts.set_keep_alive_interval(20);
+        connOpts.set_clean_session(true);
         connOpts.set_user_name(config_mqtt.username);
         connOpts.set_password(config_mqtt.password);
 
-        // Install the callback(s) before connecting
-        callback cb(cli, connOpts, &mqtt_sub_tobic, &client_id);
-        cli.set_callback(cb);
-
-        lprintf("DEBUG: MQTT Address: %s, MQTT Client ID: %s, MQTT sub Topic: %S", address.c_str(), client_id.c_str(), mqtt_sub_tobic.c_str());
         try
         {
-            std::cout << "Connecting to the MQTT server..." << std::flush;
-            cli.connect(connOpts, nullptr, cb);
+            PubSubCallback callback;
+            client.set_callback(callback);
+
+            mqtt::token_ptr connectionToken = client.connect(connOpts);
+            connectionToken->wait();
+
+            mqtt::message_ptr pubMessage = mqtt::make_message("test", "TEST MESSAGE!! TEST MESSAGE!!", QOS, false);
+            client.publish(pubMessage)->wait();
+
+            mqtt::token_ptr subToken = client.subscribe("test2", QOS);
+            subToken->wait();
+
+            while (true)
+            {
+                // Wait for messages
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            }
+
+            mqtt::token_ptr disconnectionToken = client.disconnect();
+            disconnectionToken->wait();
         }
-        catch (const mqtt::exception &exc)
+        catch (const mqtt::exception& ex)
         {
-            std::cerr << "\nERROR: Unable to connect to MQTT server: '"
-                      << address << "'" << exc << std::endl;
+            std::cerr << "MQTT Exception: " << ex.what() << ex.get_error_str() << std::endl;
             return 1;
         }
     }
-
     while (true)
     {
         lprintf("DEBUG:  Start loop");

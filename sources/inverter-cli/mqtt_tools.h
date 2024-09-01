@@ -44,6 +44,35 @@ public:
     action_listener(const std::string &name) : name_(name) {}
 };
 
+class PubSubCallback : public virtual mqtt::callback
+    {
+    public:
+        void connection_lost(const std::string& cause) override
+        {
+            std::cout << "Connection lost: " << cause << std::endl;
+        }
+
+        void delivery_complete(mqtt::delivery_token_ptr token) override
+        {
+            std::cout << "Message delivered" << std::endl;
+        }
+
+        void connection_lost(const std::string& cause) override
+        {
+            std::cout << "Connection lost: " << cause << std::endl;
+        }
+
+        void message_arrived(mqtt::const_message_ptr message) override
+        {
+            std::cout << "Message arrived: " << message->get_payload_str() << std::endl;
+        }
+
+        void delivery_complete(mqtt::delivery_token_ptr token) override
+        {
+            std::cout << "Message delivered" << std::endl;
+        }
+    };
+
 /**
  * Local callback & listener class for use with the client connection.
  * This is primarily intended to receive messages, but it will also monitor
