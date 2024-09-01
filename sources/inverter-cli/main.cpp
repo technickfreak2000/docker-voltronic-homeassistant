@@ -171,6 +171,51 @@ int main(int argc, char *argv[])
         settings = "/etc/inverter/inverter.conf";
     }
     getSettingsFile(settings);
+
+    class PublisherCallback : public virtual mqtt::callback
+    {
+    public:
+        void connection_lost(const std::string& cause) override
+        {
+            std::cout << "Connection lost: " << cause << std::endl;
+        }
+
+        void delivery_complete(mqtt::delivery_token_ptr token) override
+        {
+            std::cout << "Message delivered" << std::endl;
+        }
+    };
+
+    if(mqtt_sel){
+        string address = "tcp://" + string(config_mqtt.server) + ":" + string(config_mqtt.port);
+        string client_id = config_mqtt.device_name;
+        mqtt::async_client client(address, client_id);
+
+        mqtt::connect_options connOpts;
+        connOpts.set_keep_alive_interval(20);
+        connOpts.set_clean_session(true);
+
+        try
+        {
+            PublisherCallback callback;
+            client.set_callback(callback);
+
+            mqtt::token_ptr connectionToken = client.connect(connOpts);
+            connectionToken->wait();
+
+
+            mqtt::message_ptr pubMessage = mqtt::make_message("test", "TEST MESSAGE!! TEST MESSAGE!!", QOS, false);
+            client.publish(pubMessage)->wait();
+
+            mqtt::token_ptr disconnectionToken = client.disconnect();
+            disconnectionToken->wait();
+        }
+        catch (const mqtt::exception& ex)
+        {
+            std::cerr << "MQTT Exception: " << ex.what() << std::endl;
+            return 1;
+        }
+    }
     int fd = open(settings, O_RDWR);
     while (flock(fd, LOCK_EX))
         sleep(1);
