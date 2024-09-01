@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
         }
         catch (const mqtt::exception& ex)
         {
-            std::cerr << "MQTT Exception: " << ex.what() << std::endl;
+            std::cerr << "MQTT Exception: " << ex.what() << ex.get_error_str() << std::endl;
             return 1;
         }
     }
