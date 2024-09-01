@@ -191,11 +191,17 @@ int main(int argc, char *argv[])
         string client_id = config_mqtt.device_name;
         mqtt::async_client client(address, client_id);
 
+        // auto connOpts = mqtt::connect_options_builder()     
+        //     .clean_session()
+        //     .user_name(config_mqtt.username)
+        //     .password(config_mqtt.password)
+        //     .finalize();
+
         mqtt::connect_options connOpts;
         connOpts.set_keep_alive_interval(20);
         connOpts.set_clean_session(true);
         connOpts.set_user_name(config_mqtt.username);
-        connOpts.set_user_name(config_mqtt.password);
+        connOpts.set_password(config_mqtt.password);
 
         try
         {
