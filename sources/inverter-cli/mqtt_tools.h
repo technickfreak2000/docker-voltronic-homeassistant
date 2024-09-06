@@ -9,6 +9,7 @@
 #include <thread>
 #include <chrono>
 #include "mqtt/async_client.h"
+#include <atomic>
 
 const int QOS = 1;
 const int N_RETRY_ATTEMPTS = 5;
