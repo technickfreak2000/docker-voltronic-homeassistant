@@ -38,6 +38,7 @@ bool mqtt_sel = false;
 bool debugFlag = false;
 bool runOnce = false;
 cInverter *inv = NULL;
+cMQTTSub *mqttSub = NULL;
 
 // ---------------------------------------
 // Global configs read from 'inverter.conf'
@@ -197,7 +198,8 @@ int main(int argc, char *argv[])
     if(mqtt_sel){
         string address = "tcp://" + string(config_mqtt.server) + ":" + string(config_mqtt.port);
         string client_id = config_mqtt.device_name;
-        mqtt::async_client client(address, client_id);
+        lprintf("DEBUG:  Starting mqtt client...");
+        auto client = std::make_shared<mqtt::async_client>(address, client_id);
 
         mqtt::connect_options connOpts;
         connOpts.set_keep_alive_interval(20);
@@ -207,27 +209,15 @@ int main(int argc, char *argv[])
 
         try
         {
-            PubSubCallback callback;
-            client.set_callback(callback);
-
-            mqtt::token_ptr connectionToken = client.connect(connOpts);
-            connectionToken->wait();
+            auto rsp = client->connect(connOpts)->get_connect_response();
 
             mqtt::message_ptr pubMessage = mqtt::make_message("test", "TEST MESSAGE!! TEST MESSAGE!!", QOS, false);
-            client.publish(pubMessage)->wait();
+            client->publish(pubMessage)->wait();
 
-            mqtt::token_ptr subToken = client.subscribe("test2", QOS);
+            mqtt::token_ptr subToken = client->subscribe("test2", QOS);
             subToken->wait();
 
-            while (true)
-            {
-                // Wait for messages
-                printf("Waiting for messages");
-                std::this_thread::sleep_for(std::chrono::milliseconds(10000));
-            }
-
-            mqtt::token_ptr disconnectionToken = client.disconnect();
-            disconnectionToken->wait();
+            cMQTTSub mqttSub(client);
         }
         catch (const mqtt::exception& ex)
         {
@@ -507,6 +497,15 @@ int main(int argc, char *argv[])
             {
                 // there is no thread -- ups->terminateThread();
                 // Do once and exit instead of loop endlessly
+                if (mqtt_sel)
+                {
+                    mqtt::async_client::ptr_t client = mqttSub->getClient();
+                    mqttSub->terminateThread();
+                    
+                    mqtt::token_ptr disconnectionToken = client->disconnect();
+                    disconnectionToken->wait();
+                }
+                
                 lprintf("INVERTER: All queries complete, exiting loop.");
                 exit(0);
             }

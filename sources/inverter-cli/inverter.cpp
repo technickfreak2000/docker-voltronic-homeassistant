@@ -128,7 +128,7 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
 
     delete tmpData;
     m.unlock();
-    last = current;
+    last = current; 
     current = current->next;
   }
   if (last->next != NULL)

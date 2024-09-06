@@ -161,4 +161,33 @@ public:
         : nretry_(0), cli_(cli), connOpts_(connOpts), subListener_("Subscription"), mqtt_topic_(mqtt_topic), mqtt_client_id_(mqtt_client_id) {}
 };
 
+class cMQTTSub
+{
+  std::mutex m;
+  std::thread t2;
+  std::atomic_bool quit_thread{false};
+  mqtt::async_client::ptr_t mqttClient;
+
+  void run();
+
+public:
+  cMQTTSub(mqtt::async_client::ptr_t mqttClient);
+  bool runOnce = false;
+
+  mqtt::async_client::ptr_t getClient()
+  {
+    return mqttClient;
+  }
+
+  void terminateThread()
+  {
+    mqttClient->stop_consuming();
+    quit_thread = true;
+    t2.join();
+  }
+
+  atomic_bool inv_data_avail = ATOMIC_VAR_INIT(false);
+  
+};
+
 #endif // ___MQTT_TOOLS_H
