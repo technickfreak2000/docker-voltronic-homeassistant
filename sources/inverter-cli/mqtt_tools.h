@@ -166,7 +166,7 @@ class cMQTTSub
 {
   std::mutex m;
   std::thread t2;
-  std::atomic<bool> quit_thread{false};
+  std::atomic_bool quit_thread{false};
   mqtt::async_client::ptr_t mqttClient;
 
   void run();
@@ -187,7 +187,7 @@ public:
     t2.join();
   }
 
-  atomic_bool inv_data_avail = ATOMIC_VAR_INIT(false);
+   std::atomic_bool inv_data_avail = ATOMIC_VAR_INIT(false);
   
 };
 
