@@ -166,7 +166,7 @@ class cMQTTSub
 {
   std::mutex m;
   std::thread t2;
-  std::atomic_bool quit_thread{false};
+  std::atomic<bool> quit_thread{false};
   mqtt::async_client::ptr_t mqttClient;
 
   void run();
