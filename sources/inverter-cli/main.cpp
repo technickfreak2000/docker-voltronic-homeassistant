@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
             mqtt::token_ptr subToken = client->subscribe("test2", QOS);
             subToken->wait();
 
-            cMQTTSub mqttSub(client);
+            mqttSub = &cMQTTSub(client);
         }
         catch (const mqtt::exception& ex)
         {
