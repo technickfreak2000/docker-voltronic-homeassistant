@@ -186,8 +186,6 @@ public:
     quit_thread = true;
     t2.join();
   }
-
-   std::atomic_bool inv_data_avail = ATOMIC_VAR_INIT(false);
   
 };
 
