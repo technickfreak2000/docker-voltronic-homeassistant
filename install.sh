@@ -172,8 +172,7 @@ fi
 
 case $yn in 
 	[yY] )
-        sudo nano "$PATH_TO_NEW_INSTALL/config/inverter.conf" 
-        sudo nano "$PATH_TO_NEW_INSTALL/config/mqtt.json" 
+        sudo nano "$PATH_TO_NEW_INSTALL/config/inverter.conf"
         clear
 		break;;
 	[nN] ) echo "Moving on...";
