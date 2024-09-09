@@ -496,14 +496,31 @@ int main(int argc, char *argv[])
                 cJSON_ArrayForEach(json_key, json)
                 {
                     const char *key = json_key->string; // Get the key
-                    std::string value_str = json_key->valuestring;
-                    if (value_str == "true")
+                    std::string value_str;
+
+                    if (cJSON_IsString(json_key))
                     {
-                        value_str = "1";
+                        value_str = json_key->valuestring;
+                        if (value_str == "true")
+                        {
+                            value_str = "1";
+                        }
+                        else if (value_str == "false")
+                        {
+                            value_str = "0";
+                        }
                     }
-                    else if (value_str == "false")
+                    else if (cJSON_IsBool(json_key))
                     {
-                        value_str = "0";
+                        value_str = cJSON_IsTrue(json_key) ? "1" : "0";
+                    }
+                    else if (cJSON_IsNumber(json_key))
+                    {
+                        value_str = std::to_string(json_key->valuedouble);
+                    }
+                    else
+                    {
+                        continue; // Skip other types
                     }
 
                     // Construct MQTT topic and publish message
