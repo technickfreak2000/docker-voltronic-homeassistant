@@ -32,16 +32,21 @@ void cMQTTSub::run()
         auto info_msg = mqttClient->get_server_uri();
         std::cout << "TESTOUT: " << info_msg << std::endl;
 
-        // auto msg = mqttClient->consume_message();
+        try {
+            auto msg = mqttClient->consume_message();
 
-        // if (!msg) {
-        //     if (quit_thread) {
-        //         return;
-        //     }
-        //     continue;  // No message received, skip to the next loop iteration
-        // }
+            if (!msg) {
+                if (quit_thread) {
+                    return;
+                }
+                continue;  // No message received, skip to the next loop iteration
+            }
 
-        // std::cout << msg->get_topic() << ": " << msg->to_string() << std::endl;
+            std::cout << msg->get_topic() << ": " << msg->to_string() << std::endl;
+        }
+        catch (const std::exception &e) {
+            std::cerr << "Exception in MQTT client: " << e.what() << std::endl;
+        }
 
         if (quit_thread) {
             return;
