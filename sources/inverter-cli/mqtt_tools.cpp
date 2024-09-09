@@ -30,7 +30,7 @@ void cMQTTSub::run()
 
         lprintf("MQTT: test");
         
-        std::this_thread::sleep_for(1000);
+        std::this_thread::sleep_for(1000ms);
 
         if (quit_thread)
         {
