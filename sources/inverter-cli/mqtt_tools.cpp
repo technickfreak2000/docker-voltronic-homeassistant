@@ -3,6 +3,7 @@
 #include <chrono>
 
 #include "tools.h"
+using namespace std::chrono_literals;
 
 cMQTTSub::cMQTTSub(mqtt::async_client::ptr_t client)
 {
