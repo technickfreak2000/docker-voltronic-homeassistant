@@ -11,6 +11,8 @@
 #include "main.h"
 #include "tools.h"
 
+#include <cJSON.h>
+
 std::mutex log_mutex;
 
 double roundToTwoDecimalPlaces(double num)
@@ -83,7 +85,127 @@ int print_help()
     return 1;
 }
 
-void mqtt_publish_and_json_print()
+bool compare_cJSON(cJSON* json1, cJSON* json2) {
+    // If either is NULL, they are equal only if both are NULL
+    if (json1 == NULL || json2 == NULL) {
+        return json1 == json2;
+    }
+
+    // If types are different, the objects are not equal
+    if (json1->type != json2->type) {
+        return false;
+    }
+
+    // Compare based on type
+    switch (json1->type) {
+        case cJSON_False:
+        case cJSON_True:
+        case cJSON_NULL:
+            return true; // These types are equal by definition
+
+        case cJSON_Number:
+            return json1->valuedouble == json2->valuedouble;
+
+        case cJSON_String:
+            return strcmp(json1->valuestring, json2->valuestring) == 0;
+
+        case cJSON_Array: {
+            int size1 = cJSON_GetArraySize(json1);
+            int size2 = cJSON_GetArraySize(json2);
+
+            if (size1 != size2) return false;
+
+            for (int i = 0; i < size1; ++i) {
+                cJSON* item1 = cJSON_GetArrayItem(json1, i);
+                cJSON* item2 = cJSON_GetArrayItem(json2, i);
+                if (!compare_cJSON(item1, item2)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        case cJSON_Object: {
+            cJSON* child1 = json1->child;
+            cJSON* child2 = json2->child;
+
+            // Iterate over each child and compare keys and values
+            while (child1 && child2) {
+                if (strcmp(child1->string, child2->string) != 0 || !compare_cJSON(child1, child2)) {
+                    return false;
+                }
+                child1 = child1->next;
+                child2 = child2->next;
+            }
+            return child1 == NULL && child2 == NULL;
+        }
+
+        default:
+            return false;  // Unsupported type
+    }
+}
+
+char *replaceSpacesWithUnderscore(const char *str)
 {
-    
+    int length = strlen(str);                  // Get the length of the original string
+    char *newStr = (char *)malloc(length + 1); // Allocate memory for the new string (+1 for null terminator)
+
+    if (!newStr)
+        return nullptr; // Check for successful memory allocation
+
+    for (int i = 0; i < length; ++i)
+    {
+        if (str[i] == ' ')
+        {
+            newStr[i] = '_'; // Replace space with underscore
+        }
+        else
+        {
+            newStr[i] = str[i]; // Copy the character as-is
+        }
+    }
+
+    newStr[length] = '\0'; // Null-terminate the new string
+    return newStr;         // Return the new string
+}
+
+void add_number_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_MQTT config_mqtt, const char *name, double number, const char *unit_of_measure, const char *hass_mdi, const char *hass_class)
+{
+    char *name_with_underscore = replaceSpacesWithUnderscore(name);
+
+    // Add to json_data
+    cJSON_AddNumberToObject(json_data, name_with_underscore, number);
+
+    // Add to json_mqtt_discovery
+    //---- object
+    cJSON *object = cJSON_AddObjectToObject(json_data, name_with_underscore);
+
+    cJSON_AddStringToObject(object, "name", name);
+
+    std::string unique_id = config_mqtt.device_name + "_" + std::string(name_with_underscore);
+    cJSON_AddStringToObject(object, "uniq_id", unique_id.c_str());
+
+    //---- object - device_object
+    cJSON *device_object = cJSON_AddObjectToObject(object, "device");
+
+    cJSON_AddStringToObject(device_object, "ids", config_mqtt.device_name.c_str());
+    cJSON_AddStringToObject(device_object, "mf", config_mqtt.manufacturer.c_str());
+    // cJSON_AddStringToObject(device_object, "mdl", config_mqtt.device_name.c_str());
+    cJSON_AddStringToObject(device_object, "name", config_mqtt.device_name.c_str());
+    // cJSON_AddStringToObject(device_object, "sw", "1.0");
+
+    //--\\ object - device_object
+
+    std::string state_topic = config_mqtt.topic + "/" + config_mqtt.device_name + "/" + std::string(name_with_underscore);
+    cJSON_AddStringToObject(object, "state_topic", state_topic.c_str());
+
+    cJSON_AddStringToObject(object, "state_class", "measurement");
+    cJSON_AddStringToObject(object, "device_class", hass_class);
+    cJSON_AddStringToObject(object, "unit_of_measurement", unit_of_measure);
+    cJSON_AddStringToObject(object, "icon", hass_mdi);
+
+
+    //--\\ object
+
+    free(name_with_underscore);
 }

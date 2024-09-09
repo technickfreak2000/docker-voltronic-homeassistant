@@ -34,7 +34,8 @@
 #include <mqtt/async_client.h>
 #include "mqtt_tools.h"
 
-bool mqtt_discovery_send = false;
+cJSON *json_discovery_old = NULL;
+
 bool mqtt_sel = false;
 bool debugFlag = false;
 bool runOnce = false;
@@ -300,8 +301,11 @@ int main(int argc, char *argv[])
             counter = 0;
             while (current_qpigsn != NULL)
             {
-                sprintf(combined_query, "SCC_%d_AC_grid_frequency", counter);
-                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->freq_grid);
+                // sprintf(combined_query, "SCC_%d_AC_grid_frequency", counter);
+                // cJSON_AddNumberToObject(json, combined_query, current_qpigsn->freq_grid);
+                sprintf(combined_query, "SCC %d AC Grid Frequency", counter);
+                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->freq_grid, "Hz", "mdi:current-ac", "frequency");
+
                 sprintf(combined_query, "SCC_%d_AC_out_voltage", counter);
                 cJSON_AddNumberToObject(json, combined_query, current_qpigsn->voltage_out);
                 sprintf(combined_query, "SCC_%d_AC_out_frequency", counter);
@@ -490,12 +494,20 @@ int main(int argc, char *argv[])
 
             if (mqtt_sel)
             {
-                if (!mqtt_discovery_send)
+                if (!compare_cJSON(json_discovery_old, json_discovery))
                 {
                     lprintf("MQTT: Sending discovery");
+                    char *json_discoveryString = cJSON_Print(json_discovery);
 
-                    mqtt_discovery_send = true;
+                    lprintf("MQTT: Discovery JSON: ");
+                    lprintf("%s\n", json_discoveryString);
 
+                    cJSON_free(json_discovery);
+                    if (json_discovery_old != NULL)
+                    {
+                        cJSON_Delete(json_discovery_old);
+                    }
+                    json_discovery_old = json_discovery;
                 }
 
                 lprintf("MQTT: Sending keys");
