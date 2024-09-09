@@ -173,7 +173,6 @@ int main(int argc, char *argv[])
     }
     getSettingsFile(settings);
 
-    
     int fd = open(settings, O_RDWR);
     while (flock(fd, LOCK_EX))
         sleep(1);
@@ -195,11 +194,13 @@ int main(int argc, char *argv[])
     else
         inv->runMultiThread();
 
-    if(mqtt_sel){
+    mqtt::async_client::ptr_t client = NULL;
+    if (mqtt_sel)
+    {
         string address = "tcp://" + string(config_mqtt.server) + ":" + string(config_mqtt.port);
         string client_id = config_mqtt.device_name;
         lprintf("DEBUG:  Starting mqtt client...");
-        auto client = std::make_shared<mqtt::async_client>(address, client_id);
+        client = std::make_shared<mqtt::async_client>(address, client_id);
 
         mqtt::connect_options connOpts;
         connOpts.set_keep_alive_interval(20);
@@ -217,9 +218,9 @@ int main(int argc, char *argv[])
             mqtt::token_ptr subToken = client->subscribe("test2", QOS);
             subToken->wait();
 
-            mqttSub = new cMQTTSub(client);
+            // mqttSub = new cMQTTSub(client);
         }
-        catch (const mqtt::exception& ex)
+        catch (const mqtt::exception &ex)
         {
             std::cerr << "MQTT Exception: " << ex.what() << ex.get_error_str() << std::endl;
             return 1;
@@ -488,6 +489,30 @@ int main(int argc, char *argv[])
 
             char *jsonString = cJSON_Print(json);
 
+            if (mqtt_sel)
+            {
+                // todo iterate through cjson and push mqtt
+                cJSON *json_key = nullptr;
+                cJSON_ArrayForEach(json_key, json)
+                {
+                    const char *key = json_key->string; // Get the key
+                    std::string value_str = json_key->valuestring;
+                    if (value_str == "true")
+                    {
+                        value_str = "1";
+                    }
+                    else if (value_str == "false")
+                    {
+                        value_str = "0";
+                    }
+
+                    // Construct MQTT topic and publish message
+                    std::string topic = std::string(config_mqtt.topic) + "/sensor/" + std::string(config_mqtt.device_name) + "/" + std::string(key);
+                    mqtt::message_ptr pubMessage = mqtt::make_message(topic, std::string(value_str), QOS, false);
+                    client->publish(pubMessage)->wait();
+                }
+            }
+
             printf("%s\n", jsonString);
 
             cJSON_free(jsonString);
@@ -501,11 +526,11 @@ int main(int argc, char *argv[])
                 {
                     mqtt::async_client::ptr_t client = mqttSub->getClient();
                     mqttSub->terminateThread();
-                    
+
                     mqtt::token_ptr disconnectionToken = client->disconnect();
                     disconnectionToken->wait();
                 }
-                
+
                 lprintf("INVERTER: All queries complete, exiting loop.");
                 exit(0);
             }
