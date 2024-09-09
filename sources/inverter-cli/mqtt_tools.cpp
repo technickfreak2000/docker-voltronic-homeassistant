@@ -1,6 +1,8 @@
 #include <iostream>
 #include "mqtt_tools.h"
 
+#include "tools.h"
+
 cMQTTSub::cMQTTSub(mqtt::async_client::ptr_t client)
 {
     mqttClient = client;
@@ -12,18 +14,23 @@ void cMQTTSub::run()
 {
     while (true)
     {
-        auto msg = mqttClient->consume_message();
 
-        if (!msg)
-        {
-            if (quit_thread)
-            {
-                return;
-            }
-            continue;
-        }
+        // auto msg = mqttClient->consume_message();
 
-        std::cout << msg->get_topic() << ": " << msg->to_string() << std::endl;
+        // if (!msg)
+        // {
+        //     if (quit_thread)
+        //     {
+        //         return;
+        //     }
+        //     continue;
+        // }
+
+        // std::cout << msg->get_topic() << ": " << msg->to_string() << std::endl;
+
+        lprintf("MQTT: test");
+        
+        std::this_thread::sleep_for(1000);
 
         if (quit_thread)
         {
