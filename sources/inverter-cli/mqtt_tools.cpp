@@ -17,7 +17,7 @@ void cMQTTSub::run()
     while (true)
     {
 
-        // auto msg = mqttClient->consume_message();
+        auto msg = mqttClient->consume_message();
 
         // if (!msg)
         // {
