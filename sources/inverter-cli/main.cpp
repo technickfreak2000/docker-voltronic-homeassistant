@@ -34,6 +34,7 @@
 #include <mqtt/async_client.h>
 #include "mqtt_tools.h"
 
+bool mqtt_discovery_send = false;
 bool mqtt_sel = false;
 bool debugFlag = false;
 bool runOnce = false;
@@ -244,7 +245,7 @@ int main(int argc, char *argv[])
             QPIWS *qpiws = &inv->qpiws;
 
             int counter = 0;
-            char *combined_query = NULL;
+            char *combined_query = (char *)malloc(50 * sizeof(char));;
 
             if (qmn->model_name != NULL)
             {
@@ -257,10 +258,12 @@ int main(int argc, char *argv[])
             }
 
             cJSON *json = cJSON_CreateObject();
+            cJSON *json_discovery = cJSON_CreateObject();
 
             // Here the json gets build, you can customize the outbut based on the first inverter model name
 
             // QMN
+            cJSON_AddStringToObject(json, "Inverter_model_name", qmn->model_name);
             cJSON_AddStringToObject(json, "Inverter_model_name", qmn->model_name);
 
             // QID
@@ -283,7 +286,6 @@ int main(int argc, char *argv[])
 
             // QVFWn
             QVFWn *current_qvfwn = qvfwn;
-            combined_query = (char *)malloc(20 * sizeof(char));
             while (current_qvfwn != NULL)
             {
                 sprintf(combined_query, "Fw_version_%d", counter);
@@ -292,12 +294,10 @@ int main(int argc, char *argv[])
                 counter++;
                 current_qvfwn = current_qvfwn->next;
             }
-            free(combined_query);
 
             // QPIGS
             QPIGSn *current_qpigsn = qpigsn;
             counter = 0;
-            combined_query = (char *)malloc(50 * sizeof(char));
             while (current_qpigsn != NULL)
             {
                 sprintf(combined_query, "SCC_%d_AC_grid_frequency", counter);
@@ -357,12 +357,10 @@ int main(int argc, char *argv[])
                 counter++;
                 current_qpigsn = current_qpigsn->next;
             }
-            free(combined_query);
 
             // QPGS
             QPGSn *current_qpgsn = qpgsn;
             counter = 0;
-            combined_query = (char *)malloc(50 * sizeof(char));
             while (current_qpgsn != NULL)
             {
                 sprintf(combined_query, "INV_%d_Inverter_ID", counter);
@@ -440,7 +438,6 @@ int main(int argc, char *argv[])
                 counter++;
                 current_qpgsn = current_qpgsn->next;
             }
-            free(combined_query);
 
             // QPIRI
             cJSON_AddNumberToObject(json, "Battery_recharge_voltage", qpiri->batt_recharge_voltage);
@@ -487,11 +484,22 @@ int main(int argc, char *argv[])
             cJSON_AddBoolToObject(json, "DC_DC_over_current", qpiws->dc_dc_over_current);
             cJSON_AddBoolToObject(json, "Reserved2", qpiws->reserved2);
 
+            free(combined_query);
+
             char *jsonString = cJSON_Print(json);
 
             if (mqtt_sel)
             {
-                // todo iterate through cjson and push mqtt
+                if (!mqtt_discovery_send)
+                {
+                    lprintf("MQTT: Sending discovery");
+
+                    mqtt_discovery_send = true;
+
+                }
+
+                lprintf("MQTT: Sending keys");
+                
                 cJSON *json_key = nullptr;
                 cJSON_ArrayForEach(json_key, json)
                 {
@@ -524,10 +532,17 @@ int main(int argc, char *argv[])
                     }
 
                     // Construct MQTT topic and publish message
-                    std::string topic = std::string(config_mqtt.topic) + "/sensor/" + std::string(config_mqtt.device_name) + "/" + std::string(key);
+                    std::string topic = std::string(config_mqtt.topic) + "/" + std::string(config_mqtt.device_name) + "/" + std::string(key);
                     mqtt::message_ptr pubMessage = mqtt::make_message(topic, std::string(value_str), QOS, false);
                     client->publish(pubMessage)->wait();
                 }
+
+                lprintf("MQTT: Sending json");
+
+                // Send raw json
+                std::string topic = std::string(config_mqtt.topic) + "/" + std::string(config_mqtt.device_name) + "/json";
+                mqtt::message_ptr pubMessage = mqtt::make_message(topic, std::string(jsonString), QOS, false);
+                client->publish(pubMessage)->wait();
             }
 
             printf("%s\n", jsonString);
