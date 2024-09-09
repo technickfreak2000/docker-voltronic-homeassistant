@@ -178,7 +178,7 @@ void add_number_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_M
 
     // Add to json_mqtt_discovery
     //---- object
-    cJSON *object = cJSON_AddObjectToObject(json_data, name_with_underscore);
+    cJSON *object = cJSON_AddObjectToObject(json_mqtt_discovery, name_with_underscore);
 
     cJSON_AddStringToObject(object, "name", name);
 
