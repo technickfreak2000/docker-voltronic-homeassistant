@@ -16,6 +16,10 @@ void cMQTTSub::run()
 {
     while (true)
     {
+        if (!mqttClient) {
+            std::cerr << "Error: mqttClient is not initialized!" << std::endl;
+            return;
+        }
 
         auto msg = mqttClient->consume_message();
 
