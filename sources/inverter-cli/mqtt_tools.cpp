@@ -21,25 +21,26 @@ void cMQTTSub::run()
             return;
         }
 
+        if (!mqttClient->is_connected()) {
+            std::cerr << "MQTT client is not connected!" << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            continue;
+        }
+
         auto msg = mqttClient->consume_message();
 
-        // if (!msg)
-        // {
-        //     if (quit_thread)
-        //     {
-        //         return;
-        //     }
-        //     continue;
-        // }
+        if (!msg) {
+            if (quit_thread) {
+                return;
+            }
+            continue;  // No message received, skip to the next loop iteration
+        }
 
-        // std::cout << msg->get_topic() << ": " << msg->to_string() << std::endl;
-
-        lprintf("MQTT: test");
+        std::cout << msg->get_topic() << ": " << msg->to_string() << std::endl;
         
-        std::this_thread::sleep_for(1000ms);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-        if (quit_thread)
-        {
+        if (quit_thread) {
             return;
         }
     }
