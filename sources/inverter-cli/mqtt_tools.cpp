@@ -27,6 +27,8 @@ void cMQTTSub::run()
             continue;
         }
 
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
         auto msg = mqttClient->consume_message();
 
         if (!msg) {
@@ -37,8 +39,6 @@ void cMQTTSub::run()
         }
 
         std::cout << msg->get_topic() << ": " << msg->to_string() << std::endl;
-        
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
         if (quit_thread) {
             return;
