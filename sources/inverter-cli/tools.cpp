@@ -85,66 +85,6 @@ int print_help()
     return 1;
 }
 
-bool compare_cJSON(cJSON* json1, cJSON* json2) {
-    // If either is NULL, they are equal only if both are NULL
-    if (json1 == NULL || json2 == NULL) {
-        return json1 == json2;
-    }
-
-    // If types are different, the objects are not equal
-    if (json1->type != json2->type) {
-        return false;
-    }
-
-    // Compare based on type
-    switch (json1->type) {
-        case cJSON_False:
-        case cJSON_True:
-        case cJSON_NULL:
-            return true; // These types are equal by definition
-
-        case cJSON_Number:
-            return json1->valuedouble == json2->valuedouble;
-
-        case cJSON_String:
-            return strcmp(json1->valuestring, json2->valuestring) == 0;
-
-        case cJSON_Array: {
-            int size1 = cJSON_GetArraySize(json1);
-            int size2 = cJSON_GetArraySize(json2);
-
-            if (size1 != size2) return false;
-
-            for (int i = 0; i < size1; ++i) {
-                cJSON* item1 = cJSON_GetArrayItem(json1, i);
-                cJSON* item2 = cJSON_GetArrayItem(json2, i);
-                if (!compare_cJSON(item1, item2)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        case cJSON_Object: {
-            cJSON* child1 = json1->child;
-            cJSON* child2 = json2->child;
-
-            // Iterate over each child and compare keys and values
-            while (child1 && child2) {
-                if (strcmp(child1->string, child2->string) != 0 || !compare_cJSON(child1, child2)) {
-                    return false;
-                }
-                child1 = child1->next;
-                child2 = child2->next;
-            }
-            return child1 == NULL && child2 == NULL;
-        }
-
-        default:
-            return false;  // Unsupported type
-    }
-}
-
 char *replaceSpacesWithUnderscore(const char *str)
 {
     int length = strlen(str);                  // Get the length of the original string

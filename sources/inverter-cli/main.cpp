@@ -494,21 +494,34 @@ int main(int argc, char *argv[])
 
             if (mqtt_sel)
             {
-                if (!compare_cJSON(json_discovery_old, json_discovery))
+                char *json_discoveryString = cJSON_Print(json_discovery);
+                char *json_discovery_oldString = NULL;
+                if (json_discovery_old != NULL)
+                {
+                    json_discovery_oldString = cJSON_Print(json_discovery_old);
+                }
+
+                if (strcmp(json_discoveryString, json_discovery_oldString) != 0)
                 {
                     lprintf("MQTT: Sending discovery");
-                    char *json_discoveryString = cJSON_Print(json_discovery);
+                    
 
                     lprintf("MQTT: Discovery JSON: ");
                     lprintf("%s\n", json_discoveryString);
 
-                    cJSON_free(json_discovery);
+                    
                     if (json_discovery_old != NULL)
                     {
                         cJSON_Delete(json_discovery_old);
                     }
                     json_discovery_old = json_discovery;
                 }
+                cJSON_free(json_discoveryString);
+                if (json_discovery_oldString != NULL)
+                {
+                    cJSON_free(json_discovery_oldString);
+                }
+                
 
                 lprintf("MQTT: Sending keys");
                 
