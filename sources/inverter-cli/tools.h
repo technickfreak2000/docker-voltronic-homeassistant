@@ -25,7 +25,7 @@ int print_help();
 
 char *replaceSpacesWithUnderscore(const char *str);
 void add_number_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_MQTT config_mqtt, const char *name, double number, const char *unit_of_measure, const char *hass_mdi, const char *hass_class);
-void add_bool_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_MQTT config_mqtt, const char *name, bool boolean, const char *unit_of_measure, const char *hass_mdi, const char *hass_class);
+void add_bool_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_MQTT config_mqtt, const char *name, bool boolean, const char *unit_of_measure, const char *hass_mdi);
 void add_string_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_MQTT config_mqtt, const char *name, char *txt, const char *unit_of_measure, const char *hass_mdi, const char *hass_class);
 
 #endif // ___TOOLS_H

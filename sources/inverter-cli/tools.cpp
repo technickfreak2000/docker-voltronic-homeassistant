@@ -149,3 +149,83 @@ void add_number_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_M
 
     free(name_with_underscore);
 }
+
+void add_bool_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_MQTT config_mqtt, const char *name, bool boolean, const char *unit_of_measure, const char *hass_mdi)
+{
+    char *name_with_underscore = replaceSpacesWithUnderscore(name);
+
+    // Add to json_data
+    cJSON_AddBoolToObject(json_data, name_with_underscore, boolean);
+
+    // Add to json_mqtt_discovery
+    //---- object
+    cJSON *object = cJSON_AddObjectToObject(json_mqtt_discovery, name_with_underscore);
+
+    cJSON_AddStringToObject(object, "name", name);
+
+    std::string unique_id = config_mqtt.device_name + "_" + std::string(name_with_underscore);
+    cJSON_AddStringToObject(object, "uniq_id", unique_id.c_str());
+
+    //---- object - device_object
+    cJSON *device_object = cJSON_AddObjectToObject(object, "device");
+
+    cJSON_AddStringToObject(device_object, "ids", config_mqtt.device_name.c_str());
+    cJSON_AddStringToObject(device_object, "mf", config_mqtt.manufacturer.c_str());
+    // cJSON_AddStringToObject(device_object, "mdl", config_mqtt.device_name.c_str());
+    cJSON_AddStringToObject(device_object, "name", config_mqtt.device_name.c_str());
+    // cJSON_AddStringToObject(device_object, "sw", "1.0");
+
+    //--\\ object - device_object
+
+    std::string state_topic = config_mqtt.topic + "/" + config_mqtt.device_name + "/" + std::string(name_with_underscore);
+    cJSON_AddStringToObject(object, "state_topic", state_topic.c_str());
+
+    cJSON_AddStringToObject(object, "unit_of_measurement", unit_of_measure);
+    cJSON_AddStringToObject(object, "icon", hass_mdi);
+
+
+    //--\\ object
+
+    free(name_with_underscore);
+}
+
+void add_string_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_MQTT config_mqtt, const char *name, char *txt, const char *unit_of_measure, const char *hass_mdi, const char *hass_class)
+{
+    char *name_with_underscore = replaceSpacesWithUnderscore(name);
+
+    // Add to json_data
+    cJSON_AddStringToObject(json_data, name_with_underscore, txt);
+
+    // Add to json_mqtt_discovery
+    //---- object
+    cJSON *object = cJSON_AddObjectToObject(json_mqtt_discovery, name_with_underscore);
+
+    cJSON_AddStringToObject(object, "name", name);
+
+    std::string unique_id = config_mqtt.device_name + "_" + std::string(name_with_underscore);
+    cJSON_AddStringToObject(object, "uniq_id", unique_id.c_str());
+
+    //---- object - device_object
+    cJSON *device_object = cJSON_AddObjectToObject(object, "device");
+
+    cJSON_AddStringToObject(device_object, "ids", config_mqtt.device_name.c_str());
+    cJSON_AddStringToObject(device_object, "mf", config_mqtt.manufacturer.c_str());
+    // cJSON_AddStringToObject(device_object, "mdl", config_mqtt.device_name.c_str());
+    cJSON_AddStringToObject(device_object, "name", config_mqtt.device_name.c_str());
+    // cJSON_AddStringToObject(device_object, "sw", "1.0");
+
+    //--\\ object - device_object
+
+    std::string state_topic = config_mqtt.topic + "/" + config_mqtt.device_name + "/" + std::string(name_with_underscore);
+    cJSON_AddStringToObject(object, "state_topic", state_topic.c_str());
+
+    cJSON_AddStringToObject(object, "state_class", "measurement");
+    cJSON_AddStringToObject(object, "device_class", hass_class);
+    cJSON_AddStringToObject(object, "unit_of_measurement", unit_of_measure);
+    cJSON_AddStringToObject(object, "icon", hass_mdi);
+
+
+    //--\\ object
+
+    free(name_with_underscore);
+}
