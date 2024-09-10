@@ -246,7 +246,8 @@ int main(int argc, char *argv[])
             QPIWS *qpiws = &inv->qpiws;
 
             int counter = 0;
-            char *combined_query = (char *)malloc(50 * sizeof(char));;
+            char *combined_query = (char *)malloc(50 * sizeof(char));
+            ;
 
             if (qmn->model_name != NULL)
             {
@@ -504,12 +505,25 @@ int main(int argc, char *argv[])
                 if (json_discovery_oldString == NULL || strcmp(json_discoveryString, json_discovery_oldString) != 0)
                 {
                     lprintf("MQTT: Sending discovery");
-                    
+
+                    cJSON *json_key = nullptr;
+                    cJSON_ArrayForEach(json_key, json_discovery)
+                    {
+                        const char *key = json_key->string; // Get the key
+
+                        char *json_message = cJSON_PrintUnformatted(json_key);
+
+                        // Construct MQTT topic and publish message
+                        std::string topic = "homeassistant/sensor/" + std::string(config_mqtt.device_name) + "/" + std::string(key) + "/config";
+                        mqtt::message_ptr pubMessage = mqtt::make_message(topic, std::string(json_message), QOS, false);
+                        client->publish(pubMessage)->wait();
+
+                        cJSON_free(json_message);
+                    }
 
                     lprintf("MQTT: Discovery JSON: ");
                     lprintf("%s\n", json_discoveryString);
 
-                    
                     if (json_discovery_old != NULL)
                     {
                         cJSON_Delete(json_discovery_old);
@@ -521,10 +535,9 @@ int main(int argc, char *argv[])
                 {
                     cJSON_free(json_discovery_oldString);
                 }
-                
 
                 lprintf("MQTT: Sending keys");
-                
+
                 cJSON *json_key = nullptr;
                 cJSON_ArrayForEach(json_key, json)
                 {
