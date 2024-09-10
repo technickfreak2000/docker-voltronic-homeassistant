@@ -413,10 +413,6 @@ int main(int argc, char *argv[])
 
                 sprintf(combined_query, "INV %d Load Watt", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->load_watt, "W", "mdi:chart-bell-curve", "power");
-                
-                sprintf(combined_query, "INV %d Load kWh", counter);
-                float energy_kwh = current_qpgsn->load_watt / 1000.0;
-                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, energy_kwh, "kWh", "mdi:chart-line", "energy");
 
                 sprintf(combined_query, "INV %d Load Percent", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->load_percent, "%", "mdi:brightness-percent", "None");
@@ -440,7 +436,7 @@ int main(int argc, char *argv[])
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->load_va_total, "VA", "mdi:chart-bell-curve", "apparent_power");
 
                 sprintf(combined_query, "INV %d Load Watt Total", counter);
-                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->load_watt_total, "kWh", "mdi:chart-bell-curve", "energy");
+                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->load_watt_total, "W", "mdi:chart-bell-curve", "power");
 
                 sprintf(combined_query, "INV %d Load Percent Total", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->load_percent_total, "%", "mdi:brightness-percent", "None");
