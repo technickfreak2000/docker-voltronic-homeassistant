@@ -214,9 +214,6 @@ int main(int argc, char *argv[])
         {
             auto rsp = client->connect(connOpts)->get_connect_response();
 
-            mqtt::message_ptr pubMessage = mqtt::make_message("test", "TEST MESSAGE!! TEST MESSAGE!!", QOS, false);
-            client->publish(pubMessage)->wait();
-
             mqtt::token_ptr subToken = client->subscribe("test2", QOS);
             subToken->wait();
 
@@ -302,13 +299,12 @@ int main(int argc, char *argv[])
             counter = 0;
             while (current_qpigsn != NULL)
             {
-                // sprintf(combined_query, "SCC_%d_AC_grid_frequency", counter);
-                // cJSON_AddNumberToObject(json, combined_query, current_qpigsn->freq_grid);
                 sprintf(combined_query, "SCC %d AC Grid Frequency", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->freq_grid, "Hz", "mdi:current-ac", "frequency");
 
-                sprintf(combined_query, "SCC_%d_AC_out_voltage", counter);
-                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->voltage_out);
+                sprintf(combined_query, "SCC %d AC Out Voltage", counter);
+                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->voltage_out, "V", "mdi:power-plug", "voltage");
+
                 sprintf(combined_query, "SCC_%d_AC_out_frequency", counter);
                 cJSON_AddNumberToObject(json, combined_query, current_qpigsn->freq_out);
                 sprintf(combined_query, "SCC_%d_PV_in_voltage", counter);
