@@ -139,11 +139,14 @@ void add_number_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_M
     std::string state_topic = config_mqtt.topic + "/" + config_mqtt.device_name + "/" + std::string(name_with_underscore);
     cJSON_AddStringToObject(object, "state_topic", state_topic.c_str());
 
-    cJSON_AddStringToObject(object, "state_class", "measurement");
-    cJSON_AddStringToObject(object, "device_class", hass_class);
+    if (strcmp(hass_class, "None") != 0)
+    {
+        cJSON_AddStringToObject(object, "state_class", "measurement");
+        cJSON_AddStringToObject(object, "device_class", hass_class);
+    }
+
     cJSON_AddStringToObject(object, "unit_of_measurement", unit_of_measure);
     cJSON_AddStringToObject(object, "icon", hass_mdi);
-
 
     //--\\ object
 
@@ -183,7 +186,6 @@ void add_bool_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_MQT
     cJSON_AddStringToObject(object, "unit_of_measurement", unit_of_measure);
     cJSON_AddStringToObject(object, "icon", hass_mdi);
 
-
     //--\\ object
 
     free(name_with_underscore);
@@ -219,11 +221,14 @@ void add_string_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_M
     std::string state_topic = config_mqtt.topic + "/" + config_mqtt.device_name + "/" + std::string(name_with_underscore);
     cJSON_AddStringToObject(object, "state_topic", state_topic.c_str());
 
-    cJSON_AddStringToObject(object, "state_class", "measurement");
-    cJSON_AddStringToObject(object, "device_class", hass_class);
+    if (strcmp(hass_class, "None") != 0)
+    {
+        cJSON_AddStringToObject(object, "state_class", "measurement");
+        cJSON_AddStringToObject(object, "device_class", hass_class);
+    }
+
     cJSON_AddStringToObject(object, "unit_of_measurement", unit_of_measure);
     cJSON_AddStringToObject(object, "icon", hass_mdi);
-
 
     //--\\ object
 
