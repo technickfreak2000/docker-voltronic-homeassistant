@@ -271,16 +271,16 @@ int main(int argc, char *argv[])
             add_number_json_mqtt(json, json_discovery, config_mqtt, "Inverter Mode", qmod->inverter_mode_int, "", "mdi:solar-power", "None");
 
             // QFLAG
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Silence Open Buzzer", qflag->silence_open_buzzer, "", "mdi:bell-off", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Bypass Function", qflag->bypass_function, "", "mdi:flash", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Bypass Function Forbidden", qflag->bypass_function_forbidden, "", "mdi:flash-off", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Power Saving", qflag->power_saving, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "LCD Timeout Default Page", qflag->lcd_timeout_default_page, "", "mdi:timer", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Overload Restart", qflag->overload_restart, "", "mdi:restart", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Overtemperature Restart", qflag->overtemperature_restart, "", "mdi:thermometer", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "LCD Backlight", qflag->lcd_backlight, "", "mdi:brightness-6", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Alarm Primary Input", qflag->alarm_primary_input, "", "mdi:alarm", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Fault Code Record", qflag->fault_code_record, "", "mdi:note-text", "None");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Silence Open Buzzer", qflag->silence_open_buzzer, "", "mdi:bell-off");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Bypass Function", qflag->bypass_function, "", "mdi:flash");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Bypass Function Forbidden", qflag->bypass_function_forbidden, "", "mdi:flash-off");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Power Saving", qflag->power_saving, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "LCD Timeout Default Page", qflag->lcd_timeout_default_page, "", "mdi:timer");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Overload Restart", qflag->overload_restart, "", "mdi:restart");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Overtemperature Restart", qflag->overtemperature_restart, "", "mdi:thermometer");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "LCD Backlight", qflag->lcd_backlight, "", "mdi:brightness-6");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Alarm Primary Input", qflag->alarm_primary_input, "", "mdi:alarm");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Fault Code Record", qflag->fault_code_record, "", "mdi:note-text");
 
             // QVFWn
             QVFWn *current_qvfwn = qvfwn;
@@ -349,13 +349,13 @@ int main(int argc, char *argv[])
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->batt_discharge_current, "A", "mdi:current-dc", "current");
 
                 sprintf(combined_query, "SCC %d Load Status On", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->load_status, "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->load_status, "", "mdi:power");
 
                 sprintf(combined_query, "SCC %d SCC Charge On", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->charging_status_scc, "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->charging_status_scc, "", "mdi:power");
 
                 sprintf(combined_query, "SCC %d AC Charge On", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->charging_status_ac, "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->charging_status_ac, "", "mdi:power");
 
                 sprintf(combined_query, "SCC %d Battery Voltage Offset For Fans On", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->battery_voltage_offset_for_fans_on, "10mV", "mdi:battery-outline", "voltage");
@@ -367,13 +367,13 @@ int main(int argc, char *argv[])
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->pv_charging_power, "W", "mdi:solar-panel-large", "power");
 
                 sprintf(combined_query, "SCC %d Charging To Floating Mode", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->charging_to_floating_mode, "", "mdi:solar-power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->charging_to_floating_mode, "", "mdi:solar-power");
 
                 sprintf(combined_query, "SCC %d Switch On", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->switch_on, "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->switch_on, "", "mdi:power");
 
                 sprintf(combined_query, "SCC %d Dustproof Installed", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->dustproof_installed, "", "mdi:solar-power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->dustproof_installed, "", "mdi:solar-power");
 
                 counter++;
                 current_qpigsn = current_qpigsn->next;
@@ -442,31 +442,31 @@ int main(int argc, char *argv[])
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->load_percent_total, "%", "mdi:brightness-percent", "None");
 
                 sprintf(combined_query, "INV %d SCC OK", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->scc_ok), "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->scc_ok), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d Charging Status AC", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->charging_status_ac), "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->charging_status_ac), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d Charging Status SCC", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->charging_status_scc), "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->charging_status_scc), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d Battery Open", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->battery_open), "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->battery_open), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d Battery Under", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->battery_under), "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->battery_under), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d Battery Normal", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->battery_normal), "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->battery_normal), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d AC Loss", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->ac_loss), "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->ac_loss), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d AC OK", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->ac_ok), "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->ac_ok), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d Configuration Changed", counter);
-                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->configuration_changed), "", "mdi:power", "None");
+                add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->configuration_changed), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d Output Mode", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->output_mode, "", "mdi:solar-power", "None");
@@ -509,38 +509,38 @@ int main(int argc, char *argv[])
             add_number_json_mqtt(json, json_discovery, config_mqtt, "Battery Redischarge Voltage", qpiri->batt_redischarge_voltage, "V", "mdi:battery-negative", "voltage");
 
             // QPIWS
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Reserved", qpiws->reserved, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Inverter Fault", qpiws->inverter_fault, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Bus Over", qpiws->bus_over, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Bus Under", qpiws->bus_under, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Bus Soft Fail", qpiws->bus_soft_fail, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Line Fail", qpiws->line_fail, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "OPV Short", qpiws->opv_short, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Inverter Voltage Too Low", qpiws->inverter_voltage_too_low, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Inverter Voltage Too High", qpiws->inverter_voltage_too_high, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Over Temperature", qpiws->over_temperature, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Fan Locked", qpiws->fan_locked, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Voltage High", qpiws->battery_voltage_high, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Low Alarm", qpiws->battery_low_alarm, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Overcharge", qpiws->overcharge, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Under Shutdown", qpiws->battery_under_shutdown, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Derating", qpiws->battery_derating, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Over Load", qpiws->over_load, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "EEPROM Fault", qpiws->eeprom_fault, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Inverter Over Current", qpiws->inverter_over_current, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Inverter Soft Fail", qpiws->inverter_soft_fail, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Self Test Fail", qpiws->self_test_fail, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "OP DC Voltage Over", qpiws->op_dc_voltage_over, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Open", qpiws->bat_open, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Current Sensor Fail", qpiws->current_sensor_fail, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Short", qpiws->battery_short, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Power Limit", qpiws->power_limit, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "PV Voltage High", qpiws->pv_voltage_high, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "MPPT Overload Fault", qpiws->mppt_overload_fault, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "MPPT Overload Warning", qpiws->mppt_overload_warning, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Too Low to Charge", qpiws->battery_too_low_to_charge, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "DC DC Over Current", qpiws->dc_dc_over_current, "", "mdi:power", "None");
-            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Reserved2", qpiws->reserved2, "", "mdi:power", "None");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Reserved", qpiws->reserved, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Inverter Fault", qpiws->inverter_fault, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Bus Over", qpiws->bus_over, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Bus Under", qpiws->bus_under, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Bus Soft Fail", qpiws->bus_soft_fail, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Line Fail", qpiws->line_fail, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "OPV Short", qpiws->opv_short, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Inverter Voltage Too Low", qpiws->inverter_voltage_too_low, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Inverter Voltage Too High", qpiws->inverter_voltage_too_high, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Over Temperature", qpiws->over_temperature, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Fan Locked", qpiws->fan_locked, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Voltage High", qpiws->battery_voltage_high, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Low Alarm", qpiws->battery_low_alarm, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Overcharge", qpiws->overcharge, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Under Shutdown", qpiws->battery_under_shutdown, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Derating", qpiws->battery_derating, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Over Load", qpiws->over_load, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "EEPROM Fault", qpiws->eeprom_fault, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Inverter Over Current", qpiws->inverter_over_current, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Inverter Soft Fail", qpiws->inverter_soft_fail, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Self Test Fail", qpiws->self_test_fail, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "OP DC Voltage Over", qpiws->op_dc_voltage_over, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Open", qpiws->bat_open, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Current Sensor Fail", qpiws->current_sensor_fail, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Short", qpiws->battery_short, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Power Limit", qpiws->power_limit, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "PV Voltage High", qpiws->pv_voltage_high, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "MPPT Overload Fault", qpiws->mppt_overload_fault, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "MPPT Overload Warning", qpiws->mppt_overload_warning, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Battery Too Low to Charge", qpiws->battery_too_low_to_charge, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "DC DC Over Current", qpiws->dc_dc_over_current, "", "mdi:power");
+            add_bool_json_mqtt(json, json_discovery, config_mqtt, "Reserved2", qpiws->reserved2, "", "mdi:power");
 
             free(combined_query);
 
