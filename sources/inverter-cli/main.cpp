@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
             // Here the json gets build, you can customize the outbut based on the first inverter model name
 
             // QMN
-            add_string_json_mqtt(json, json_discovery, config_mqtt, "Inverter Model Name", qmn->model_name, "", "mdi:power-plug", "None");
+            add_string_json_mqtt(json, json_discovery, config_mqtt, "Inverter Model Name", qmn->model_name, "", "mdi:power-plug", "enum");
 
             // QID
             add_string_json_mqtt(json, json_discovery, config_mqtt, "Inverter ID", qid->inverter_id, "", "mdi:identifier", "None");
@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->voltage_out, "V", "mdi:power-plug", "voltage");
 
                 sprintf(combined_query, "SCC %d AC Out Frequency", counter);
-                cJSON_AddNumberToObject(json, combined_query, current_qpigsn->freq_out);
+                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->freq_out, "Hz", "mdi:current-ac", "frequency");
 
                 sprintf(combined_query, "SCC %d PV In Voltage", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpigsn->pv_input_voltage, "V", "mdi:solar-panel-large", "voltage");
@@ -385,16 +385,16 @@ int main(int argc, char *argv[])
             while (current_qpgsn != NULL)
             {
                 sprintf(combined_query, "INV %d Inverter ID", counter);
-                add_string_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->inverter_id, "", "power", "None");
+                add_string_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->inverter_id, "", "mdi:power", "None");
 
                 sprintf(combined_query, "INV %d Inverter Mode", counter);
-                add_string_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->inverter_mode, "", "solar-power", "None");
+                add_string_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->inverter_mode, "", "mdi:solar-power", "None");
 
                 sprintf(combined_query, "INV %d Inverter Mode Int", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->inverter_mode_int, "", "mdi:solar-power", "None");
 
                 sprintf(combined_query, "INV %d Fault Code", counter);
-                add_string_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->fault_code, "", "power", "None");
+                add_string_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->fault_code, "", "mdi:power", "None");
 
                 sprintf(combined_query, "INV %d Voltage Grid", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->voltage_grid, "V", "mdi:power-plug", "voltage");
