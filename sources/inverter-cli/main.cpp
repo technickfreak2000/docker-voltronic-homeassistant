@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
             add_string_json_mqtt(json, json_discovery, config_mqtt, "Inverter ID", qid->inverter_id, "", "mdi:identifier", "None");
 
             // QMOD
-            add_number_json_mqtt(json, json_discovery, config_mqtt, "Inverter Mode", qmod->inverter_mode_int, "", "mdi:solar-power", "None");
+            add_number_json_mqtt(json, json_discovery, config_mqtt, "Inverter Mode", qmod->inverter_mode_int, "", "mdi:solar-power", "enum");
 
             // QFLAG
             add_bool_json_mqtt(json, json_discovery, config_mqtt, "Silence Open Buzzer", qflag->silence_open_buzzer, "", "mdi:bell-off");
@@ -388,7 +388,7 @@ int main(int argc, char *argv[])
                 add_string_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->inverter_id, "", "mdi:power", "None");
 
                 sprintf(combined_query, "INV %d Inverter Mode", counter);
-                add_string_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->inverter_mode, "", "mdi:solar-power", "None");
+                add_string_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->inverter_mode, "", "mdi:solar-power", "enum");
 
                 sprintf(combined_query, "INV %d Inverter Mode Int", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->inverter_mode_int, "", "mdi:solar-power", "None");
