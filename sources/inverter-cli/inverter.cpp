@@ -136,6 +136,7 @@ void cInverter::GetQPIGSn(QPIGSn *qpigsn)
     free(last->next);
     last->next = NULL;
   }
+  free(combined_query);
 }
 
 void cInverter::GetQPGSn(QPGSn *qpgsn)
@@ -224,6 +225,7 @@ void cInverter::GetQPGSn(QPGSn *qpgsn)
     free(last->next);
     last->next = NULL;
   }
+  free(combined_query);
 }
 
 void cInverter::GetQPIRI(QPIRI *qpiri)
@@ -591,7 +593,7 @@ bool cInverter::query(const char *cmd)
       if (time(NULL) - started > 5) // Wait 5 secs before timeout
       {
         lprintf("DEBUG:  %s read timeout", cmd);
-        break;
+        return false;
       }
       else
       {
