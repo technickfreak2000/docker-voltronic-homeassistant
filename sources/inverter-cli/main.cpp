@@ -501,7 +501,7 @@ int main(int argc, char *argv[])
                     json_discovery_oldString = cJSON_Print(json_discovery_old);
                 }
 
-                if (json_discovery_oldString != NULL && strcmp(json_discoveryString, json_discovery_oldString) != 0)
+                if (json_discovery_oldString == NULL || strcmp(json_discoveryString, json_discovery_oldString) != 0)
                 {
                     lprintf("MQTT: Sending discovery");
                     
