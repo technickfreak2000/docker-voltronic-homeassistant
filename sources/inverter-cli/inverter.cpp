@@ -171,11 +171,10 @@ void cInverter::GetQPGSn(QPGSn *qpgsn)
     char device_status[8];
 
     // Parse values
-    sscanf(tmpData->c_str(), "%d %s %s %d %s %lf %lf %lf %lf %d %d %d %lf %d %d %lf %d %d %d %d %s %d %d %d %d %d %lf %d",
+    sscanf(tmpData->c_str(), "%d %s %s %s %lf %lf %lf %lf %d %d %d %lf %d %d %lf %d %d %d %d %s %d %d %d %d %d %lf %d",
            &current->parallel_num_exists,
            &current->inverter_id,
            &current->inverter_mode,
-           &current->inverter_mode_int,
            &current->fault_code,
            &current->voltage_grid,
            &current->freq_grid,
