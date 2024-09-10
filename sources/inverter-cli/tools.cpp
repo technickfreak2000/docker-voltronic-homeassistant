@@ -141,7 +141,7 @@ void add_number_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_M
 
     if (strcmp(hass_class, "None") != 0)
     {
-        if (strcmp(hass_class, "enum") != 0)
+        if (strcmp(hass_class, "enum") != 0 && strcmp(hass_class, "energy") != 0)
         {
             cJSON_AddStringToObject(object, "state_class", "measurement");
         }
@@ -226,7 +226,7 @@ void add_string_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_M
 
     if (strcmp(hass_class, "None") != 0)
     {
-        if (strcmp(hass_class, "enum") != 0)
+        if (strcmp(hass_class, "enum") != 0 && strcmp(hass_class, "energy") != 0)
         {
             cJSON_AddStringToObject(object, "state_class", "measurement");
         }
