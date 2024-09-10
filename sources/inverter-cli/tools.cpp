@@ -141,7 +141,10 @@ void add_number_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_M
 
     if (strcmp(hass_class, "None") != 0)
     {
-        cJSON_AddStringToObject(object, "state_class", "measurement");
+        if (strcmp(hass_class, "enum") != 0)
+        {
+            cJSON_AddStringToObject(object, "state_class", "measurement");
+        }
         cJSON_AddStringToObject(object, "device_class", hass_class);
     }
 
@@ -223,7 +226,10 @@ void add_string_json_mqtt(cJSON *json_data, cJSON *json_mqtt_discovery, CONFIG_M
 
     if (strcmp(hass_class, "None") != 0)
     {
-        cJSON_AddStringToObject(object, "state_class", "measurement");
+        if (strcmp(hass_class, "enum") != 0)
+        {
+            cJSON_AddStringToObject(object, "state_class", "measurement");
+        }
         cJSON_AddStringToObject(object, "device_class", hass_class);
     }
 
