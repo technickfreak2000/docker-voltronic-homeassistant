@@ -498,6 +498,16 @@ int main(int argc, char *argv[])
                 sprintf(combined_query, "INV %d PV Input Watts", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->pv_input_watts, "W", "mdi:solar-panel-large", "power");
 
+                sprintf(combined_query, "INV %d Grid Load", counter);
+                if (strcmp(current_qpgsn->inverter_mode, "L") == 0)
+                {
+                    add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->load_watt + (((double)current_qpgsn->batt_charge_current-current_qpgsn->pv_input_current) * qpiri->batt_bulk_voltage), "W", "mdi:solar-panel-large", "power");
+                }
+                else
+                {
+                    add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, 0, "W", "mdi:solar-panel-large", "power");
+                }
+                
                 counter++;
                 current_qpgsn = current_qpgsn->next;
             }
