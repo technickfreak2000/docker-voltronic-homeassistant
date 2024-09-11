@@ -1,6 +1,9 @@
 #!/bin/bash
 
-/opt/inverter-cli/bin/inverter_poller -m
+while true
+do
+  /opt/inverter-cli/bin/inverter_poller -m
+done
 
 #UNBUFFER='stdbuf -i0 -oL -eL'
 
