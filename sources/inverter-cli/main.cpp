@@ -489,6 +489,12 @@ int main(int argc, char *argv[])
                 sprintf(combined_query, "INV %d Batt Discharge Current", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->batt_discharge_current, "A", "mdi:current-dc", "current");
 
+                sprintf(combined_query, "INV %d Batt Discharge Watts", counter);
+                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, (double)current_qpgsn->batt_discharge_current * qpiri->batt_bulk_voltage, "W", "mdi:chart-bell-curve", "power");
+
+                sprintf(combined_query, "INV %d Batt Charge Watts", counter);
+                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, (double)current_qpgsn->batt_charge_current * qpiri->batt_bulk_voltage, "W", "mdi:chart-bell-curve", "power");
+
                 sprintf(combined_query, "INV %d PV Input Watts", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->pv_input_watts, "W", "mdi:solar-panel-large", "power");
 
