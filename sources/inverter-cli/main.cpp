@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
             mqtt::token_ptr subToken = client->subscribe("test2", QOS);
             subToken->wait();
 
-            // mqttSub = new cMQTTSub(client);
+            mqttSub = new cMQTTSub(client);
         }
         catch (const mqtt::exception &ex)
         {
@@ -456,7 +456,7 @@ int main(int argc, char *argv[])
                 sprintf(combined_query, "INV %d Battery Under", counter);
                 add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->battery_under), "", "mdi:power");
 
-                sprintf(combined_query, "INV %d Battery Normal", counter);
+                sprintf(combinedhttps://192.168.1.12:8006/?console=lxc&xtermjs=1&vmid=119&vmname=inverter-cli&node=new-main&cmd=_query, "INV %d Battery Normal", counter);
                 add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->battery_normal), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d AC Loss", counter);
@@ -490,10 +490,10 @@ int main(int argc, char *argv[])
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->batt_discharge_current, "A", "mdi:current-dc", "current");
 
                 sprintf(combined_query, "INV %d Batt Discharge Watts", counter);
-                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, (double)current_qpgsn->batt_discharge_current * qpiri->batt_bulk_voltage, "W", "mdi:chart-bell-curve", "power");
+                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, (double)current_qpgsn->batt_discharge_current * qpigsn->voltage_batt, "W", "mdi:chart-bell-curve", "power");
 
                 sprintf(combined_query, "INV %d Batt Charge Watts", counter);
-                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, (double)current_qpgsn->batt_charge_current * qpiri->batt_bulk_voltage, "W", "mdi:chart-bell-curve", "power");
+                add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, (double)current_qpgsn->batt_charge_current * qpigsn->voltage_batt, "W", "mdi:chart-bell-curve", "power");
 
                 sprintf(combined_query, "INV %d PV Input Watts", counter);
                 add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->pv_input_watts, "W", "mdi:solar-panel-large", "power");
@@ -501,7 +501,7 @@ int main(int argc, char *argv[])
                 sprintf(combined_query, "INV %d Grid Load", counter);
                 if (strcmp(current_qpgsn->inverter_mode, "L") == 0)
                 {
-                    add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->load_watt + (((double)current_qpgsn->batt_charge_current-current_qpgsn->pv_input_current) * qpiri->batt_bulk_voltage), "W", "mdi:power-plug", "power");
+                    add_number_json_mqtt(json, json_discovery, config_mqtt, combined_query, current_qpgsn->load_watt + (((double)current_qpgsn->batt_charge_current-current_qpgsn->pv_input_current) * qpigsn->voltage_batt), "W", "mdi:power-plug", "power");
                 }
                 else
                 {
