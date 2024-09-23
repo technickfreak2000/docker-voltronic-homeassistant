@@ -263,6 +263,7 @@ void cInverter::GetQPIRI(QPIRI *qpiri)
            &qpiri->batt_redischarge_voltage); // * Battery re-discharge voltage
                                               // ^ PV OK condition for parallel
                                               // ^ PV power balance
+    printf("Bulk voltage: %s\n", &qpiri->batt_bulk_voltage);
     delete tmpData;
     m.unlock();
   }
