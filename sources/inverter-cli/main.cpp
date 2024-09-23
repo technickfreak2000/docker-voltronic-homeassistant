@@ -196,7 +196,8 @@ int main(int argc, char *argv[])
     else
         inv->runMultiThread();
 
-    mqtt::async_client::ptr_t client = NULL;
+    std::shared_ptr<mqtt::async_client> client;
+    //mqtt::async_client::ptr_t client = NULL;
     if (mqtt_sel)
     {
         string address = "tcp://" + string(config_mqtt.server) + ":" + string(config_mqtt.port);

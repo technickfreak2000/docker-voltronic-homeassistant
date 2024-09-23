@@ -167,15 +167,15 @@ class cMQTTSub
   std::mutex m;
   std::thread t2;
   std::atomic_bool quit_thread{false};
-  mqtt::async_client::ptr_t mqttClient;
+  std::shared_ptr<mqtt::async_client> mqttClient;
 
   void run();
 
 public:
-  cMQTTSub(mqtt::async_client::ptr_t mqttClient);
+  cMQTTSub(std::shared_ptr<mqtt::async_client> mqttClient);
   bool runOnce = false;
 
-  mqtt::async_client::ptr_t getClient()
+  std::shared_ptr<mqtt::async_client> getClient()
   {
     return mqttClient;
   }
