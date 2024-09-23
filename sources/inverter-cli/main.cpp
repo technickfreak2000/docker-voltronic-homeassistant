@@ -456,7 +456,7 @@ int main(int argc, char *argv[])
                 sprintf(combined_query, "INV %d Battery Under", counter);
                 add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->battery_under), "", "mdi:power");
 
-                sprintf(combinedhttps://192.168.1.12:8006/?console=lxc&xtermjs=1&vmid=119&vmname=inverter-cli&node=new-main&cmd=_query, "INV %d Battery Normal", counter);
+                sprintf(combined_query, "INV %d Battery Normal", counter);
                 add_bool_json_mqtt(json, json_discovery, config_mqtt, combined_query, atomic_load(&current_qpgsn->battery_normal), "", "mdi:power");
 
                 sprintf(combined_query, "INV %d AC Loss", counter);
